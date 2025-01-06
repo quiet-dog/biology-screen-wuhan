@@ -114,3 +114,14 @@ export const getPersonnelListApi = () => {
         }
     });
 }
+
+
+export const getPersonnelListAllApi = () => {
+    return http.get("/manage/personnel", {
+        params: {
+            pageSize: 500,
+            pageNum: 1,
+
+        }
+    });
+}

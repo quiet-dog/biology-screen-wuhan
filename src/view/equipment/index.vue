@@ -76,7 +76,7 @@
       </div>
       <el-cascader :options="equipmentlist2" v-model="equipmentIds" @change="cascaderChange" class="cascaderCss" :props="{
         value: 'id',
-        label: 'name',
+        label: 'label',
         children: 'thresholdList',
       }" />
     </div>
@@ -234,7 +234,7 @@
             <span>{{ item.repairContent }}</span>
           </div>
           <div>
-            <span>维修原因：</span>
+            <span>故障原因：</span>
             <span>{{ item.faultReason }}</span>
           </div>
         </div>
@@ -489,6 +489,7 @@ const equipmentListFun = async () => {
       id: item.equipmentId,
       name: item.equipmentName,
       thresholdList: list,
+      label: item.equipmentName +"-"+ item.equipmentCode,
     };
   });
   equipmentId.value = data.data.rows[0].equipmentId;

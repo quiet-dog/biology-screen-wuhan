@@ -66,27 +66,27 @@
     <div class="bigscreen_lb_bottom">
       <div class="bigscreen_lb_bottom_nei" ref="bigscreenLBRef"></div>
     </div>
-    <div v-show="hisShow"  class="lb_table ltTrendDialog">
+    <div v-show="hisShow" class="lb_table ltTrendDialog">
       <div class="ltTrendDialog_top">
-      <span>报警列表</span>
-      <img @click="closeShow" :src="img9" alt="" srcset="" />
-    </div>
+        <span>报警列表</span>
+        <img @click="closeShow" :src="img9" alt="" srcset="" />
+      </div>
       <div class="ltTrendDialog_bottom">
         <ElTable id="tableMy" header-row-class-name="headerTr" style="width: 100%;" height="100%" :data="hisList">
-        <el-table-column width="150" fixed prop="createTime" label="报警时间">
-          <template #default="{ row }">
-            <span>{{ 
-              dayjs(row.createTime).format("YYYY-MM-DD hh:mm:ss")  }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column fixed width="80" prop="level" label="报警级别">
-          <template #default="{ row }">
-            <el-tag :style="getLevelStyle(row.level)" effect="plain" size="small">
-              {{ row.level ? row.level : "-" }}
-            </el-tag>
-          </template>
-        </el-table-column>
-        <!-- <el-table-column prop="type" label="类型">
+          <el-table-column width="150" fixed prop="createTime" label="报警时间">
+            <template #default="{ row }">
+              <span>{{
+                dayjs(row.createTime).format("YYYY-MM-DD hh:mm:ss") }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column fixed width="80" prop="level" label="报警级别">
+            <template #default="{ row }">
+              <el-tag :style="getLevelStyle(row.level)" effect="plain" size="small">
+                {{ row.level ? row.level : "-" }}
+              </el-tag>
+            </template>
+          </el-table-column>
+          <!-- <el-table-column prop="type" label="类型">
           <template #default="{ row }">
             <span>{{ row.type }}</span>
           </template>
@@ -101,20 +101,20 @@
             <span>{{ row.eventId }}</span>
           </template>
         </el-table-column> -->
-        <el-table-column  prop="description" label="报警描述">
-          <template #default="{ row }">
-            <span>{{ row.description }}</span>
-          </template>
-        </el-table-column>
+          <el-table-column prop="description" label="报警描述">
+            <template #default="{ row }">
+              <span>{{ row.description }}</span>
+            </template>
+          </el-table-column>
 
 
-      </ElTable>
+        </ElTable>
       </div>
-   
+
     </div>
   </div>
   <center></center>
-  <div  class="bigscreen_rt">
+  <div class="bigscreen_rt">
     <div class="bigscreen_rt_top">
       <div class="bigscreen_rt_top_l">
         <img src="/public/img/光标.png" alt="" />
@@ -139,36 +139,27 @@
     <div class="bigscreen_rc_top">
       <div class="bigscreen_rc_top_l">
         <img src="/public/img/光标.png" alt="" />
-        <span>政策法规</span>
+        <span>报警类型统计</span>
       </div>
-      <el-input class="inputcss" placeholder="请输入政策法规名称" :prefix-icon="Search" clearable
-        v-model="policiesFormData.policiesName" @change="policieslistFun" />
+      <!-- <el-input class="inputcss" placeholder="请输入政策法规名称" :prefix-icon="Search" clearable
+        v-model="policiesFormData.policiesName" @change="policieslistFun" /> -->
     </div>
     <div class="bigscreen_rc_bottom">
-      <div class="bigscreen_rc_bottom_nei">
-        <div class="bigscreen_rc_bottom_l">
-          <img src="/public/img/圆形标记.png" alt="" />
-          <img style="margin-top: 70px" src="/public/img/圆形标记.png" alt="" />
-          <img style="margin-top: 70px" src="/public/img/圆形标记.png" alt="" />
+      <div style="width: 100%;height: 100%;" class="bigscreen_rc_bottom_nei">
+        <div style="width: 100%;height: 100%;" class="bigscreen_rc_bottom_r">
+          <div style="width: 100%;height: 100%;" class="bigscreen_rc_bottom_r_nei" ref="yzRef"></div>
         </div>
-        <div class="bigscreen_rc_bottom_r">
-          <Vue3SeamlessScroll :list="policieslist" :class-option="{
-            step: 5,
-          }" hover class="scrool">
-            <div v-for="(item, index) in policieslist" @click="rcClick(item)" :key="index"
-              class="bigscreen_rc_bottom_rnei">
-              <span style="color: rgba(172, 223, 255, 1); font-size: 11px">{{
-                dayjs(item.createTime).format("YYYY-MM-DD")
-                }}</span>
-              <div :style="{
-                background: `url(${item.img}) no-repeat`,
-                'background-size': '100% 100%',
-              }">
-                <span style="margin-left: 10px">{{ item.policiesName }}</span>
-                <img style="margin-right: 18px; cursor: pointer" src="/public/img/查看详情.png" alt="" />
-              </div>
-            </div>
-          </Vue3SeamlessScroll>
+      </div>
+      <div v-show="etDialog" class="bigscreen_rc_dialog">
+        <div class="bigscreen_rc_dialog_top">
+          <span>报警区域统计</span>
+          <img @click="handleDialogClose" :src="img9" alt="" srcset="" />
+        </div>
+        <div class="bigscreen_rc_dialog_bottom">
+          <ElTable :data="yzTableData" height="100%" style="width: 100%">
+            <el-table-column prop="name" label="区域" />
+            <el-table-column prop="value" label="数量" />
+          </ElTable>
         </div>
       </div>
     </div>
@@ -282,21 +273,22 @@ import img9 from "../../../public/img/叉号.png";
 import { useIntervalFn } from "@vueuse/core";
 import { getChannelListApi, getStreamUrlApi } from "../../api/video/index.ts";
 import Video from "./components/Video.vue";
+import { useAlarmHook } from "./alarm.tsx";
 
-const getValue = (item)=>{
-  if(item.type == "设备报警"){
+const getValue = (item) => {
+  if (item.type == "设备报警") {
     let unit = "";
-    if(item.threshold){
+    if (item.threshold) {
       return item.equipmentValue + item.threshold?.unit
     }
   }
-  if (item.type= "环境报警"){
+  if (item.type = "环境报警") {
     return item.environmentValue + item.environment?.unitName
   }
-  if(item.type == "物料报警"){
+  if (item.type == "物料报警") {
     return item.materialsValue + item.materials?.unit
   }
-  if(item.type == "工艺节点报警"){
+  if (item.type == "工艺节点报警") {
     return item.equipmentValue + item.threshold?.unit
   }
   return "未知"
@@ -510,6 +502,28 @@ const bigscreenRBoption = {
   },
   tooltip: {
     trigger: "axis",
+    formatter: (params)=>{
+      let str = params[0].name + "<br>";
+      params.forEach((item) => {
+        if(item.seriesName === "设备报警"){
+          let rate = 0;
+          yxData.value.forEach((item1) => {
+            if(item1.type === "设备报警"){
+              rate = item1.rate[item.dataIndex]
+            }
+          })
+          let rateStr =""
+          if (rate === 0){
+            rateStr = "0%"
+          }else{
+            rateStr = (rate * 100) + "%"
+          }
+          str+= item.marker + "事故率" + "：" + rateStr  + "<br>";
+        }
+        str += item.marker + item.seriesName + "：" + item.value + "<br>";
+      });
+      return str;
+    },
   },
   legend: {
     data: [
@@ -614,8 +628,10 @@ const bigscreenRBoption = {
     },
   ],
 };
+const yxData = ref([])
 const getstatisticsList = async () => {
   const { data } = await getstatistics({ dayType: rbRadio.value });
+  yxData.value = data.data;
   bigscreenRBoption.xAxis.data = data.data[0].times;
   bigscreenRBoption.series[0].data = data.data[2].data;
   bigscreenRBoption.series[1].data = data.data[0].data;
@@ -807,7 +823,7 @@ const geteventTotalFun = async () => {
     if (!bigScreenInit.value) {
       bigScreenInit.value = true;
       bigscreenLBChart = echarts.init(bigscreenLBRef.value);
-    bigscreenLBChart.setOption(bigscreenLBoption);
+      bigscreenLBChart.setOption(bigscreenLBoption);
       bigscreenLBChart.off().on("click", params => {
         let cuData = "";
         let enData = "";
@@ -818,7 +834,7 @@ const geteventTotalFun = async () => {
           hisDayType.value = lbRadio.value;
           if (lbRadio.value === "week") {
             // 将年份换成今年的年份
-            cuData = dayjs().subtract(6-hisIndex,"day").startOf("day").format("YYYY-MM-DD");
+            cuData = dayjs().subtract(6 - hisIndex, "day").startOf("day").format("YYYY-MM-DD");
             enData = dayjs(cuData).endOf("day").format("YYYY-MM-DD")
           } else {
             cuData = dayjs(params.name).startOf("month").format("YYYY-MM-DD")
@@ -865,9 +881,11 @@ const getVideoList = () => {
   });
 };
 
-const closeShow =()=>{
-  hisShow.value =false
+const closeShow = () => {
+  hisShow.value = false
 }
+
+const { yzRef, yzTableData,etDialog,handleDialogClose } = useAlarmHook();
 
 onMounted(() => {
   getVideoList();
@@ -909,8 +927,8 @@ $design-height: 1080;
 
 
 
-:deep(.headerTr){
-  --el-table-header-bg-color: rgba(255,255,255,0.2) !important;
+:deep(.headerTr) {
+  --el-table-header-bg-color: rgba(255, 255, 255, 0.2) !important;
 }
 
 .ltTrendDialog {
@@ -925,7 +943,7 @@ $design-height: 1080;
   position: fixed;
 
   .ltTrendDialog_top {
-    
+
 
     width: 100%;
     height: adaptiveHeight(45);
@@ -940,7 +958,7 @@ $design-height: 1080;
       font-family: youshe;
     }
 
-    .myInput{
+    .myInput {
       width: adaptiveWidth(120);
       position: relative;
       right: adaptiveWidth(120);
@@ -960,6 +978,36 @@ $design-height: 1080;
     height: calc(90% - adaptiveHeight(60));
     margin-left: adaptiveWidth(25);
     margin-top: adaptiveHeight(35);
+  }
+}
+
+.bigscreen_rc_dialog {
+  position: absolute;
+  width: adaptiveWidth(360);
+  height: adaptiveHeight(300);
+  top: 0;
+  right: adaptiveWidth(440);
+  background-color: red;
+  background: url("/public/img/弹窗背景.png") no-repeat;
+  background-size: 100% 100%;
+  padding: 0 adaptiveWidth(20);
+  .bigscreen_rc_dialog_bottom{
+    width: 100%;
+    height: calc(100% - adaptiveHeight(65));
+  }
+
+  .bigscreen_rc_dialog_top{
+    width: 100%;
+    height: adaptiveHeight(45);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #ffffff;
+
+    img {
+      position: relative;
+      left: adaptiveWidth(10);
+    }
   }
 }
 
@@ -1360,55 +1408,56 @@ $design-height: 1080;
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
 
-    .bigscreen_rc_bottom_nei {
-      width: 100%;
-      height: 100%;
+    // .bigscreen_rc_bottom_nei {
+    //   width: 100%;
+    //   height: 100%;
+    //   display: flex;
+    //   justify-content: center;
+    //   align-items: center;
+
+    //   .bigscreen_rc_bottom_l {
+    //     width: adaptiveWidth(20);
+    //     height: adaptiveHeight(207);
+    //     background: url("/img/线.png") no-repeat;
+    //     background-size: 2px 100%;
+    //     background-position: center;
+    //     display: flex;
+    //     flex-direction: column;
+    //     align-items: center;
+    //   }
+
+    .bigscreen_rc_bottom_r {
+      width: adaptiveWidth(381);
+      height: adaptiveHeight(207);
+      margin-left: adaptiveFontSize(15);
       display: flex;
-      justify-content: center;
-      align-items: center;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
 
-      .bigscreen_rc_bottom_l {
-        width: adaptiveWidth(20);
-        height: adaptiveHeight(207);
-        background: url("/img/线.png") no-repeat;
-        background-size: 2px 100%;
-        background-position: center;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
+      // .bigscreen_rc_bottom_rnei {
+      //   width: 100%;
+      //   height: adaptiveHeight(57);
+      //   display: flex;
+      //   flex-direction: column;
+      //   justify-content: space-between;
 
-      .bigscreen_rc_bottom_r {
-        width: adaptiveWidth(381);
-        height: adaptiveHeight(207);
-        margin-left: adaptiveFontSize(15);
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        overflow: hidden;
+      //   div {
+      //     width: 100%;
+      //     height: adaptiveHeight(38);
+      //     display: flex;
+      //     align-items: center;
+      //     justify-content: space-between;
 
-        .bigscreen_rc_bottom_rnei {
-          width: 100%;
-          height: adaptiveHeight(57);
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-
-          div {
-            width: 100%;
-            height: adaptiveHeight(38);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            span {
-              color: rgba(255, 255, 255, 1);
-              font-size: adaptiveFontSize(14);
-            }
-          }
-        }
-      }
+      //     span {
+      //       color: rgba(255, 255, 255, 1);
+      //       font-size: adaptiveFontSize(14);
+      //     }
+      //   }
+      // }
     }
+
+    // }
   }
 }
 

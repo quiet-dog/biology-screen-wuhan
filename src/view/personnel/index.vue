@@ -3,7 +3,7 @@
     <div class="bigscreen_lt_top">
       <div class="bigscreen_lt_top_l">
         <img src="/public/img/光标.png" alt="" />
-        <span>门禁记录</span>
+        <span>人员档案</span>
       </div>
     </div>
     <div class="bigscreen_lt_bottom">
@@ -18,15 +18,16 @@
               'background-size': '100% 100%',
             }">
               <div>
-                <span>{{ item.personnel?.name }}</span>
-                <span>进入</span>
+                <span>{{ item.name }}</span>
+                <!-- <span>进入</span> -->
+                <span>性别: {{ item.sex }}</span>
               </div>
               <div>
-                <span>员工编号：{{ item.personnel?.code }}</span>
-                <span>门禁地点：{{ item.doorPlace }}</span>
+                <span>员工编号：{{ item.code }}</span>
+                <span>部门：{{ item.department }}</span>
               </div>
               <div>
-                <span>刷卡时间：{{ item.createTime }}</span>
+                <span>入职时间：{{ item.createTime }}</span>
               </div>
             </div>
           </div>
@@ -34,7 +35,7 @@
       </div>
     </div>
   </div>
-  <div class="bigscreen_lb">
+  <!-- <div class="bigscreen_lb">
     <div class="bigscreen_lb_top">
       <div class="bigscreen_lb_top_l">
         <img src="/public/img/光标.png" alt="" />
@@ -87,7 +88,7 @@
         </Vue3SeamlessScroll>
       </div>
     </div>
-  </div>
+  </div> -->
   <center></center>
   <div class="bigscreen_rt">
     <div class="bigscreen_rt_top">
@@ -118,15 +119,16 @@
     <div class="bigscreen_rb_top">
       <div class="bigscreen_rb_top_l">
         <img src="/public/img/光标.png" alt="" />
-        <span>异常健康指标统计</span>
+        <span>视频监控</span>
       </div>
-      <el-radio-group v-model="radio1" @change="changeRadio1" class="group">
+      <!-- <el-radio-group v-model="radio1" @change="changeRadio1" class="group">
         <el-radio-button label="周" value="week" />
         <el-radio-button label="年" value="year" />
-      </el-radio-group>
+      </el-radio-group> -->
     </div>
     <div class="bigscreen_rb_bottom">
-      <div class="bigscreen_rb_bottom_nei" ref="bigscreenRBRef"></div>
+      <!-- <div class="bigscreen_rb_bottom_nei" ref="bigscreenRBRef"></div> -->
+      <Video style="width:100%" class="rtDialog_bottom_video" ref="video2Ref" />
     </div>
   </div>
 
@@ -142,27 +144,27 @@
         <div class="ltDialog_bottomr">
           <div>
             <span>员工编号：</span>
-            <span>{{ personnelInfo?.personnel?.code }}</span>
+            <span>{{ personnelInfo?.code }}</span>
           </div>
           <div>
             <span>姓名：</span>
-            <span>{{ personnelInfo?.personnel?.name }}</span>
+            <span>{{ personnelInfo?.name }}</span>
           </div>
           <div>
             <span>性别：</span>
-            <span>{{ personnelInfo?.personnel?.sex }}</span>
+            <span>{{ personnelInfo?.sex }}</span>
           </div>
           <div>
             <span>部门：</span>
-            <span>{{ personnelInfo?.personnel?.department }}</span>
+            <span>{{ personnelInfo?.department }}</span>
           </div>
           <div>
             <span>岗位：</span>
-            <span>{{ personnelInfo?.personnel?.post }}</span>
+            <span>{{ personnelInfo?.post }}</span>
           </div>
           <div>
             <span>联系方式：</span>
-            <span>{{ personnelInfo?.personnel?.contact }}</span>
+            <span>{{ personnelInfo?.contact }}</span>
           </div>
         </div>
       </div>
@@ -203,7 +205,7 @@ import {
   accesscontrolList,
 } from "../../api/personnel/index";
 import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
-import { getChannelListApi, getStreamUrlApi } from "../../api/video/index.ts";
+import { getChannelListApi, getPersonnelListAllApi, getStreamUrlApi } from "../../api/video/index.ts";
 import { useIntervalFn } from '@vueuse/core'
 
 
@@ -460,7 +462,7 @@ const accesscontrolData = ref<accesscontrolRes>({
 });
 const accesscontrollist = ref<any[]>([]);
 const accesscontrolFun = async () => {
-  const { data } = await accesscontrolList(accesscontrolData.value);
+  const { data } = await getPersonnelListAllApi();
   let img = [
     "/img/personnel/红色背景.png",
     "/img/personnel/绿色背景.png",
@@ -476,7 +478,7 @@ const accessontrolTimer = useIntervalFn(() => {
   accesscontrolFun().finally(() => {
     accessontrolTimer.resume();
   });
-}, 5000);
+}, 100000);
 const personnelInfo = ref()
 const personnelShow = ref(false)
 const ltClick = (item: any) => {
@@ -615,28 +617,39 @@ const healthySelect = reactive([
 ]);
 
 const videoRef = ref(null);
+const video2Ref = ref(null);
 const videoInfo = ref({});
 const channelQuery = ref({
   name: "",
   pageNum: 1,
-  pageSize: 1,
+  pageSize: 2,
 });
 const getVideoList = () => {
   nextTick(() => {
     getChannelListApi(channelQuery.value).then((res) => {
+      if (res.data.data && res.data.data.List && res.data.data.List.length > 0) {
+        videoInfo.value = res.data.data.List[0];
+        res.data.data.List.forEach((item, index) => {
+          getStreamUrlApi(videoInfo.value.channelid).then((ress) => {
+            console.log("res.data.data.wsflv", ress.data.data.wsflv);
+            if (index % 2 == 0){
+              videoRef.value.play(ress.data.data.wsflv);
+              videoRef.value.setChannelId(ress.data.data.channelId);
+            }else{
+              video2Ref.value.play(ress.data.data.wsflv);
+              video2Ref.value.setChannelId(ress.data.data.channelId);
+            }
+            channelQuery.value.pageNum += 1;
+            if (channelQuery.value.pageNum > ress.data.data.Total) {
+              channelQuery.value.pageNum = 1;
+            }
+          }).catch((err) => {
+            channelQuery.value.pageNum = 1
+          });
+        })
 
-      videoInfo.value = res.data.data.List[0];
-      getStreamUrlApi(videoInfo.value.channelid).then((ress) => {
-        console.log("res.data.data.wsflv", ress.data.data.wsflv);
-        videoRef.value.play(ress.data.data.wsflv);
-        videoRef.value.setChannelId(ress.data.data.channelId);
-        channelQuery.value.pageNum += 1;
-        if (channelQuery.value.pageNum > ress.data.data.Total) {
-          channelQuery.value.pageNum = 1;
-        }
-      }).catch((err) => {
-        channelQuery.value.pageNum = 1
-      });
+      }
+
     });
   });
 
@@ -726,12 +739,16 @@ $design-height: 1080;
   }
 }
 
-.bigscreen_lt,
 .bigscreen_lb,
 .bigscreen_rt,
 .bigscreen_rb {
   width: adaptiveWidth(443);
   height: adaptiveHeight(445);
+}
+
+.bigscreen_lt {
+  width: adaptiveWidth(443);
+  height: adaptiveHeight(850);
 }
 
 .bigscreen_lt {
@@ -776,7 +793,7 @@ $design-height: 1080;
 
   .bigscreen_lt_bottom {
     width: 100%;
-    height: adaptiveHeight(406);
+    height: adaptiveHeight(850);
     margin-top: adaptiveHeight(5);
     background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
@@ -787,7 +804,7 @@ $design-height: 1080;
 
     .bigscreen_lt_bottom_neis {
       margin-top: adaptiveHeight(20);
-      height: adaptiveHeight(366);
+      height: 100%;
       overflow: hidden;
 
       .bigscreen_lt_bottom_nei {
@@ -1110,6 +1127,16 @@ $design-height: 1080;
     display: flex;
     justify-content: center;
     align-items: center;
+
+    .rtDialog_bottom_video {
+      :deep(#container) {
+        width: adaptiveWidth(420);
+        height: adaptiveHeight(215);
+        object-fit: cover;
+      }
+
+      object-fit: cover;
+    }
 
     .bigscreen_rb_bottom_nei {
       width: adaptiveWidth(403);

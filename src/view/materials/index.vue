@@ -593,8 +593,10 @@ const allByReceiveExplainFun = async () => {
   updateBigscreenRToption(
     data.xdata,
     data.productionData,
-    data.researchData,
-    data.otherData
+    data.otherData,
+    data.maintenanceData,
+    data.experimentData,
+    data.cleanData
   );
   if (bigscreenRTRef.value) {
     bigscreenRTChart = echarts.init(bigscreenRTRef.value);
@@ -604,15 +606,21 @@ const allByReceiveExplainFun = async () => {
 const updateBigscreenRToption = (
   xdata: string[],
   productionData: number[],
-  researchData: number[],
-  otherData: number[]
+  // researchData: number[],
+  otherData: number[],
+  maintenanceData: number[],
+  experimentData: number[],
+  cleanData: number[]
 ) => {
   bigscreenRToption.dataset.source = [
-    ["product", "生产领用", "研发领用", "其他领用"], // 表头
+    ["product", "生产用量", "维修用量", "实验用量","清洁用量","其他领用"], // 表头
     ...xdata.map((item, index) => [
       item,
       productionData[index] || 0,
-      researchData[index] || 0,
+      // researchData[index] || 0,
+      maintenanceData[index] || 0,
+      experimentData[index] || 0,
+      cleanData[index] || 0,
       otherData[index] || 0,
     ]),
   ];

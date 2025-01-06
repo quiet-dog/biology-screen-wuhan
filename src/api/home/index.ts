@@ -17,3 +17,17 @@ export function getEventAtatistics(params: { type: string }) {
   return http.get("/manage/emergencyEvent/getStock", { params });
 }
 
+export function getAllEventEchart() {
+  return http.get("/manage/event/getAllEventEchart");
+}
+
+
+export function getAllEquipmentAreaEchart() {
+  return http.get("/manage/event/getAllEquipmentAreaEchart");
+}
+
+export function getAllEnvironmentAreaEchart() {
+  return http.get("/manage/event/getAllEnvironmentAreaEchart");
+}
+
+

@@ -116,8 +116,12 @@
                 <span :style="{
                   color: item.isHighRisk ? 'red' : '#ffffff',
                 }">{{ item.nodeName }}</span>
-                <span>{{ item.craftArchive.craftArchiveName }}</span>
-                <span>{{ item.isHighRisk ? "是" : "否" }}</span>
+                <span :style="{
+                  color: item.isHighRisk ? 'red' : '#ffffff',
+                }">{{ item.craftArchive.craftArchiveName }}</span>
+                <span :style="{
+                  color: item.isHighRisk ? 'red' : '#ffffff',
+                }">{{ item.isHighRisk ? "是" : "否" }}</span>
               </div>
             </div>
           </Vue3SeamlessScroll>
@@ -736,7 +740,7 @@ const alarmEventsTimer = useIntervalFn(() => {
 const processFormData = ref({
   craftArchiveId: null,
   pageNum: 1,
-  pageSize: 20,
+  pageSize: 1000,
   orderColumn: "createTime",
   orderDirection: "descending",
 });
@@ -754,7 +758,7 @@ const processlistTimer = useIntervalFn(() => {
   processlistFun().finally(() => {
     processlistTimer.resume();
   })
-}, 5000)
+}, 3600000)
 const rtShow = ref(false);
 const rtInfo = ref()
 const rtClcik = (item) => {
