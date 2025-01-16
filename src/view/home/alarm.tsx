@@ -16,7 +16,7 @@ export function useAlarmHook() {
         },
         series: [
             {
-                name: 'Access From',
+                name: '',
                 type: 'pie',
                 radius: '50%',
                 data: [

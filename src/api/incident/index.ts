@@ -42,6 +42,10 @@ export function alarmMateEventsList(params: alarmEventsListRes) {
   return http.get("/manage/alarm", { params });
 }
 
+export function receiveList(params: alarmEventsListRes) {
+  return http.get("/manage/reveice", { params });
+}
+
 
 //获取报警信息列表
 export interface alarmInformationListRes {

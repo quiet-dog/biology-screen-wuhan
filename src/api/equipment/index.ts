@@ -18,8 +18,19 @@ export interface dailyInspectionRes {
   orderColumn: string;
   orderDirection: string;
 }
+
+export interface CiShu {
+  startTime: string;
+  endTime: string;
+}
 export function dailyInspectionList(params: dailyInspectionRes) {
   return http.get("/manage/equipment-daily-inspection", {
+    params,
+  });
+}
+
+export function dailyCishuInspectionList(params: CiShu) {
+  return http.get("/manage/equipment-daily-inspection/getCishu", {
     params,
   });
 }
@@ -42,6 +53,14 @@ export interface historicalStatisticsRes {
 }
 export function historicalStatisticsList(params: historicalStatisticsRes) {
   return http.get("/manage/equipment-data/history", { params });
+}
+
+export function getAllTime(id: number) {
+  return http.get("/manage/equipment-data/totalTime", {
+    params: {
+      equipmentId: id
+    }
+  });
 }
 
 //维修统计分析

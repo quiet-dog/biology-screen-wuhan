@@ -81,6 +81,7 @@
       }" />
     </div>
     <div class="bigscreen_lb_bottom">
+      <div class="bigscreen_lb_bottom_text" >运行时间:{{ allTime }}</div>
       <div @mouseenter="historicalStatisticsListTimer.pause()" @mouseleave="historicalStatisticsListTimer.resume()"
         class="bigscreen_lb_bottom_nei" ref="bigscreenLBRef"></div>
     </div>
@@ -149,7 +150,10 @@
       <div class="bigscreen_rb_top_l">
         <img src="/public/img/光标.png" alt="" />
         <span>巡检记录</span>
+        <ElButton link style="color: white;" @click="ciShuDig = true" class="bigscreen_rb_top_l_rg">巡检趋势分析</ElButton>
       </div>
+
+
     </div>
     <div class="bigscreen_rb_bottom">
       <img src="/public/img/xujian.png" alt="" />
@@ -197,6 +201,27 @@
             </div>
           </Vue3SeamlessScroll>
         </div>
+      </div>
+    </div>
+    <div class="rb_dialog" v-show="ciShuDig">
+      <div class="rb_dialog_top">
+        <span>巡检趋势</span>
+        <img @click="ciShuDig = false" class="rb_dialog_top_x" :src="img9" alt="" srcset="" />
+
+        <div class="pickerCss">
+          <img src="/public/img/zuo.svg" alt="" @click="ciShuLeftClick" style="margin-left: 5px" />
+          <span>{{
+            dayjs(ciShuTimer.startTime).format("MM月DD日")
+          }}</span>
+          <span>-</span>
+          <span>{{
+            dayjs(ciShuTimer.endTime).format("MM月DD日")
+          }}</span>
+          <img src="/public/img/you.svg" alt="" @click="ciShuRightClick" style="margin-right: 5px" />
+        </div>
+      </div>
+      <div class="rb_dialog_bottom">
+        <div class="rb_dialog_bottom_echart" ref="qushiRef"></div>
       </div>
     </div>
   </div>
@@ -317,6 +342,8 @@ import {
   equipmentList,
   historicalStatisticsList,
   repairStatistics,
+  dailyCishuInspectionList,
+  getAllTime,
 } from "../../api/equipment/index";
 import dayjs from "dayjs";
 import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
@@ -325,6 +352,8 @@ import { getChannelListApi, getStreamUrlApi } from "../../api/video";
 import Video from "../home/components/Video.vue";
 import { thresholdDataList } from "../../api/riskassessment";
 import { useIntervalFn } from '@vueuse/core'
+import { ElButton } from "element-plus";
+import { useXunJianQushiHook } from "./qushi";
 
 
 const rtStatus = ref(false);
@@ -333,7 +362,9 @@ const rtClick = (item) => {
   rtStatus.value = !rtStatus.value;
   getStreamUrlApi(item.channelid).then((res) => {
     console.log("res.data.data.wsflv", res.data.data.wsflv);
-    videoRef.value.play(res.data.data.wsflv);
+    const url = new URL(res.data.data.wsflv);
+    url.host = location.host;
+    videoRef.value.play(url.toString());
     videoRef.value.setChannelId(res.data.data.channelId);
   });
   // nextTick(() => {
@@ -352,7 +383,7 @@ const rtcanleClick = () => {
 const ltequipmentFormData = ref({
   equipmentName: "",
   pageNum: 1,
-  pageSize: 1000,
+  pageSize: 100,
   orderColumn: "createTime",
   orderDirection: "descending",
 });
@@ -464,7 +495,7 @@ const ltequipmentlistTimer = useIntervalFn(() => {
 const equipmentFormData = ref({
   equipmentName: "",
   pageNum: 1,
-  pageSize: 20,
+  pageSize: 100,
   orderColumn: "createTime",
   orderDirection: "descending",
 });
@@ -482,6 +513,7 @@ const equipmentListFun = async () => {
         ...v,
         id: v.thresholdId,
         name: v.sensorName,
+        label: v.sensorName,
       };
     });
     return {
@@ -489,15 +521,15 @@ const equipmentListFun = async () => {
       id: item.equipmentId,
       name: item.equipmentName,
       thresholdList: list,
-      label: item.equipmentName +"-"+ item.equipmentCode,
+      label: item.equipmentName + "-" + item.equipmentCode,
     };
   });
   equipmentId.value = data.data.rows[0].equipmentId;
   equipmentIds.value = [
     equipmentlist2.value[0].equipmentId,
-    equipmentlist2.value[0].thresholdList[0].thresholdId,
+    equipmentlist2.value[0]?.thresholdList[0]?.thresholdId,
   ];
-  thresholdId.value = equipmentlist2.value[0].thresholdList[0].thresholdId;
+  thresholdId.value = equipmentlist2?.value[0].thresholdList[0]?.thresholdId;
   historicalStatisticsListFun();
 };
 const searchEquipment = (val) => {
@@ -598,16 +630,38 @@ const historicalStatisticsListTimer = useIntervalFn(() => {
   })
 }, 10000)
 
+const allTime =ref("0")
+function getFormatTime(data:number){
+  const days = Math.floor(data / 1440);     // 1天 = 1440分钟
+  const hours = Math.floor((data % 1440) / 60);
+  const mins = data % 60;
+  if (days>0){
+    return `${days}天${hours}小时${mins}分`
+  }
+  if (hours > 0 ){
+    return `${hours}小时${mins}分`
+  }
+  return `${mins}分`
+}
 const cascaderChange = (val) => {
+  console.log("val",val)
   thresholdId.value = val[1];
   historicalStatisticsListFun();
+  getAllTime(val[0]).then(res=>{
+    // 转成几天几小时
+    if(res.data?.data?.totalTime !=null){
+      allTime.value = getFormatTime(res.data?.data?.totalTime)
+    }else{
+      allTime.value = "0"
+    }
+  })
 };
 
 //维修记录
 const repairformData = ref<equipmentRepairListRes>({
   equipmentCode: "",
   pageNum: 1,
-  pageSize: 20,
+  pageSize: 100,
   orderColumn: "createTime",
   orderDirection: "descending",
 });
@@ -720,7 +774,7 @@ const rctcanleClick = () => {
 //巡检记录
 const inspectionformData = ref<dailyInspectionRes>({
   pageNum: 1,
-  pageSize: 20,
+  pageSize: 100,
   orderColumn: "createTime",
   orderDirection: "descending",
 });
@@ -786,12 +840,20 @@ window.onresize = function () {
   bigscreenLBChart.resize();
 };
 
+const {ciShuTimer,
+        ciShuLeftClick,
+        ciShuRightClick,
+        dailyCishuInspectionListFunc,
+        qushiRef,
+        ciShuDig} = useXunJianQushiHook()
+
 onMounted(() => {
   equipmentRepairListFun();
   inspectionListFun();
   equipmentListFun();
   ltequipmentListFun();
   getVideoList()
+  dailyCishuInspectionListFunc();
 });
 </script>
 
@@ -811,11 +873,78 @@ $design-height: 1080;
   @return #{$px / $design-width * 100}vw;
 }
 
+.rb_dialog {
+  width: adaptiveWidth(350);
+  height: adaptiveHeight(270);
+  position: absolute;
+  top: 0;
+  left: - adaptiveWidth(350);
+  background: url("/public/img/弹窗背景.png") no-repeat;
+  background-size: 100% 100%;
+}
+
+.rb_dialog_top {
+  width: 100%;
+  height: adaptiveHeight(45);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .rb_dialog_top_x {
+    position: absolute;
+    right: adaptiveWidth(7);
+  }
+
+  span {
+    font-family: youshe;
+    font-size: adaptiveFontSize(20);
+    color: #ffffff;
+    padding-left: adaptiveWidth(15);
+  }
+}
+
+.rb_dialog_bottom {
+  height: adaptiveHeight(225);
+}
+
+.rb_dialog_bottom_echart{
+  width: adaptiveWidth(350);;
+  height: adaptiveHeight(225);
+}
+
 .yzInput {
   position: relative;
   left: adaptiveWidth(20);
   top: adaptiveHeight(5);
 }
+
+.bigscreen_rb_top_l_rg {
+  margin-left: adaptiveWidth(260);
+}
+
+.pickerCss {
+
+  width: adaptiveWidth(155);
+  height: adaptiveHeight(24);
+  border: 1px solid rgba(227, 233, 243, 0.2);
+  border-radius: 5px;
+  margin-right: adaptiveWidth(11);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  top: adaptiveWidth(6);
+  left: - adaptiveWidth(20);
+
+  span {
+    color: #ffffff;
+    font-size: adaptiveFontSize(10);
+    font-family: unset !important;
+    font-weight: 100 !important;
+  }
+}
+
+
 
 .bigscreen_lt,
 .bigscreen_lc,
@@ -1077,9 +1206,17 @@ $design-height: 1080;
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
 
+    .bigscreen_lb_bottom_text{
+      height: adaptiveHeight(20);
+      text-align: right;
+      padding-right: adaptiveWidth(20);
+      padding-top: adaptiveHeight(10);
+      color: white;
+    }
+
     .bigscreen_lb_bottom_nei {
       width: 100%;
-      height: 100%;
+      height: adaptiveHeight(221);
     }
   }
 }

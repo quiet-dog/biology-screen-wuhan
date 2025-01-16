@@ -456,7 +456,7 @@ const accesscontrolData = ref<accesscontrolRes>({
   doorPlace: "",
   name: "",
   pageNum: 1,
-  pageSize: 20,
+  pageSize: 100,
   orderColumn: "createTime",
   orderDirection: "descending",
 });
@@ -632,12 +632,20 @@ const getVideoList = () => {
         res.data.data.List.forEach((item, index) => {
           getStreamUrlApi(videoInfo.value.channelid).then((ress) => {
             console.log("res.data.data.wsflv", ress.data.data.wsflv);
-            if (index % 2 == 0){
-              videoRef.value.play(ress.data.data.wsflv);
+            if (index % 2 == 0) {
+              const url = new URL(ress.data.data.wsflv);
+              url.host = location.host;
+              videoRef.value.play(url.toString());
               videoRef.value.setChannelId(ress.data.data.channelId);
-            }else{
-              video2Ref.value.play(ress.data.data.wsflv);
+              // videoRef.value.play(ress.data.data.wsflv);
+              // videoRef.value.setChannelId(ress.data.data.channelId);
+            } else {
+              const url = new URL(ress.data.data.wsflv);
+              url.host = location.host;
+              video2Ref.value.play(url.toString());
               video2Ref.value.setChannelId(ress.data.data.channelId);
+              // video2Ref.value.play(ress.data.data.wsflv);
+              // video2Ref.value.setChannelId(ress.data.data.channelId);
             }
             channelQuery.value.pageNum += 1;
             if (channelQuery.value.pageNum > ress.data.data.Total) {

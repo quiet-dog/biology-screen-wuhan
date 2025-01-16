@@ -483,7 +483,7 @@ const changeHisList = () => {
     beginTime: hisStart,
     endTime: hisEnd,
     pageNum: 1,
-    pageSize: 1000,
+    pageSize: 100,
     type: "设备报警",
     deviceName: hisDeviceName.value
   }).then((res) => {
@@ -538,7 +538,7 @@ const historyStatistics = async () => {
             beginTime: cuData,
             endTime: enData,
             pageNum: 1,
-            pageSize: 1000,
+            pageSize: 100,
             type: "设备报警",
             deviceName: hisDeviceName.value
           }).then((res) => {
@@ -556,7 +556,7 @@ const historyStatistics = async () => {
 const downloadFile = () => {
   exportAlarmEvents({
     pageNum: 1,
-    pageSize: 1000,
+    pageSize: 100,
     beginTime: hisStart,
     endTime: hisEnd,
     type: "设备报警",
@@ -589,7 +589,7 @@ const historyStatisticsTimer = useIntervalFn(() => {
 //设备数据
 const equipmentFormData = ref({
   pageNum: 1,
-  pageSize: 20,
+  pageSize: 100,
   orderColumn: "createTime",
   orderDirection: "descending",
 });
@@ -687,7 +687,7 @@ const powerByAreaTotalStaticFun = async () => {
           powetDayType = powerByAreaTotalStaticData.value.dayType;
           alarmEventsList({
             pageNum: 1,
-            pageSize: 1000,
+            pageSize: 100,
             area: params.name,
             beginTime: powetDayType == "week"? dayjs().startOf("week").format("YYYY-MM-DD"):dayjs().startOf("year").format("YYYY-MM-DD"),
             endTime: powetDayType == "week"? dayjs().endOf("week").format("YYYY-MM-DD"):dayjs().endOf("year").format("YYYY-MM-DD"),

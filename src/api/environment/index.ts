@@ -58,6 +58,13 @@ export function powerByAreaTotalStatic(params: {
   return http.get("/manage/detection/powerByAreaTotal", { params });
 }
 
+export function getZuiXinShuJuApi(params: {
+  area: string,
+  unitName: string
+}) {
+  return http.get("/manage/detection/getZuiXinShuJu", { params });
+}
+
 
 //区域报警数量统计
 export function eventByAreaTotalStatic(params: {

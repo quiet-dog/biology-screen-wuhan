@@ -12,6 +12,10 @@ export function receiveList(params: receiveListRes) {
   return http.get("/manage/receive", { params });
 }
 
+export function reportList(params: receiveListRes) {
+  return http.get("/manage/report", { params });
+}
+
 //获取物料档案列表
 export interface materialFilesListRes {
   pageNum: number;

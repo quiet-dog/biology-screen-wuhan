@@ -110,7 +110,7 @@ export function useTwoDeviceHook() {
   //   http.get("/manage/threshold", {
   //     params: {
   //       pageNum: 1,
-  //       pageSize: 10000
+  //       pageSize: 1000
   //     }
   //   }).then((res) => {
   //     res.data.data.rows.forEach((item: any) => {
@@ -125,7 +125,7 @@ export function useTwoDeviceHook() {
   //   http.get("/manage/environment", {
   //     params: {
   //       pageNum: 1,
-  //       pageSize: 10000
+  //       pageSize: 1000
   //     }
   //   }).then((res) => {
 
@@ -142,7 +142,7 @@ export function useTwoDeviceHook() {
   //   http.get("/manage/equipment", {
   //     params: {
   //       pageNum: 1,
-  //       pageSize: 10000
+  //       pageSize: 1000
   //     }
   //   }).then((res) => {
 

@@ -158,7 +158,7 @@
         <div class="bigscreen_rc_dialog_bottom">
           <ElTable :data="yzTableData" height="100%" style="width: 100%">
             <el-table-column prop="name" label="区域" />
-            <el-table-column prop="value" label="数量" />
+            <el-table-column prop="value" width="100" label="数量" />
           </ElTable>
         </div>
       </div>
@@ -302,7 +302,9 @@ const rtClick = (item: { channelid: string }) => {
     nextTick(() => {
       getStreamUrlApi(item.channelid).then((res) => {
         console.log("res.data.data.wsflv", res.data.data.wsflv);
-        videoRef.value.play(res.data.data.wsflv);
+        const url = new URL(res.data.data.wsflv);
+        url.host = location.host;
+        videoRef.value.play(url.toString());
         videoRef.value.setChannelId(res.data.data.channelId);
       });
     });
@@ -316,7 +318,7 @@ const rtcanleClick = () => {
 const policiesFormData = ref({
   policiesName: "",
   pageNum: 1,
-  pageSize: 20,
+  pageSize: 100,
   orderColumn: "createTime",
   orderDirection: "descending",
 });
@@ -847,7 +849,7 @@ const geteventTotalFun = async () => {
             beginTime: cuData,
             endTime: enData,
             pageNum: 1,
-            pageSize: 1000
+            pageSize: 100
           }).then((res) => {
             hisList.value = res.data.data.rows;
           })

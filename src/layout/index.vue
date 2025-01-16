@@ -6,7 +6,7 @@
         src="/public/img/高生物安全动态监管平台.png"
         alt=""
       /> -->
-      <div class="text-my">高风险安全风险车间智能化风险管理和实时动态监管平台</div>
+      <div class="text-my">高生物安全风险车间<br/>智能化风险管理和实时动态监管平台</div>
       <div class="bigscreen_header_r">
         <span>{{ time }}</span>
         <span>{{ dayOfWeek }}</span>
@@ -96,11 +96,11 @@ const btnfun = [
     name: "home",
     path: "/home",
   },
-  {
-    title: "风险评估",
-    name: "riskassessment",
-    path: "/riskassessment",
-  },
+  // {
+  //   title: "风险评估",
+  //   name: "riskassessment",
+  //   path: "/riskassessment",
+  // },
   {
     title: "人员数据",
     name: "personnel",
@@ -126,11 +126,11 @@ const btnfun = [
     name: "environment",
     path: "/environment",
   },
-  {
-    title: "事件管理",
-    name: "incident",
-    path: "/incident",
-  },
+  // {
+  //   title: "事件管理",
+  //   name: "incident",
+  //   path: "/incident",
+  // },
 ];
 
 const bigscreenBtn = (val: string) => {

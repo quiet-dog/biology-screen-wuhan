@@ -4,7 +4,7 @@ export const getThreshold = () => {
   return http.request<ResponseData<void>>("get", "/manage/threshold", {
     params: {
       pageNum: 1,
-      pageSize: 10000
+      pageSize: 1000
     }
   })
 }

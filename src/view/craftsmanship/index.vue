@@ -151,7 +151,7 @@
             <span style="font-size: 18px">工艺要素</span>
             <span style="font-size: 28px; padding-left: 25px">{{
               processTotal
-              }}</span>
+            }}</span>
           </div>
           <div>
             <span>
@@ -227,46 +227,46 @@
   </div>
 
   <!-- <template v-for="item in nodelist"> -->
-    <div v-show="lbShow" class="lbDialog">
-      <div class="lbDialog_top">
-        <span>工艺节点详情</span>
-        <img :src="img9" alt="" srcset="" @click="lbcanleClick" />
+  <div v-show="lbShow" class="lbDialog">
+    <div class="lbDialog_top">
+      <span>工艺节点详情</span>
+      <img :src="img9" alt="" srcset="" @click="lbcanleClick" />
+    </div>
+    <div class="lbDialog_bottom">
+      <div>
+        <span>节点编号：</span>
+        <span>{{ lbInfo?.craftNodeId }}</span>
       </div>
-      <div class="lbDialog_bottom">
-        <div>
-          <span>节点编号：</span>
-          <span>{{ lbInfo?.craftNodeId }}</span>
-        </div>
-        <div>
-          <span>节点名称：</span>
-          <span>{{ lbInfo?.nodeName }}</span>
-        </div>
-        <div>
-          <span>所属工艺：</span>
-          <span>病毒加工艺</span>
-        </div>
-        <div>
-          <span>节点顺序：</span>
-          <span>{{ lbInfo?.nodeOrder }}</span>
-        </div>
-        <div>
-          <span>操作描述：</span>
-          <span>{{ lbInfo?.operationDescription }}</span>
-        </div>
-        <div>
-          <span>操作方式：</span>
-          <span>{{ lbInfo?.operationMethod }}</span>
-        </div>
-        <div>
-          <span>所需时间：</span>
-          <span>{{ lbInfo?.requiredTime }}</span>
-        </div>
-        <div>
-          <span>是否为高风险：</span>
-          <span>{{ lbInfo?.isHighRisk ? "是" : "否" }}</span>
-        </div>
+      <div>
+        <span>节点名称：</span>
+        <span>{{ lbInfo?.nodeName }}</span>
+      </div>
+      <div>
+        <span>所属工艺：</span>
+        <span>病毒加工艺</span>
+      </div>
+      <div>
+        <span>节点顺序：</span>
+        <span>{{ lbInfo?.nodeOrder }}</span>
+      </div>
+      <div>
+        <span>操作描述：</span>
+        <span>{{ lbInfo?.operationDescription }}</span>
+      </div>
+      <div>
+        <span>操作方式：</span>
+        <span>{{ lbInfo?.operationMethod }}</span>
+      </div>
+      <div>
+        <span>所需时间：</span>
+        <span>{{ lbInfo?.requiredTime }}</span>
+      </div>
+      <div>
+        <span>是否为高风险：</span>
+        <span>{{ lbInfo?.isHighRisk ? "是" : "否" }}</span>
       </div>
     </div>
+  </div>
   <!-- </template> -->
 
   <!-- <template v-for="item in processlist"> -->
@@ -341,14 +341,20 @@
         </div>
       </div>
       <div class="processflowchart" v-else>
-       <el-scrollbar height="100%">
-        <div class="processflowchart_con">
-          <el-steps direction="vertical" :active="0">
-            <el-step id="stepMy" v-for="item in rbInfoList" :title="item.nodeOrder">
-              <template #title>
-                <div>
-                  <span style="color: #3582c7;" >{{ item.nodeName }}</span>
-                </div>
+        <el-scrollbar height="100%">
+          <div class="processflowchart_con">
+            <el-steps direction="vertical" :active="0">
+              <el-step id="stepMy" v-for="(item,index) in rbInfoList" :title="item.nodeOrder">
+                <!-- <template v-if="item.isHighRisk"  #icon>
+                    {{ index+1 }}
+                  </div>
+                </template> -->
+                <template #title>
+                  <div>
+                    <span :style="{
+                      color: item.isHighRisk ? 'red' : '#3582c7',
+                    }">{{ item.nodeName }}</span>
+                  </div>
                 </template>
                 <template #description>
                   <div>
@@ -368,9 +374,9 @@
                     <span>{{ item.isHighRisk ? "是" : "否" }}</span>
                   </div> -->
                 </template>
-            </el-step>
-          </el-steps>
-        </div>
+              </el-step>
+            </el-steps>
+          </div>
         </el-scrollbar>
       </div>
     </div>
@@ -388,6 +394,7 @@ import center from "../../components/center.vue";
 import img9 from "../../../public/img/叉号.png";
 import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
 import { useIntervalFn } from '@vueuse/core'
+import { ElStep } from "element-plus";
 
 
 const bigscreenLBRef = ref();
@@ -579,7 +586,7 @@ function createAreaStyle(startColor: string, endColor: string) {
 //工艺档案
 const archiveFormData = ref({
   pageNum: 1,
-  pageSize: 20,
+  pageSize: 100,
   orderColumn: "createTime",
   orderDirection: "descending",
 });
@@ -648,7 +655,7 @@ const processSelstClick = async (item, v, i) => {
 const nodeFormData = ref({
   nodeName: "",
   pageNum: 1,
-  pageSize: 6,
+  pageSize: 100,
   orderColumn: "createTime",
   orderDirection: "descending",
 });
@@ -670,7 +677,7 @@ const lbShow = ref(false);
 const lbInfo = ref()
 const lbClick = (item: any) => {
   lbInfo.value = item;
-  console.log("lbInfo",lbInfo.value)
+  console.log("lbInfo", lbInfo.value)
   lbShow.value = true;
   // nodelist.value.forEach((v) => {
   //   if (item.craftNodeId == v.craftNodeId) {
@@ -689,7 +696,7 @@ const lbcanleClick = (item: any) => {
 const alarmEventsFormData = ref({
   type: "工艺节点报警",
   pageNum: 1,
-  pageSize: 1000,
+  pageSize: 100,
   orderColumn: "createTime",
   orderDirection: "descending",
 });
@@ -740,7 +747,7 @@ const alarmEventsTimer = useIntervalFn(() => {
 const processFormData = ref({
   craftArchiveId: null,
   pageNum: 1,
-  pageSize: 1000,
+  pageSize: 100,
   orderColumn: "createTime",
   orderDirection: "descending",
 });
@@ -812,7 +819,7 @@ $design-height: 1080;
 }
 
 
-#stepMy:deep(> div.el-step__main > div.el-step__description.is-process){
+#stepMy:deep(> div.el-step__main > div.el-step__description.is-process) {
   color: white !important;
 }
 

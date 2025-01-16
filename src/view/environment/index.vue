@@ -97,10 +97,48 @@
         <img src="/public/img/光标.png" alt="" />
         <span>区域环境指标</span>
       </div>
-      <el-radio-group v-model="powerByAreaTotalStaticData.dayType" @change="powerByAreaTotalStaticFun" class="group">
+      <!-- <el-radio-group v-model="powerByAreaTotalStaticData.dayType" @change="powerByAreaTotalStaticFun" class="group">
         <el-radio-button label="周" value="week" />
         <el-radio-button label="年" value="year" />
-      </el-radio-group>
+      </el-radio-group> -->
+
+      <div class="left-se">
+        <el-select
+        v-model="powerByAreaTotalStaticData.area"
+          filterable
+          placeholder="请选择区域"
+          style="width: 100%"
+           class="cascaderCss"
+           @change="powerByAreaTotalStaticFun"
+        >
+          <el-option label="控制区" value="控制区" />
+          <el-option
+            label="高风险安全风险车间防护区"
+            value="高风险安全风险车间防护区"
+          />
+          <el-option label="UDAF区" value="UDAF区" />
+          <el-option label="C级区" value="C级区" />
+          <el-option label="D级区" value="D级区" />
+          <el-option label="CNC区" value="CNC区" />
+          <el-option label="NC区" value="NC区" />
+          <el-option label="有毒区" value="有毒区" />
+        </el-select>
+
+      </div>
+      <div class="left-se">
+        <el-select
+          v-model="powerByAreaTotalStaticData.unitName"
+          filterable
+          placeholder="请选择指标"
+          style="width: 100%"
+          class="cascaderCss"
+           @change="powerByAreaTotalStaticFun"
+        >
+          <el-option label="温度" value="温度" />
+          <el-option label="湿度" value="湿度" />
+          <el-option label="压差" value="压差" />
+        </el-select>
+      </div>
     </div>
     <div class="bigscreen_rb_bottom">
       <div class="bigscreen_rb_bottom_nei" ref="bigscreenRBRef"></div>
@@ -142,6 +180,7 @@ import {
   powerByTypeStatistics,
   powerByAreaTotalStatic,
   environmentalDetectionList,
+  getZuiXinShuJuApi,
 } from "../../api/environment";
 import center from "../../components/center.vue";
 import img9 from "../../../public/img/叉号.png";
@@ -284,7 +323,7 @@ const powerByTypeStatisticsFun = async () => {
 //数据展示
 const environmentFileFormData = ref({
   pageNum: 1,
-  pageSize: 20,
+  pageSize: 100,
   orderColumn: "createTime",
   orderDirection: "descending",
 });
@@ -748,12 +787,11 @@ const bigscreenRBoption = {
   },
 };
 const powerByAreaTotalStaticData = ref({
-  des: "",
-  dayType: "week",
-  type: "电",
+  area:"控制区",
+  unitName:"温度"
 });
 const powerByAreaTotalStaticFun = async () => {
-  const { data } = await powerByAreaTotalStatic(
+  const { data } = await getZuiXinShuJuApi(
     powerByAreaTotalStaticData.value
   );
   bigscreenRBoption.xAxis.data = data.data.time;
@@ -821,6 +859,24 @@ $design-height: 1080;
     display: grid;
     grid-template-rows: 1fr 2fr 1fr;
   }
+}
+
+:deep(.cascaderCss) {
+  width: adaptiveWidth(200);
+  height: adaptiveHeight(24);
+  margin-right: adaptiveWidth(11);
+
+  .el-select__wrapper {
+    background: none;
+    height: adaptiveHeight(24);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2) !important;
+  }
+}
+
+.left-se{
+  width:adaptiveWidth(100);
+  position:relative;
+  left:- adaptiveWidth(20);
 }
 
 .bigscreen_lt,

@@ -387,7 +387,7 @@ const bigscreenLCoption = {
 const sopFormData = ref({
   name: "",
   pageNum: 1,
-  pageSize: 20,
+  pageSize: 100,
   orderColumn: "createTime",
   orderDirection: "descending",
 });
@@ -416,7 +416,7 @@ const previewcanleClick2 = (item: any) => {
 const policiesFormData = ref({
   policiesName: "",
   pageNum: 1,
-  pageSize: 20,
+  pageSize: 100,
   orderColumn: "createTime",
   orderDirection: "descending",
 });
@@ -453,7 +453,7 @@ const downloadFile = (item) => {
 const alarmEventsFormData = ref({
   type: "",
   pageNum: 1,
-  pageSize: 20,
+  pageSize: 100,
   orderColumn: "createTime",
   orderDirection: "descending",
 });
@@ -503,7 +503,7 @@ const alarmEventslistFun = async () => {
 const alarmInformationFormData = ref({
   eventName: "",
   pageNum: 1,
-  pageSize: 1000,
+  pageSize: 100,
   orderColumn: "createTime",
   orderDirection: "descending",
   type: "政策法规类"
@@ -537,29 +537,23 @@ const areaStatisticsFun = async () => {
 };
 
 const timeLeftClick = () => {
-  const currentStart = dayjs(
-    areaStatisticsFormData.value.startTime,
-    "YYYY-MM-DD"
-  );
-  areaStatisticsFormData.value.startTime = currentStart
-    .subtract(6, "day").startOf("day")
+  areaStatisticsFormData.value.startTime = dayjs(areaStatisticsFormData.value.startTime)
+    .subtract(7, "day").startOf("day")
     .format("YYYY-MM-DD");
-  areaStatisticsFormData.value.endTime = currentStart
+  areaStatisticsFormData.value.endTime = dayjs(areaStatisticsFormData.value.endTime)
+  .subtract(7, "day").startOf("day")
     .endOf("day")
     .format("YYYY-MM-DD");
   areaStatisticsFun(); // 更新数据
 };
 const timeRightClick = () => {
-  const currentStart = dayjs(
-    areaStatisticsFormData.value.startTime,
-    "YYYY-MM-DD"
-  );
-  areaStatisticsFormData.value.startTime = currentStart
-    .add(6, "day")
+ 
+  areaStatisticsFormData.value.startTime = dayjs(areaStatisticsFormData.value.startTime)
+    .add(7, "day")
     .startOf("day")
     .format("YYYY-MM-DD");
-  areaStatisticsFormData.value.endTime = currentStart
-    .add(12, "day")
+  areaStatisticsFormData.value.endTime =  dayjs(areaStatisticsFormData.value.endTime)
+    .add(7, "day")
     .endOf("day")
     .format("YYYY-MM-DD");
   areaStatisticsFun(); // 更新数据
