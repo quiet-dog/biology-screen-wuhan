@@ -1,5 +1,5 @@
 <template>
-  <component
+  <!-- <component
     v-if="!isMediaFile && isSupported"
     :is="previewComponent"
     :src="src"
@@ -41,7 +41,8 @@
   >
     <i class="el-icon-warning" style="font-size: 48px; color: #e6a23c" />
     <p style="margin-top: 16px">不支持该文件类型的预览</p>
-  </div>
+  </div> -->
+  <iframe :src="src" height="800px" width="100%" />
 </template>
 
 <script>
@@ -116,9 +117,14 @@ export default {
     fileUrl: {
       immediate: true,
       handler(newUrl) {
-        if (newUrl) {
-          this.loadFile();
-        }
+        //if (newUrl) {
+        // this.loadFile();
+        //}
+        var encodedUrl = encodeURIComponent("http://192.168.0.11:9000/biology/" + newUrl);
+        // 然后使用 btoa 对编码后的 URL 进行 Base64 编码
+        var base64Url = btoa(encodedUrl);
+        this.src = location.origin + "/kkfile/onlinePreview?url=" + encodeURIComponent(base64Url);
+        console.error("src", this.src);
       },
     },
   },

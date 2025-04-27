@@ -346,7 +346,12 @@ const rcClick = (item: any) => {
     }
   });
   if (item.paths.length > 0) {
-    previewVisibleUrl.value = item.paths[0].path;
+    // previewVisibleUrl.value = item.paths[0].path;
+    let u = item.paths[0].path
+    if (u[0] == "/") {
+      u = u.substring(1);
+    }
+    previewVisibleUrl.value = u;
   }
 };
 const previewcanleClick = (item: { status: boolean }) => {
@@ -504,23 +509,23 @@ const bigscreenRBoption = {
   },
   tooltip: {
     trigger: "axis",
-    formatter: (params)=>{
+    formatter: (params) => {
       let str = params[0].name + "<br>";
       params.forEach((item) => {
-        if(item.seriesName === "设备报警"){
+        if (item.seriesName === "设备报警") {
           let rate = 0;
           yxData.value.forEach((item1) => {
-            if(item1.type === "设备报警"){
+            if (item1.type === "设备报警") {
               rate = item1.rate[item.dataIndex]
             }
           })
-          let rateStr =""
-          if (rate === 0){
+          let rateStr = ""
+          if (rate === 0) {
             rateStr = "0%"
-          }else{
+          } else {
             rateStr = (rate * 100) + "%"
           }
-          str+= item.marker + "事故率" + "：" + rateStr  + "<br>";
+          str += item.marker + "事故率" + "：" + rateStr + "<br>";
         }
         str += item.marker + item.seriesName + "：" + item.value + "<br>";
       });
@@ -887,7 +892,7 @@ const closeShow = () => {
   hisShow.value = false
 }
 
-const { yzRef, yzTableData,etDialog,handleDialogClose } = useAlarmHook();
+const { yzRef, yzTableData, etDialog, handleDialogClose } = useAlarmHook();
 
 onMounted(() => {
   getVideoList();
@@ -993,12 +998,13 @@ $design-height: 1080;
   background: url("/public/img/弹窗背景.png") no-repeat;
   background-size: 100% 100%;
   padding: 0 adaptiveWidth(20);
-  .bigscreen_rc_dialog_bottom{
+
+  .bigscreen_rc_dialog_bottom {
     width: 100%;
     height: calc(100% - adaptiveHeight(65));
   }
 
-  .bigscreen_rc_dialog_top{
+  .bigscreen_rc_dialog_top {
     width: 100%;
     height: adaptiveHeight(45);
     display: flex;

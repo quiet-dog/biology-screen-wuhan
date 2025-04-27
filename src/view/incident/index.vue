@@ -45,11 +45,11 @@
         <img src="/public/img/zuo.svg" alt="" @click="timeLeftClick" style="margin-left: 5px" />
         <span>{{
           dayjs(areaStatisticsFormData.startTime).format("MM月DD日")
-        }}</span>
+          }}</span>
         <span>-</span>
         <span>{{
           dayjs(areaStatisticsFormData.endTime).format("MM月DD日")
-        }}</span>
+          }}</span>
         <img src="/public/img/you.svg" alt="" @click="timeRightClick" style="margin-right: 5px" />
       </div>
     </div>
@@ -406,7 +406,12 @@ const rcClcik = (item: any) => {
     }
   });
   if (item.paths.length > 0) {
-    sopPreviewVisibleUrl.value = "/upload/" + item.paths[0].path;
+    // sopPreviewVisibleUrl.value = "/upload/" + item.paths[0].path;
+    let u = item.paths[0].path
+    if (u[0] == "/") {
+      u = u.substring(1);
+    }
+    sopPreviewVisibleUrl.value = u;
   }
 };
 const previewcanleClick2 = (item: any) => {
@@ -438,7 +443,12 @@ const rbClcik = (item: any) => {
     }
   });
   if (item.paths.length > 0) {
-    previewVisibleUrl.value = item.paths[0].path;
+    // previewVisibleUrl.value = item.paths[0].path;
+    let u = item.paths[0].path
+    if (u[0] == "/") {
+      u = u.substring(1);
+    }
+    previewVisibleUrl.value = u;
   }
 };
 const previewcanleClick = (item: any) => {
@@ -541,18 +551,18 @@ const timeLeftClick = () => {
     .subtract(7, "day").startOf("day")
     .format("YYYY-MM-DD");
   areaStatisticsFormData.value.endTime = dayjs(areaStatisticsFormData.value.endTime)
-  .subtract(7, "day").startOf("day")
+    .subtract(7, "day").startOf("day")
     .endOf("day")
     .format("YYYY-MM-DD");
   areaStatisticsFun(); // 更新数据
 };
 const timeRightClick = () => {
- 
+
   areaStatisticsFormData.value.startTime = dayjs(areaStatisticsFormData.value.startTime)
     .add(7, "day")
     .startOf("day")
     .format("YYYY-MM-DD");
-  areaStatisticsFormData.value.endTime =  dayjs(areaStatisticsFormData.value.endTime)
+  areaStatisticsFormData.value.endTime = dayjs(areaStatisticsFormData.value.endTime)
     .add(7, "day")
     .endOf("day")
     .format("YYYY-MM-DD");
