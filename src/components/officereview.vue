@@ -131,10 +131,10 @@ export default {
   methods: {
     loadFile() {
       axios
-        .get(`${baseURL}/file/preview`, {
-          params: {
-            fileName: this.fileUrl,
-          },
+        .get(`${baseURL}/file/preview` + this.fileUrl, {
+          // params: {
+          //  fileName: this.fileUrl,
+          // },
           headers: {
             Authorization: `Bearer MASTER_TOKEN_123456`,
             Accept: "*/*",
