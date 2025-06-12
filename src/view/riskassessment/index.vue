@@ -64,7 +64,8 @@
         <img @click="closeShow" :src="img9" alt="" srcset="" />
       </div>
       <div class="ltTrendDialog_bottom">
-        <ElTable style="width: 100%" height="100%" :data="hisList">
+        <ElTable :header-cell-style="tableHeaderColor" :cell-style="handleChangeCellStyle"
+          style="width: 100%;background: #002547;" height="100%" :data="hisList">
           <el-table-column width="150" fixed prop="createTime" label="报警时间">
             <template #default="{ row }">
               <span>{{ row.createTime }}</span>
@@ -96,7 +97,7 @@
               <span>{{ row.eventId }}</span>
             </template>
           </el-table-column> -->
-          <el-table-column  prop="description" label="描述">
+          <el-table-column prop="description" label="描述">
             <template #default="{ row }">
               <span>{{ row.description }}</span>
             </template>
@@ -131,14 +132,15 @@
         <span>报警列表</span>
         <img @click="closeRtShow" :src="img9" alt="" srcset="" />
       </div>
-      <div  class="ltTrendDialog_bottom">
-        <ElTable style="width: 100%" height="100%" :data="powerInfoList">
+      <div class="ltTrendDialog_bottom">
+        <ElTable :header-cell-style="tableHeaderColor" :cell-style="handleChangeCellStyle"
+          style="width: 100%;background: #002547;" height="100%" :data="powerInfoList">
           <el-table-column width="150" fixed prop="createTime" label="报警时间">
             <template #default="{ row }">
               <span>{{ row.createTime }}</span>
             </template>
           </el-table-column>
-        
+
           <el-table-column fixed width="80" prop="level" label="报警级别">
             <template #default="{ row }">
               <el-tag :style="getLevelStyle(row.level)" effect="plain" size="small">
@@ -146,7 +148,7 @@
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column  prop="description" label="描述">
+          <el-table-column prop="description" label="描述">
             <template #default="{ row }">
               <span>{{ row.description }}</span>
             </template>
@@ -155,8 +157,8 @@
 
         </ElTable>
       </div>
-      </div>
     </div>
+  </div>
   <div class="bigscreen_rb">
     <div class="bigscreen_rb_top">
       <div class="bigscreen_rb_top_l">
@@ -525,7 +527,7 @@ const historyStatistics = async () => {
           hisDayType.value = historyStatisticsData.value.dayType;
           if (historyStatisticsData.value.dayType === "week") {
             // 将年份换成今年的年份
-            cuData =dayjs().subtract(6-hisIndex,"day").startOf("day").format("YYYY-MM-DD");
+            cuData = dayjs().subtract(6 - hisIndex, "day").startOf("day").format("YYYY-MM-DD");
             enData = dayjs(cuData).endOf("day").format("YYYY-MM-DD")
           } else {
             cuData = dayjs(params.name).startOf("month").format("YYYY-MM-DD")
@@ -677,11 +679,11 @@ const powerByAreaTotalStaticFun = async () => {
   bigscreenRToption.xAxis.data = data.data.times;
   bigscreenRToption.series[0].data = data.data.data;
   if (bigscreenRTRef.value) {
-    if (!powerInit){
+    if (!powerInit) {
       bigscreenRTChart = echarts.init(bigscreenRTRef.value);
-      bigscreenRTChart.off().on("click",(params)=>{
+      bigscreenRTChart.off().on("click", (params) => {
         rtShow.value = true
-        if (params.dataIndex!= powerIndex || params.name != powerArea || powetDayType != powerByAreaTotalStaticData.value.dayType){
+        if (params.dataIndex != powerIndex || params.name != powerArea || powetDayType != powerByAreaTotalStaticData.value.dayType) {
           powerIndex = params.dataIndex;
           powerArea = params.name;
           powetDayType = powerByAreaTotalStaticData.value.dayType;
@@ -689,14 +691,14 @@ const powerByAreaTotalStaticFun = async () => {
             pageNum: 1,
             pageSize: 100,
             area: params.name,
-            beginTime: powetDayType == "week"? dayjs().startOf("week").format("YYYY-MM-DD"):dayjs().startOf("year").format("YYYY-MM-DD"),
-            endTime: powetDayType == "week"? dayjs().endOf("week").format("YYYY-MM-DD"):dayjs().endOf("year").format("YYYY-MM-DD"),
-          }).then(res=>{
+            beginTime: powetDayType == "week" ? dayjs().startOf("week").format("YYYY-MM-DD") : dayjs().startOf("year").format("YYYY-MM-DD"),
+            endTime: powetDayType == "week" ? dayjs().endOf("week").format("YYYY-MM-DD") : dayjs().endOf("year").format("YYYY-MM-DD"),
+          }).then(res => {
             powerInfoList.value = res.data.data.rows;
-            console.log("powerInfoList",powerInfoList.value)
+            console.log("powerInfoList", powerInfoList.value)
           })
         }
-        
+
       })
     }
     powerInit = true;
@@ -714,6 +716,20 @@ const powerTimer = useIntervalFn(() => {
 }, 5000)
 const closeShow = () => {
   hisShow.value = false;
+}
+
+function tableHeaderColor(data) {
+  return {
+    backgroundColor: "#002547",
+    color: "white",
+  };
+}
+
+function handleChangeCellStyle({ row, column, rowIndex, columnIndex }) {
+  return {
+    backgroundColor: "#002547",
+    color: "white",
+  }
 }
 
 window.onresize = function () {
@@ -749,7 +765,7 @@ $design-height: 1080;
   @return #{$px / $design-width * 100}vw;
 }
 
-.rt_table{
+.rt_table {
   width: adaptiveWidth(500);
   height: adaptiveHeight(400);
   position: absolute;
@@ -757,7 +773,7 @@ $design-height: 1080;
   right: adaptiveWidth(470);
   z-index: 999;
   background-color: red;
-  
+
 }
 
 .lb_table {
@@ -814,13 +830,14 @@ $design-height: 1080;
       cursor: pointer;
     }
   }
+
   .ltTrendDialog_bottom {
     width: adaptiveWidth(450);
     height: calc(90% - adaptiveHeight(60));
     margin-left: adaptiveWidth(25);
     margin-top: adaptiveHeight(35);
   }
-  
+
 }
 
 
@@ -857,13 +874,14 @@ $design-height: 1080;
       cursor: pointer;
     }
   }
+
   .ltTrendDialog_bottom {
     width: adaptiveWidth(450);
     height: calc(90% - adaptiveHeight(60));
     margin-left: adaptiveWidth(25);
     margin-top: adaptiveHeight(35);
   }
-  
+
 }
 
 
@@ -894,7 +912,8 @@ $design-height: 1080;
 .bigscreen_rb {
   width: adaptiveWidth(443);
   height: adaptiveHeight(445);
-  position: relative;;
+  position: relative;
+  ;
 }
 
 .bigscreen_lt {

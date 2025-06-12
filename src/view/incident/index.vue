@@ -170,7 +170,9 @@
               <span>
                 {{ item.sopId }}
               </span>
-              <span>{{ item.name }}</span>
+              <ElTooltip :content="item.name">
+                <span>{{ item.name }}</span>
+              </ElTooltip>
               <span>{{ item.scope }}</span>
             </div>
           </Vue3SeamlessScroll>
@@ -1200,6 +1202,12 @@ $design-height: 1080;
           color: #ffffff;
           font-size: 12px;
           text-align: center;
+          white-space: nowrap;
+          /* 禁止换行 */
+          overflow: hidden;
+          /* 超出内容隐藏 */
+          text-overflow: ellipsis;
+          /* 显示省略号 */
         }
       }
 

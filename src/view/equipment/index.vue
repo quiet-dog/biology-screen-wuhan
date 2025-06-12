@@ -16,12 +16,23 @@
               background: `url('${item.back}') no-repeat`,
               backgroundSize: '100% 100%',
             }">
-              <span>{{ item?.equipment?.equipmentCode }}</span>
-              <span :style="{
+              <!-- <span>{{ item?.equipment?.equipmentCode }}</span> -->
+
+              <ElTooltip :content="item?.equipment?.equipmentCode">
+                <span>{{ item?.equipment?.equipmentCode }}</span>
+              </ElTooltip>
+              <!-- <span :style="{
                 color: item.back !== '/img/红色背景.png' ? '#00FFF9' : '#FFBCC0',
               }">
                 {{ item?.equipment?.equipmentName }}
-              </span>
+              </span> -->
+              <ElTooltip :content="item?.equipment?.equipmentName">
+                <span :style="{
+                  color: item.back !== '/img/红色背景.png' ? '#00FFF9' : '#FFBCC0',
+                }">
+                  {{ item?.equipment?.equipmentName }}
+                </span>
+              </ElTooltip>
               <span :style="{
                 color: getEquipmentDataColor(item)
               }">
@@ -56,11 +67,17 @@
             step: 5,
           }" hover class="scrool">
             <div class="bigscreen_lc_bottom_nei_b" v-for="item in equipmentlist">
-              <span>
-                {{ item.equipmentCode }}
-              </span>
-              <span>{{ item.equipmentName }}</span>
-              <span>{{ item.equipmentType }}</span>
+              <ElTooltip :content="item.equipmentCode">
+                <span>
+                  {{ item.equipmentCode }}
+                </span>
+              </ElTooltip>
+              <ElTooltip :content="item.equipmentName">
+                <span>{{ item.equipmentName }}</span>
+              </ElTooltip>
+              <ElTooltip :content="item.equipmentType">
+                <span>{{ item.equipmentType }}</span>
+              </ElTooltip>
               <span>{{ dayjs(item.purchaseDate).format("YYYY-MM-DD") }}</span>
             </div>
           </Vue3SeamlessScroll>
@@ -81,7 +98,7 @@
       }" />
     </div>
     <div class="bigscreen_lb_bottom">
-      <div class="bigscreen_lb_bottom_text" >运行时间:{{ allTime }}</div>
+      <div class="bigscreen_lb_bottom_text">运行时间:{{ allTime }}</div>
       <div @mouseenter="historicalStatisticsListTimer.pause()" @mouseleave="historicalStatisticsListTimer.resume()"
         class="bigscreen_lb_bottom_nei" ref="bigscreenLBRef"></div>
     </div>
@@ -630,28 +647,28 @@ const historicalStatisticsListTimer = useIntervalFn(() => {
   })
 }, 10000)
 
-const allTime =ref("0")
-function getFormatTime(data:number){
+const allTime = ref("0")
+function getFormatTime(data: number) {
   const days = Math.floor(data / 1440);     // 1天 = 1440分钟
   const hours = Math.floor((data % 1440) / 60);
   const mins = data % 60;
-  if (days>0){
+  if (days > 0) {
     return `${days}天${hours}小时${mins}分`
   }
-  if (hours > 0 ){
+  if (hours > 0) {
     return `${hours}小时${mins}分`
   }
   return `${mins}分`
 }
 const cascaderChange = (val) => {
-  console.log("val",val)
+  console.log("val", val)
   thresholdId.value = val[1];
   historicalStatisticsListFun();
-  getAllTime(val[0]).then(res=>{
+  getAllTime(val[0]).then(res => {
     // 转成几天几小时
-    if(res.data?.data?.totalTime !=null){
+    if (res.data?.data?.totalTime != null) {
       allTime.value = getFormatTime(res.data?.data?.totalTime)
-    }else{
+    } else {
       allTime.value = "0"
     }
   })
@@ -840,12 +857,12 @@ window.onresize = function () {
   bigscreenLBChart.resize();
 };
 
-const {ciShuTimer,
-        ciShuLeftClick,
-        ciShuRightClick,
-        dailyCishuInspectionListFunc,
-        qushiRef,
-        ciShuDig} = useXunJianQushiHook()
+const { ciShuTimer,
+  ciShuLeftClick,
+  ciShuRightClick,
+  dailyCishuInspectionListFunc,
+  qushiRef,
+  ciShuDig } = useXunJianQushiHook()
 
 onMounted(() => {
   equipmentRepairListFun();
@@ -907,8 +924,9 @@ $design-height: 1080;
   height: adaptiveHeight(225);
 }
 
-.rb_dialog_bottom_echart{
-  width: adaptiveWidth(350);;
+.rb_dialog_bottom_echart {
+  width: adaptiveWidth(350);
+  ;
   height: adaptiveHeight(225);
 }
 
@@ -1035,18 +1053,31 @@ $design-height: 1080;
             &:nth-child(1) {
               font-size: adaptiveFontSize(12);
               color: #ffffff;
-              padding: 0 adaptiveWidth(32);
+              padding: 0 0 0 adaptiveWidth(32);
+              width: adaptiveWidth(30);
+              white-space: nowrap;
+              /* 不换行 */
+              overflow: hidden;
+              /* 超出隐藏 */
+              text-overflow: ellipsis;
+              /* 超出部分显示省略号 */
             }
 
             &:nth-child(2) {
               font-family: youshe;
               font-size: adaptiveFontSize(20);
+              white-space: nowrap;
+              /* 不换行 */
+              overflow: hidden;
+              /* 超出隐藏 */
+              text-overflow: ellipsis;
+              /* 超出部分显示省略号 */
             }
 
             &:nth-child(3) {
               // font-family: youshe;
               font-size: adaptiveFontSize(12);
-              margin-left: adaptiveFontSize(30);
+              margin-left: auto;
             }
           }
         }
@@ -1150,6 +1181,12 @@ $design-height: 1080;
             &:nth-child(3),
             &:nth-child(4) {
               text-align: center;
+              white-space: nowrap;
+              /* 不换行 */
+              overflow: hidden;
+              /* 超出隐藏 */
+              text-overflow: ellipsis;
+              /* 超出部分显示省略号 */
             }
           }
         }
@@ -1206,7 +1243,7 @@ $design-height: 1080;
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
 
-    .bigscreen_lb_bottom_text{
+    .bigscreen_lb_bottom_text {
       height: adaptiveHeight(20);
       text-align: right;
       padding-right: adaptiveWidth(20);

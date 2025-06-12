@@ -72,7 +72,8 @@
         <img @click="closeShow" :src="img9" alt="" srcset="" />
       </div>
       <div class="ltTrendDialog_bottom">
-        <ElTable id="tableMy" header-row-class-name="headerTr" style="width: 100%;" height="100%" :data="hisList">
+        <ElTable id="tableMy" :header-cell-style="tableHeaderColor" :cell-style="handleChangeCellStyle"
+          header-row-class-name="headerTr" style="width: 100%;background: #002547;" height="100%" :data="hisList">
           <el-table-column width="150" fixed prop="createTime" label="报警时间">
             <template #default="{ row }">
               <span>{{
@@ -156,7 +157,8 @@
           <img @click="handleDialogClose" :src="img9" alt="" srcset="" />
         </div>
         <div class="bigscreen_rc_dialog_bottom">
-          <ElTable :data="yzTableData" height="100%" style="width: 100%">
+          <ElTable :header-cell-style="tableHeaderColor" :cell-style="handleChangeCellStyle" :data="yzTableData"
+            height="100%" style="width: 100%;background: #002547;">
             <el-table-column prop="name" label="区域" />
             <el-table-column prop="value" width="100" label="数量" />
           </ElTable>
@@ -893,6 +895,22 @@ const closeShow = () => {
 }
 
 const { yzRef, yzTableData, etDialog, handleDialogClose } = useAlarmHook();
+
+function tableHeaderColor(data) {
+  return {
+    backgroundColor: "#002547",
+    color: "white",
+  };
+}
+
+function handleChangeCellStyle({ row, column, rowIndex, columnIndex }) {
+  return {
+    backgroundColor: "#002547",
+    color: "white",
+  }
+}
+
+
 
 onMounted(() => {
   getVideoList();
