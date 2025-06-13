@@ -3,16 +3,14 @@
     <div class="bigscreen_lt_top">
       <div class="bigscreen_lt_top_l">
         <img src="/public/img/光标.png" alt="" />
-        <span @click="selectType = '库存异常'">库存异常</span>
-        <span>/</span>
-        <span  @click="selectType = '领用异常'">领用异常</span>
+        <span>报警信息</span>
       </div>
     </div>
     <div class="bigscreen_lt_bottom">
       <div @mouseenter="alarmInfomationTimer.pause()" @mouseleave="alarmInfomationTimer.resume()"
         class="bigscreen_lt_bottom_neis">
-        <Vue3SeamlessScroll v-if="selectType =='库存异常'" :list="alarmInformationlist" :step="1" :singleHeight="70" hover class="scrool">
-          <div class="bigscreen_lt_bottom_nei"  v-for="item in alarmInformationlist">
+        <Vue3SeamlessScroll :list="alarmInformationlist" :step="1" :singleHeight="70" hover class="scrool">
+          <div class="bigscreen_lt_bottom_nei" v-for="item in alarmInformationlist">
             <img :src="item.img" alt="" />
             <div class="bigscreen_lt_bottom_nei_r">
               <span style="padding-left: 25px">{{ item.materials?.name }}</span>
@@ -20,22 +18,6 @@
                 dayjs(item.materials?.createTime).format("YYYY-MM-DD")
                 }}</span>
               <span>{{ item.level }}</span>
-            </div>
-          </div>
-        </Vue3SeamlessScroll>
-
-        <Vue3SeamlessScroll v-if="selectType=='领用异常'" :list="receiveListData" :step="1" :singleHeight="70" hover class="scrool">
-          <div  class="bigscreen_lt_bottom_ne_yichang" v-for="item in receiveListData">
-            <div class="bigscreen_lt_bottom_nei_r_yichang">
-              <span style="padding-left: 25px">{{ item.materialsInfo?.name }}</span>
-              <span>{{
-                item.reportNum
-                }}</span>
-              <span>
-                <ElTag v-if="item.reportType == '丢失'" type="danger"> {{ item.reportType }} </ElTag>
-                <ElTag v-else type="warning" > {{ item.reportType }} </ElTag>
-              </span>
-              <span>{{ dayjs(item?.createTime).format("YYYY-MM-DD") }}</span>
             </div>
           </div>
         </Vue3SeamlessScroll>
@@ -76,11 +58,12 @@
       </div>
       <el-select size="small" class="selectcss" v-model="materialsName" @change="dosagetypeStatisticsFun"
         style="width: 80px; position: absolute; right: 20px; z-index: 100">
-        <el-option label="营养物质类" value="营养物质类" />
+        <!-- <el-option label="营养物质类" value="营养物质类" />
         <el-option label="反应调节类" value="反应调节类" />
         <el-option label="监测分析类" value="监测分析类" />
         <el-option label="生产核心原料类" value="生产核心原料类" />
-        <el-option label="耗材类" value="耗材类" />
+        <el-option label="耗材类" value="耗材类" /> -->
+        <el-option v-for="item in materailsTypes" :key="item" :label="item" :value="item" />
       </el-select>
     </div>
     <div class="bigscreen_lb_bottom">
@@ -214,18 +197,16 @@ import {
   dosagetypeStatistics,
   materialFilesInfo,
   allByReceiveExplain,
-  reportList,
+  materialFilesTypes,
 } from "../../api/materials/index";
-import { alarmEventsList, alarmMateEventsList } from '../../api/incident/index';
+import { alarmEventsList, alarmMateEventsList } from "../../api/incident/index";
 import dayjs from "dayjs";
 import center from "../../components/center.vue";
 import img9 from "../../../public/img/叉号.png";
 import { Search } from "@element-plus/icons-vue";
 import { useIntervalFn } from "@vueuse/core";
-import { ElTag } from "element-plus";
 
 //报警信息
-const selectType = ref("库存异常");
 const alarmInformationData = ref({
   type: "物料报警",
   pageNum: 1,
@@ -285,31 +266,14 @@ const alarmInformationlistFun = async () => {
     };
   });
 };
-const receiveListData =ref([])
-const reveiveListQuery = ref({
-  pageNum: 1,
-  pageSize: 10,
-  orderColumn: "createTime",
-  orderDirection: "descending",
-})
-const getReceiveListApi = async () => {
-  const { data } = await reportList(reveiveListQuery.value);
-  receiveListData.value = data.data.rows;
-};
 
-watch(()=>selectType.value,()=>{
-  if(selectType.value == '库存异常'){
-    alarmInformationlistFun()
-  }else{
-    getReceiveListApi()
-  }
-})
 const alarmInfomationTimer = useIntervalFn(() => {
   alarmInfomationTimer.pause();
   alarmInformationlistFun().finally(() => {
     alarmInfomationTimer.resume();
   })
 }, 100000)
+
 
 //领用记录
 const receiveFormData = ref({
@@ -324,6 +288,7 @@ const rbstatus = ref(false);
 const receivelistFun = async () => {
   const { data } = await receiveList(receiveFormData.value);
   receivelist.value = data.data.rows;
+  console.log("receivelist", receivelist.value);
 };
 const rbClick = async () => {
   rbstatus.value = !rbstatus.value;
@@ -631,10 +596,8 @@ const allByReceiveExplainFun = async () => {
   updateBigscreenRToption(
     data.xdata,
     data.productionData,
-    data.otherData,
-    data.maintenanceData,
-    data.experimentData,
-    data.cleanData
+    data.researchData,
+    data.otherData
   );
   if (bigscreenRTRef.value) {
     bigscreenRTChart = echarts.init(bigscreenRTRef.value);
@@ -644,21 +607,15 @@ const allByReceiveExplainFun = async () => {
 const updateBigscreenRToption = (
   xdata: string[],
   productionData: number[],
-  // researchData: number[],
-  otherData: number[],
-  maintenanceData: number[],
-  experimentData: number[],
-  cleanData: number[]
+  researchData: number[],
+  otherData: number[]
 ) => {
   bigscreenRToption.dataset.source = [
-    ["product", "生产用量", "维修用量", "实验用量", "清洁用量", "其他领用"], // 表头
+    ["product", "生产领用", "研发领用", "其他领用"], // 表头
     ...xdata.map((item, index) => [
       item,
       productionData[index] || 0,
-      // researchData[index] || 0,
-      maintenanceData[index] || 0,
-      experimentData[index] || 0,
-      cleanData[index] || 0,
+      researchData[index] || 0,
       otherData[index] || 0,
     ]),
   ];
@@ -730,7 +687,7 @@ const bigscreenRCoption = {
 const receivestatisticsData = ref({
   materialsId: null,
   materialsName: "",
-  startTime: dayjs().subtract(6, "day").startOf("day").format("YYYY-MM-DD HH:mm:ss"),
+  startTime: dayjs().subtract(6, 'day').startOf("day").format("YYYY-MM-DD HH:mm:ss"),
   endTime: dayjs().endOf("day").format("YYYY-MM-DD HH:mm:ss"),
 });
 const receivestatisticsFun = async () => {
@@ -745,8 +702,9 @@ const receivestatisticsFun = async () => {
   console.log("====================asd")
 };
 const timeLeftClick = () => {
-  
-  receivestatisticsData.value.startTime = dayjs(receivestatisticsData.value.startTime).subtract(7, "day")
+
+  receivestatisticsData.value.startTime = dayjs(receivestatisticsData.value.startTime)
+    .subtract(7, "day")
     .startOf("day")
     .format("YYYY-MM-DD HH:mm:ss");
   receivestatisticsData.value.endTime = dayjs(receivestatisticsData.value.endTime)
@@ -756,16 +714,19 @@ const timeLeftClick = () => {
   receivestatisticsFun(); // 更新数据
 };
 const timeRightClick = () => {
-  receivestatisticsData.value.startTime =  dayjs(receivestatisticsData.value.startTime)
+
+  receivestatisticsData.value.startTime = dayjs(receivestatisticsData.value.startTime)
     .add(7, "day")
     .startOf("day")
     .format("YYYY-MM-DD HH:mm:ss");
-  receivestatisticsData.value.endTime =  dayjs(receivestatisticsData.value.endTime)
+  receivestatisticsData.value.endTime = dayjs(receivestatisticsData.value.endTime)
     .add(7, "day")
     .endOf("day")
     .format("YYYY-MM-DD HH:mm:ss");
   receivestatisticsFun(); // 更新数据
 };
+
+const materailsTypes = ref([]);
 
 window.onresize = function () {
   bigscreenLCChart.resize();
@@ -774,13 +735,32 @@ window.onresize = function () {
   bigscreenRCChart.resize();
 };
 
+const typsTimer = useIntervalFn(() => {
+  typsTimer.pause();
+  materialFilesTypes().then(res=>{
+    materailsTypes.value = res.data.data;
+  }).catch(err =>{
+    
+  }).finally(() => {
+    typsTimer.resume();
+  });
+}, 5000);
+
 onMounted(() => {
-  receivelistFun();
-  alarmInformationlistFun();
-  materialFilesListFun();
-  receivestatisticsFun();
-  typeStatisticsFun();
-  allByReceiveExplainFun();
+  materialFilesTypes().then((res) => {
+    materailsTypes.value = res.data.data;
+    if (materailsTypes.value.length > 0) {
+      materialsName.value = materailsTypes.value[0];
+    }
+    receivelistFun();
+    alarmInformationlistFun();
+    materialFilesListFun();
+    receivestatisticsFun();
+    typeStatisticsFun();
+    allByReceiveExplainFun();
+  });
+
+
 });
 </script>
 
@@ -914,48 +894,7 @@ $design-height: 1080;
             }
           }
         }
-
-        
       }
-
-      .bigscreen_lt_bottom_ne_yichang{
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        color: white;
-        margin: adaptiveHeight(10) 0;
-
-        .bigscreen_lt_bottom_nei_r_yichang{
-          width: calc(100% );
-          margin-left: adaptiveWidth(20);
-          // background: url("/public/img/back.png") no-repeat;
-          background-size: 100% 100%;
-          height: adaptiveHeight(33);
-          margin-right: adaptiveWidth(40);
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          // color: #ffffff;
-
-          span:nth-child(0){
-          width: adaptiveWidth(52);
-          height: adaptiveHeight(59);
-          margin-left: adaptiveWidth(40);
-        }
-
-          span {
-            width: 33%;
-            // color: #ffffff;
-            font-size: adaptiveFontSize(14);
-            text-align: center;
-            // 字体超出省略号
-            white-space: nowrap;
-            text-overflow: ellipsis;
-          }
-        }
-      }
-      
     }
   }
 }

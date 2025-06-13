@@ -111,7 +111,7 @@
            class="cascaderCss"
            @change="powerByAreaTotalStaticFun"
         >
-          <el-option label="控制区" value="控制区" />
+          <!-- <el-option label="控制区" value="控制区" />
           <el-option
             label="高风险安全风险车间防护区"
             value="高风险安全风险车间防护区"
@@ -121,7 +121,8 @@
           <el-option label="D级区" value="D级区" />
           <el-option label="CNC区" value="CNC区" />
           <el-option label="NC区" value="NC区" />
-          <el-option label="有毒区" value="有毒区" />
+          <el-option label="有毒区" value="有毒区" /> -->
+          <el-option v-for="area in allAreas" :key="area" :label="area" :value="area" />
         </el-select>
 
       </div>
@@ -181,6 +182,7 @@ import {
   powerByAreaTotalStatic,
   environmentalDetectionList,
   getZuiXinShuJuApi,
+  getAreas,
 } from "../../api/environment";
 import center from "../../components/center.vue";
 import img9 from "../../../public/img/叉号.png";
@@ -802,6 +804,31 @@ const powerByAreaTotalStaticFun = async () => {
   }
 };
 
+const allAreas = ref([]);
+
+async function getAllAreasFunc(){
+  getAreas().then(res => {
+    allAreas.value = res.data.data;
+    if (allAreas.value.length > 0) {
+      powerByAreaTotalStaticData.value.area = allAreas.value[0];
+      powerByAreaTotalStaticFun();
+    }
+  }).catch(err => {
+    console.error("获取区域列表失败", err);
+  });
+}
+
+const getAreasTimer = useIntervalFn(() => {
+  getAreasTimer.pause();
+  getAreas().then(res => {
+    allAreas.value = res.data.data;
+  }).catch(err => {
+    console.error("获取区域列表失败", err);
+  }).finally(() => {
+    getAreasTimer.resume();
+  });
+}, 5000);
+
 window.onresize = function () {
   bigscreenLBChart.resize();
   bigscreenRBChart.resize();
@@ -811,11 +838,13 @@ window.onresize = function () {
 onMounted(() => {
   ltDialogChart = echarts.init(environmentFileDialogRef.value);
 
+  getAllAreasFunc();
   environmentFileFun();
   historyStatisticsFun();
   powerStaticFun();
   powerByTypeStatisticsFun();
-  powerByAreaTotalStaticFun();
+  // powerByAreaTotalStaticFun();
+  getAllAreasFunc();
   getEnvList()
 });
 </script>

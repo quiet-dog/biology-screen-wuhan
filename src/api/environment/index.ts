@@ -118,3 +118,8 @@ export const getMontEventType = async () => {
   }
   return list;
 };
+
+
+export function getAreas() {
+  return http.get("/manage/environment/areas",);
+}

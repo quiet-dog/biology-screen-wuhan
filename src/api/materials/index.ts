@@ -65,3 +65,7 @@ export function dosagetypeStatistics(params: { name: string }) {
 export function allByReceiveExplain() {
   return http.get("/manage/receive/allByReceiveExplain");
 }
+
+export function materialFilesTypes() {
+  return http.get("/manage/materials/types");
+}
