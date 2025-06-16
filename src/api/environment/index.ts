@@ -123,3 +123,7 @@ export const getMontEventType = async () => {
 export function getAreas() {
   return http.get("/manage/environment/areas",);
 }
+
+export function getAllGroup() {
+  return http.get("/manage/environment/allGroup",);
+}

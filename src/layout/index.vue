@@ -6,7 +6,7 @@
         src="/public/img/高生物安全动态监管平台.png"
         alt=""
       /> -->
-      <div class="text-my">高生物安全风险车间<br/>智能化风险管理和实时动态监管平台</div>
+      <div class="text-my">高生物安全风险车间<br/>生物安全关键技术研究数字孪生平台</div>
       <div class="bigscreen_header_r">
         <span>{{ time }}</span>
         <span>{{ dayOfWeek }}</span>

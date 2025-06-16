@@ -285,6 +285,7 @@ const environmentFileFormData = ref({
   pageSize: 10,
   orderColumn: "createTime",
   orderDirection: "descending",
+  environmentalDetectionList:true,
   // startTime:dayjs().format("YYYY-MM-DD"),
   // endTime:dayjs().add(1,"day").format("YYYY-MM-DD")
 });

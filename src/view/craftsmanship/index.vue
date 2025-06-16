@@ -211,7 +211,9 @@
                     background: index % 2 === 0 ? '#01D1E7' : '#DF9819',
                   }"></div>
                 </div>
-                {{ item.craftArchiveName }}
+                <ElTooltip :content="item.craftArchiveName">
+                <span>{{ item.craftArchiveName }}</span>
+              </ElTooltip>
               </div>
               <div>{{ item.version }}</div>
               <div :style="{
@@ -1384,6 +1386,13 @@ $design-height: 1080;
             color: #ffffff;
             display: flex;
             align-items: center;
+
+            white-space: nowrap;
+          /* 禁止换行 */
+          overflow: hidden;
+          /* 超出内容隐藏 */
+          text-overflow: ellipsis;
+          /* 显示省略号 */
 
             .bigscreen_rb_bottom_nei_item1_div {
               width: adaptiveWidth(10);

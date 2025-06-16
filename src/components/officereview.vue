@@ -46,12 +46,12 @@
 </template>
 
 <script>
-import VueOfficeDocx from "@vue-office/docx";
-import VueOfficeExcel from "@vue-office/excel";
-import VuePdfEmbed from "vue-pdf-embed";
-import VueOfficePptx from "@vue-office/pptx";
-import "@vue-office/docx/lib/index.css";
-import "@vue-office/excel/lib/index.css";
+// import VueOfficeDocx from "@vue-office/docx";
+// import VueOfficeExcel from "@vue-office/excel";
+// import VuePdfEmbed from "vue-pdf-embed";
+// import VueOfficePptx from "@vue-office/pptx";
+// import "@vue-office/docx/lib/index.css";
+// import "@vue-office/excel/lib/index.css";
 // import "@vue-office/pdf/lib/index.css";
 import axios from "axios";
 // import { getToken } from "../../utils/auth";
@@ -59,10 +59,10 @@ import { baseURL } from "../../src/utils/http";
 
 export default {
   components: {
-    VueOfficeDocx,
-    VueOfficeExcel,
-    VuePdfEmbed,
-    VueOfficePptx,
+    // VueOfficeDocx,
+    // VueOfficeExcel,
+    // VuePdfEmbed,
+    // VueOfficePptx,
   },
   props: {
     fileUrl: {

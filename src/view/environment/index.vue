@@ -43,7 +43,7 @@
         </div>
           <div class="lt_b">
              <div>
-              {{ item.environment?.tag }}
+              {{ item.environment?.description }}
              </div>
             <img :src="DiZuo" alt="" srcset="">
           </div>
@@ -135,9 +135,10 @@
           class="cascaderCss"
            @change="powerByAreaTotalStaticFun"
         >
-          <el-option label="温度" value="温度" />
+          <!-- <el-option label="温度" value="温度" />
           <el-option label="湿度" value="湿度" />
-          <el-option label="压差" value="压差" />
+          <el-option label="压差" value="压差" /> -->
+          <el-option v-for="item in allUnitName" :key="item" :label="item" :value="item" />
         </el-select>
       </div>
     </div>
@@ -183,6 +184,7 @@ import {
   environmentalDetectionList,
   getZuiXinShuJuApi,
   getAreas,
+  getAllGroup,
 } from "../../api/environment";
 import center from "../../components/center.vue";
 import img9 from "../../../public/img/叉号.png";
@@ -347,12 +349,30 @@ const getEnvList = ()=>{
     pageSize:4,
     orderColumn: "createTime",
     orderDirection: "descending",
+    isIgnore:true,
   }).then(res=>{
     envList.value = res.data.data.rows;
   }).catch(err=>{
 
   })
 }
+
+const getEnvListTimer = useIntervalFn(() => {
+  getEnvListTimer.pause();
+  environmentalDetectionList({
+    pageNum:1,
+    pageSize:4,
+    orderColumn: "createTime",
+    orderDirection: "descending",
+    isIgnore:true,
+  }).then(res=>{
+    envList.value = res.data.data.rows;
+  }).catch(err=>{
+
+  }).finally(() => {
+    getEnvListTimer.resume();
+  })
+}, 5000)
 const environmentFileTimer = useIntervalFn(() => {
   environmentFileTimer.pause();
   environmentFileFun().finally(() => {
@@ -811,7 +831,7 @@ async function getAllAreasFunc(){
     allAreas.value = res.data.data;
     if (allAreas.value.length > 0) {
       powerByAreaTotalStaticData.value.area = allAreas.value[0];
-      powerByAreaTotalStaticFun();
+      // powerByAreaTotalStaticFun();
     }
   }).catch(err => {
     console.error("获取区域列表失败", err);
@@ -835,6 +855,29 @@ window.onresize = function () {
   bigscreenRTChart.resize();
 };
 
+
+const allUnitName = ref([])
+const getAllGroupFunc = ()=>{
+  getAllGroup().then(res=>{
+    allUnitName.value = res.data.data.unitName;
+    if (allUnitName.value.length > 0) {
+      powerByAreaTotalStaticData.value.unitName = allUnitName.value[0];
+      powerByAreaTotalStaticFun();
+    }
+  }).catch(err=>{
+  })
+}
+
+const allUnitNameTimer = useIntervalFn(() => {
+  allUnitNameTimer.pause();
+  getAllGroup().then(res=>{
+    allUnitName.value = res.data.data.unitName;
+  }).catch(err=>{
+  }).finally(() => {
+    allUnitNameTimer.resume();
+  });
+}, 5000);
+
 onMounted(() => {
   ltDialogChart = echarts.init(environmentFileDialogRef.value);
 
@@ -846,6 +889,7 @@ onMounted(() => {
   // powerByAreaTotalStaticFun();
   getAllAreasFunc();
   getEnvList()
+  getAllGroupFunc();
 });
 </script>
 
