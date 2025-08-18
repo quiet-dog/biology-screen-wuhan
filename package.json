@@ -13,6 +13,7 @@
     "@element-plus/icons-vue": "^2.3.1",
     "@iconify-icons/ep": "^1.2.12",
     "@iconify-icons/ri": "^1.2.10",
+    "@iconify-json/ri": "^1.2.5",
     "@iconify/json": "^2.2.347",
     "@iconify/vue": "^5.0.0",
     "@jiaminghi/data-view": "^2.10.0",

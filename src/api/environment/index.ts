@@ -127,3 +127,11 @@ export function getAreas() {
 export function getAllGroup() {
   return http.get("/manage/environment/allGroup",);
 }
+
+
+export function getBuTongApi(data) {
+  return http.post("/manage/detection/getBuTong", data);
+}
+
+
+

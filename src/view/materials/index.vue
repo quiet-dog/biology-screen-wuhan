@@ -15,7 +15,7 @@
             <div class="bigscreen_lt_bottom_nei_r">
               <span style="padding-left: 25px">{{ item.materials?.name }}</span>
               <span>{{
-                dayjs(item.materials?.createTime).format("YYYY-MM-DD")
+                dayjs(item.createTime).format("YYYY-MM-DD")
                 }}</span>
               <span>{{ item.level }}</span>
             </div>
@@ -614,9 +614,9 @@ const updateBigscreenRToption = (
     ["product", "生产领用", "研发领用", "其他领用"], // 表头
     ...xdata.map((item, index) => [
       item,
-      productionData[index] || 0,
-      researchData[index] || 0,
-      otherData[index] || 0,
+      productionData != null ? (productionData[index] || 0) :0,
+      researchData!=null ? (researchData[index] || 0):0,
+      otherData!=null ?(otherData[index] || 0) :0,
     ]),
   ];
 };

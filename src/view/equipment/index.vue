@@ -1919,4 +1919,11 @@ $design-height: 1080;
   font-size: adaptiveFontSize(12);
   border-radius: 2px;
 }
+
+
+.single-line-ellipsis {
+  white-space: nowrap;        /* 不换行 */
+  overflow: hidden;           /* 溢出隐藏 */
+  text-overflow: ellipsis;    /* 超出部分显示省略号 */
+}
 </style>

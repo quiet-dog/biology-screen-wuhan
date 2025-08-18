@@ -23,28 +23,29 @@
           <span>{{ item.esignal }}</span>
         </div>
       </div> -->
-      <div class="lt_container" >
+      <div class="lt_container">
         <div :style="{
           backgroundImage: `url(${BeiJing})`,
-        }" @click="ltClick2(item)" v-for="(item,index) in envList" :key="index">
+        }" @click="ltClick2(item)" v-for="(item, index) in envList" :key="index">
           <div>
             <img v-if="item.environment?.unitName === '温度'" :src="WenDu" alt="">
             <img v-if="item.environment?.unitName === '湿度'" :src="ShiDu" alt="">
             <img v-if="item.environment?.unitName === '压差'" :src="YaCha" alt="">
           </div>
-          <div>{{ 
-          item.environment?.unitName  }}
-          <br/>  
-          <span :class="getValueColorClass(item)">
-            {{ item.value }}
-          </span>
-          <br/>
-          {{ item.environment?.unitName =="温度" ? '℃' : item.environment?.unitName == "湿度" ? '%' : item.environment?.unitName == "压差" ? "Pa": ""}}
-        </div>
+          <div>{{
+            item.environment?.unitName }}
+            <br />
+            <span :class="getValueColorClass(item)">
+              {{ item.value }}
+            </span>
+            <br />
+            {{ item.environment?.unitName == "温度" ? '℃' : item.environment?.unitName == "湿度" ? '%' :
+              item.environment?.unitName == "压差" ? "Pa": ""}}
+          </div>
           <div class="lt_b">
-             <div>
+            <div>
               {{ item.environment?.description }}
-             </div>
+            </div>
             <img :src="DiZuo" alt="" srcset="">
           </div>
         </div>
@@ -103,7 +104,7 @@
       </el-radio-group> -->
 
       <div class="left-se">
-        <el-select
+        <!-- <el-select
         v-model="powerByAreaTotalStaticData.area"
           filterable
           placeholder="请选择区域"
@@ -111,33 +112,17 @@
            class="cascaderCss"
            @change="powerByAreaTotalStaticFun"
         >
-          <!-- <el-option label="控制区" value="控制区" />
-          <el-option
-            label="高风险安全风险车间防护区"
-            value="高风险安全风险车间防护区"
-          />
-          <el-option label="UDAF区" value="UDAF区" />
-          <el-option label="C级区" value="C级区" />
-          <el-option label="D级区" value="D级区" />
-          <el-option label="CNC区" value="CNC区" />
-          <el-option label="NC区" value="NC区" />
-          <el-option label="有毒区" value="有毒区" /> -->
           <el-option v-for="area in allAreas" :key="area" :label="area" :value="area" />
-        </el-select>
+        </el-select> -->
 
+        <!-- <el-form-item label="日期：" class="form-item">
+          <el-date-picker v-model="powerByAreaTotalStaticData.timeRange" type="date" placeholder="选择日期" value-format="YYYY-MM-DD"
+            @change="handleTimeChange" />
+        </el-form-item> -->
       </div>
       <div class="left-se">
-        <el-select
-          v-model="powerByAreaTotalStaticData.unitName"
-          filterable
-          placeholder="请选择指标"
-          style="width: 100%"
-          class="cascaderCss"
-           @change="powerByAreaTotalStaticFun"
-        >
-          <!-- <el-option label="温度" value="温度" />
-          <el-option label="湿度" value="湿度" />
-          <el-option label="压差" value="压差" /> -->
+        <el-select v-model="powerByAreaTotalStaticData.unitName" filterable placeholder="请选择指标" style="width: 100%"
+          class="cascaderCss" @change="powerByAreaTotalStaticFun">
           <el-option v-for="item in allUnitName" :key="item" :label="item" :value="item" />
         </el-select>
       </div>
@@ -185,6 +170,7 @@ import {
   getZuiXinShuJuApi,
   getAreas,
   getAllGroup,
+  getBuTongApi,
 } from "../../api/environment";
 import center from "../../components/center.vue";
 import img9 from "../../../public/img/叉号.png";
@@ -194,10 +180,18 @@ import ShiDu from "../../assets/env/湿度.png";
 import YaCha from "../../assets/env/压差.png";
 import BeiJing from "../../assets/env/背景.jpg";
 import { useIntervalFn } from "@vueuse/core";
+import dayjs from "dayjs";
 
 const zsRadio = ref("week");
 const zsRadioChange = async () => {
   zsEchartData();
+};
+
+const handleTimeChange = val => {
+  // 转为YYYY-MM-DD格式
+  powerByAreaTotalStaticData.value.beginTime = dayjs(val).startOf('day').format("YYYY-MM-DD");
+  powerByAreaTotalStaticData.value.endTime = dayjs(val).add(1, 'day').startOf("day").format("YYYY-MM-DD");
+  powerByAreaTotalStaticFun();
 };
 
 const getValueColorClass = row => {
@@ -343,16 +337,16 @@ const environmentFileFun = async () => {
   });
 };
 const envList = ref([]);
-const getEnvList = ()=>{
+const getEnvList = () => {
   environmentalDetectionList({
-    pageNum:1,
-    pageSize:4,
+    pageNum: 1,
+    pageSize: 4,
     orderColumn: "createTime",
     orderDirection: "descending",
-    isIgnore:true,
-  }).then(res=>{
+    isIgnore: true,
+  }).then(res => {
     envList.value = res.data.data.rows;
-  }).catch(err=>{
+  }).catch(err => {
 
   })
 }
@@ -360,14 +354,14 @@ const getEnvList = ()=>{
 const getEnvListTimer = useIntervalFn(() => {
   getEnvListTimer.pause();
   environmentalDetectionList({
-    pageNum:1,
-    pageSize:4,
+    pageNum: 1,
+    pageSize: 4,
     orderColumn: "createTime",
     orderDirection: "descending",
-    isIgnore:true,
-  }).then(res=>{
+    isIgnore: true,
+  }).then(res => {
     envList.value = res.data.data.rows;
-  }).catch(err=>{
+  }).catch(err => {
 
   }).finally(() => {
     getEnvListTimer.resume();
@@ -769,6 +763,13 @@ const bigscreenRBoption = {
     bottom: "6%",
     containLabel: true,
   },
+  legend:{
+    data:[],
+    // 白色
+    textStyle: {
+      color: "#ffffff",
+    },
+  },
   xAxis: {
     type: "category",
     data: [],
@@ -809,24 +810,39 @@ const bigscreenRBoption = {
   },
 };
 const powerByAreaTotalStaticData = ref({
-  area:"控制区",
-  unitName:"温度"
+  // area:"控制区",
+  unitName: "温度",
+  beginTime: dayjs().startOf('day').format('YYYY-MM-DD'),
+  endTime: dayjs().add(1, "day").startOf('day').format('YYYY-MM-DD'),
+  timeRange: [],
 });
 const powerByAreaTotalStaticFun = async () => {
-  const { data } = await getZuiXinShuJuApi(
-    powerByAreaTotalStaticData.value
-  );
-  bigscreenRBoption.xAxis.data = data.data.time;
-  bigscreenRBoption.series[0].data = data.data.data;
+  // const { data } = await getZuiXinShuJuApi(
+  //   powerByAreaTotalStaticData.value
+  // );
+  // bigscreenRBoption.xAxis.data = data.data.time;
+  // bigscreenRBoption.series[0].data = data.data.data;
+  // if (bigscreenRBRef.value) {
+  //   bigscreenRBChart = echarts.init(bigscreenRBRef.value);
+  //   bigscreenRBChart.setOption(bigscreenRBoption);
+  // }
+  const { data } = await getBuTongApi({
+    unitName: powerByAreaTotalStaticData.value.unitName,
+    beginTime: dayjs().startOf('day').format('YYYY-MM-DD'),
+    endTime: dayjs().add(1, 'day').startOf('day').format('YYYY-MM-DD'),
+  });
+  bigscreenRBoption.legend.data = data.data.series.map(item => item.name);
+  bigscreenRBoption.xAxis.data = data.data.xAxis;
+  bigscreenRBoption.series = data.data.series
   if (bigscreenRBRef.value) {
     bigscreenRBChart = echarts.init(bigscreenRBRef.value);
-    bigscreenRBChart.setOption(bigscreenRBoption);
+    bigscreenRBChart.setOption(bigscreenRBoption,true);
   }
 };
 
 const allAreas = ref([]);
 
-async function getAllAreasFunc(){
+async function getAllAreasFunc() {
   getAreas().then(res => {
     allAreas.value = res.data.data;
     if (allAreas.value.length > 0) {
@@ -857,22 +873,24 @@ window.onresize = function () {
 
 
 const allUnitName = ref([])
-const getAllGroupFunc = ()=>{
-  getAllGroup().then(res=>{
-    allUnitName.value = res.data.data.unitName;
+const getAllGroupFunc = () => {
+  getAllGroup().then(res => {
+    allUnitName.value = res.data.data.unitName.filter(item => item !== "电" && item !== "水" && !item.includes("报警"));
     if (allUnitName.value.length > 0) {
       powerByAreaTotalStaticData.value.unitName = allUnitName.value[0];
+      powerByAreaTotalStaticData.value.beginTime = dayjs().startOf('day').format('YYYY-MM-DD');
+      powerByAreaTotalStaticData.value.endTime = dayjs().add(1, 'day').startOf('day').format('YYYY-MM-DD');
       powerByAreaTotalStaticFun();
     }
-  }).catch(err=>{
+  }).catch(err => {
   })
 }
 
 const allUnitNameTimer = useIntervalFn(() => {
   allUnitNameTimer.pause();
-  getAllGroup().then(res=>{
-    allUnitName.value = res.data.data.unitName;
-  }).catch(err=>{
+  getAllGroup().then(res => {
+    allUnitName.value = res.data.data.unitName.filter(item => item !== "电" && item !== "水" && !item.includes("报警"));
+  }).catch(err => {
   }).finally(() => {
     allUnitNameTimer.resume();
   });
@@ -909,7 +927,7 @@ $design-height: 1080;
   @return #{$px / $design-width * 100}vw;
 }
 
-.lt_container{
+.lt_container {
   width: calc(100% - adaptiveWidth(20));
   height: 100%;
   display: flex;
@@ -924,7 +942,7 @@ $design-height: 1080;
   padding: 0 adaptiveWidth(10);
   // margin: 0 adaptiveWidth(10);
 
-  >div{
+  >div {
     width: adaptiveWidth(90);
     height: adaptiveHeight(350);
     border-radius: adaptiveWidth(10);
@@ -946,10 +964,10 @@ $design-height: 1080;
   }
 }
 
-.left-se{
-  width:adaptiveWidth(100);
-  position:relative;
-  left:- adaptiveWidth(20);
+.left-se {
+  width: adaptiveWidth(100);
+  position: relative;
+  left: - adaptiveWidth(20);
 }
 
 .bigscreen_lt,
@@ -960,13 +978,15 @@ $design-height: 1080;
   height: adaptiveHeight(445);
 }
 
-.lt_b{
+.lt_b {
   position: relative;
+
   div {
     position: relative;
     z-index: 1;
     font-size: adaptiveFontSize(12);
   }
+
   img {
     position: absolute;
     left: 50%;
@@ -1384,16 +1404,21 @@ $design-height: 1080;
 .text-urgent {
   color: #f53f3f;
 }
+
 .text-important {
   color: #ff7d00;
 }
+
 .text-warning {
   color: #fadc19;
 }
+
 .text-info {
   color: #168cff;
 }
+
 .text-success {
   color: #00b42a;
 }
+
 </style>

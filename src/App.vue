@@ -12,11 +12,14 @@ import Vide from "./assets/a.mp3";
 import { useLoginStore } from "./store/login";
 import { Client } from "@stomp/stompjs";
 import { ElMessageBox, ElNotification } from "element-plus";
-import { IconifyIconOffline } from "./components/ReIcon";
+// import { IconifyIconOffline } from "./components/ReIcon";
 import { useSettingStoreHook } from "./store/modules/settings";
 import AlarmIcon from "@iconify-icons/ri/alarm-warning-fill";
 import { useRenderIcon } from "./components/ReIcon/src/hooks";
 import { Icon } from "@iconify/vue";
+import { addCollection } from '@iconify/vue';
+import riIcons from '@iconify-json/ri/icons.json';
+addCollection(riIcons);
 
 const pureSetting = useSettingStoreHook();
 // WebSocket客户端配置
@@ -86,67 +89,6 @@ stompClient.onStompError = frame => {
   console.error("Broker reported error: " + frame.headers["message"]);
   console.error("Additional details: " + frame.body);
 };
-
-// const set = reactive({
-//   sidebar: computed(() => {
-//     return useAppStoreHook().sidebar;
-//   }),
-
-//   device: computed(() => {
-//     return useAppStoreHook().device;
-//   }),
-
-//   fixedHeader: computed(() => {
-//     return pureSetting.fixedHeader;
-//   }),
-
-//   classes: computed(() => {
-//     return {
-//       hideSidebar: !set.sidebar.opened,
-//       openSidebar: set.sidebar.opened,
-//       withoutAnimation: set.sidebar.withoutAnimation,
-//       mobile: set.device === "mobile"
-//     };
-//   }),
-
-//   hideTabs: computed(() => {
-//     return $storage?.configure.hideTabs;
-//   })
-// });
-
-// const layoutHeader = defineComponent({
-//   render() {
-//     return h(
-//       "div",
-//       {
-//         class: { "fixed-header": set.fixedHeader },
-//         style: [
-//           set.hideTabs && layout.value.includes("horizontal")
-//             ? isDark.value
-//               ? "box-shadow: 0 1px 4px #0d0d0d"
-//               : "box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08)"
-//             : ""
-//         ]
-//       },
-//       {
-//         default: () => [
-//           !pureSetting.hiddenSideBar &&
-//           (layout.value.includes("vertical") || layout.value.includes("mix"))
-//             ? h(navbar, {
-//               ref: navbarRef,
-//               ref_key: "navbarRef",
-//             })
-//             : null,
-//           !pureSetting.hiddenSideBar && layout.value.includes("horizontal")
-//             ? h(Horizontal)
-//             : null,
-//           h(tag)
-//         ]
-//       }
-//     );
-//   }
-// });
-
 
 
 

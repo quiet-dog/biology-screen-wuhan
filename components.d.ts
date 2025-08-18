@@ -35,4 +35,7 @@ declare module 'vue' {
     Tuthree: typeof import('./src/components/tuthree/index.vue')['default']
     Tutwo: typeof import('./src/components/tutwo/index.vue')['default']
   }
+  export interface ComponentCustomProperties {
+    vInfiniteScroll: typeof import('element-plus/es')['ElInfiniteScroll']
+  }
 }

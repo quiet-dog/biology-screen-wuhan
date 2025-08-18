@@ -72,6 +72,14 @@ const routes: RouteRecordRaw[] = [
           title: "风险评估",
         },
       },
+      {
+        path: "/ketisan",
+        name: "ketisan",
+        component: () => import("../view/ketisan/index.vue"),
+        meta: {
+          title: "课题三",
+        },
+      },
     ],
   },
 ];

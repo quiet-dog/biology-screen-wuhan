@@ -126,6 +126,11 @@ const btnfun = [
     name: "environment",
     path: "/environment",
   },
+  {
+    title: "课题三",
+    name: "ketisan",
+    path: "/ketisan",
+  },
   // {
   //   title: "事件管理",
   //   name: "incident",
