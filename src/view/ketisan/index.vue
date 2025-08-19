@@ -78,7 +78,7 @@
                 <img src="/public/img/光标.png" alt="" />
                 <span>人体行为识别数据</span>
             </div>
-            <ElButton class="inputcssright" placeholder="请输入监控点位" :prefix-icon="Search">
+            <ElButton @click="jiWeiQuShiBianHuaOpen" class="inputcssright" placeholder="请输入监控点位" :prefix-icon="Search">
                 趋势分析
             </ElButton>
         </div>
@@ -123,7 +123,7 @@
             </div>
         </div>
         <div class="bigscreen_rc_bottom">
-            <div class="bigscreen_rc_bottom_nei">
+            <div class="bigscreen_rc_bottom_nei" ref="jianCeShuJuTongJiRef">
             </div>
         </div>
     </div>
@@ -142,84 +142,6 @@
 
         </div>
     </div>
-
-    <!-- <template v-for="item in repairList">
-        <div v-if="item.status" class="rcDialog">
-            <div class="rcDialog_top">
-                <span>维修记录详情</span>
-                <img :src="img9" alt="" srcset="" @click="rccanleClick(item)" />
-            </div>
-            <div class="rcDialog_bottom">
-                <div class="rcDialog_bottoml">
-                    <div>
-                        <span>维修编号：</span>
-                        <span>{{ item.recordId }}</span>
-                    </div>
-                    <div>
-                        <span>设备编号：</span>
-                        <span>{{ item.equipment.equipmentCode }}</span>
-                    </div>
-                    <div>
-                        <span>维修时间：</span>
-                        <span>{{ dayjs(item.repairDate).format("YYYY-MM-DD") }}</span>
-                    </div>
-                    <div>
-                        <span>维修人员：</span>
-                        <span>{{ item.repairPersonnel }}</span>
-                    </div>
-                    <div>
-                        <span>维修费用：</span>
-                        <span>{{ item.repairCost }}</span>
-                    </div>
-                    <div>
-                        <span>维修内容：</span>
-                        <span>{{ item.repairContent }}</span>
-                    </div>
-                    <div>
-                        <span>故障原因：</span>
-                        <span>{{ item.faultReason }}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </template> -->
-
-    <!-- <template v-for="item in inspectionlist">
-        <div v-if="item.status" class="rbDialog">
-            <div class="rbDialog_top">
-                <span>巡检记录详情</span>
-                <img :src="img9" alt="" srcset="" @click="rbcanleClick(item)" />
-            </div>
-            <div class="rbDialog_bottom">
-                <div class="rbDialog_bottoml">
-                    <div>
-                        <span>巡检编号：</span>
-                        <span> {{ item.recordId }}</span>
-                    </div>
-                    <div>
-                        <span>巡检时期：</span>
-                        <span> {{ dayjs(item.inspectionDate).format("YYYY-MM-DD") }}</span>
-                    </div>
-                    <div>
-                        <span>巡检人员：</span>
-                        <span>{{ item.inspector }}</span>
-                    </div>
-                    <div>
-                        <span>异常数：</span>
-                        <span>{{ item.anomalyCount }}</span>
-                    </div>
-                    <div>
-                        <span>巡检内容：</span>
-                        <span>{{ item.taskDescription }}</span>
-                    </div>
-                    <div>
-                        <span>异常说明：</span>
-                        <span>{{ item.anomalyDescription }}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </template> -->
 
     <div v-if="resultDetailVis" class="ltDialog">
         <div class="rctDialog_top">
@@ -243,86 +165,48 @@
         </div>
     </div>
 
-    <!-- <div v-if="rcStatus" class="rctDialog">
+    <div v-if="jiWeiQuShiBianHuaVis" class="rzDialog">
         <div class="rctDialog_top">
-            <span>维修统计分析</span>
-            <ElInput placeholder="请输入设备编号" v-model="yzInput" @keydown.enter="yzRadioChange" class="inputcss yzInput" />
-            <el-radio-group v-model="yzRadio" class="group yzRadio" @change="yzRadioChange">
+            <span>趋势分析</span>
+            <img @click="jiWeiQuShiBianHuaClose" :src="img9" alt="" srcset="" />
+        </div>
+        <div class="rctDialog_content">
+            <ElInput class="inputcss rctDialog_content_inputcss" @change="jiWeiQuShiBianHuaGet" v-model="jiWeiQuShiBianHuaInput" />
+            <el-radio-group v-model="jiWeiQuShiBianHuaRadio" @change="jiWeiQuShiBianHuaChangeRadio" class="group cssRadio">
+                <el-radio-button label="天" value="day" />
                 <el-radio-button label="周" value="week" />
-                <el-radio-button label="年" value="year" />
+                <el-radio-button label="月" value="month" />
+                <!-- <el-radio-button label="年" value="year" /> -->
             </el-radio-group>
-            <img :src="img9" alt="" srcset="" @click="rctcanleClick" />
         </div>
-        <div class="rctDialog_bottom" ref="bigscreenRCRef"></div>
+        <div class="rctDialog_bottom" ref="jiWeiQuShiBianHuaRef">
+        </div>
     </div>
-    <div v-if="rtStatus" class="rtDialog">
-        <div class="rtDialog_top">
-            <span>查看监控视频</span>
-            <img :src="img9" alt="" srcset="" @click="rtcanleClick" />
-        </div>
-        <div class="rtDialog_bottom">
-            <Video class="rtDialog_bottom_video" ref="videoRef" />
-        </div>
-    </div> -->
+
+
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, nextTick } from "vue";
-import * as echarts from "echarts";
+import { ref, onMounted,  } from "vue";
 import { Search } from "@element-plus/icons-vue";
 import center from "../../components/center.vue";
-import {
-    equipmentRepairList,
-    equipmentRepairListRes,
-    dailyInspectionList,
-    dailyInspectionRes,
-    equipmentList,
-    historicalStatisticsList,
-    repairStatistics,
-    dailyCishuInspectionList,
-    getAllTime,
-} from "../../api/equipment/index";
 import dayjs from "dayjs";
 import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
 import img9 from "../../../public/img/叉号.png";
-import { getChannelListApi, getStreamUrlApi } from "../../api/video";
-import Video from "../home/components/Video.vue";
-import { thresholdDataList } from "../../api/riskassessment";
 import { useIntervalFn } from '@vueuse/core'
 import { ElButton, ElDescriptions, ElDescriptionsItem, ElForm, ElFormItem, ElInput, ElScrollbar, ElSelect } from "element-plus";
-import { useXunJianQushiHook } from "./qushi";
-import { getResultShiJuan, resultShiJuanList } from "../../api/resultShiJuan";
 import { xlFangAnList } from "../../api/xlFangAn";
-import { useCePingJieGuoFenXi, useCePingJieGuoTongJi, useJiWeiBaoJingZhanBi, useRenYuanXingWeiShiBieShuJu, userOther } from "./other";
+import { useCePingJieGuoFenXi, useCePingJieGuoTongJi, useJianCeShuJuTongJi, useJiWeiBaoJingZhanBi, useRenYuanXingWeiShiBieShuJu, userOther } from "./other";
 
 const { resultDetail, resultDetailVis, handleResultDetailVis, resultFangAn } = userOther()
 const { selectValue, changeSelectValue, cePingJieGuoFenXiRef } = useCePingJieGuoFenXi()
 const { handleSelectCePingJieGuoTongJi, cePingJieGuoTongJiRef, cePingJieGuoTongJiSelect, loadMoreCePingJieGuoTongJiSelect, selectXlFangAnList } = useCePingJieGuoTongJi()
 const { xwAlarmlist } = useRenYuanXingWeiShiBieShuJu()
-const { jiWeiBaoJingZhanBiRef,rbRadio,changeRbRadio } = useJiWeiBaoJingZhanBi()
+const { jiWeiBaoJingZhanBiRef, rbRadio, changeRbRadio } = useJiWeiBaoJingZhanBi()
+const { jianCeShuJuTongJiRef, jiWeiQuShiBianHuaOpen,
+    jiWeiQuShiBianHuaVis, jiWeiQuShiBianHuaInput, jiWeiQuShiBianHuaRef, jiWeiQuShiBianHuaClose,
+jiWeiQuShiBianHuaRadio,jiWeiQuShiBianHuaChangeRadio,jiWeiQuShiBianHuaGet } = useJianCeShuJuTongJi()
 
-const rtStatus = ref(false);
-const videoRef = ref();
-const rtClick = (item) => {
-    rtStatus.value = !rtStatus.value;
-    getStreamUrlApi(item.channelid).then((res) => {
-        console.log("res.data.data.wsflv", res.data.data.wsflv);
-        const url = new URL(res.data.data.wsflv);
-        url.host = location.host;
-        videoRef.value.play(url.toString());
-        videoRef.value.setChannelId(res.data.data.channelId);
-    });
-    // nextTick(() => {
-    //   getStreamUrlApi(item.channelid).then((res) => {
-    //     console.log("res.data.data.wsflv", res.data.data.wsflv);
-    //     videoRef.value.play(res.data.data.wsflv);
-    //     videoRef.value.setChannelId(res.data.data.channelId);
-    //   });
-    // });
-};
-const rtcanleClick = () => {
-    rtStatus.value = false;
-};
 
 //监测数据
 const xlFangAnFormData = ref({
@@ -342,7 +226,7 @@ const xlFangAnlistTimer = useIntervalFn(() => {
     xlFangAnListFun().finally(() => {
         xlFangAnlistTimer.resume();
     })
-}, 100000)
+}, 10000)
 
 
 
@@ -955,6 +839,7 @@ $design-height: 1080;
 
         .bigscreen_rc_bottom_nei {
             width: adaptiveWidth(407);
+            height: 100%;
             margin: 0 auto;
 
             .bigscreen_rc_bottom_nei_t {
@@ -1401,9 +1286,11 @@ $design-height: 1080;
 
     .rctDialog_bottom {
         width: adaptiveWidth(420);
-        height: adaptiveHeight(200);
+        height: adaptiveHeight(150);
         margin: adaptiveHeight(10) auto;
     }
+
+    .rctDialog_content {}
 }
 
 
@@ -1417,6 +1304,47 @@ $design-height: 1080;
     position: absolute;
     top: adaptiveHeight(100);
     left: adaptiveWidth(480);
+    z-index: 10;
+
+    .rctDialog_top {
+        width: 100%;
+        height: adaptiveHeight(45);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        span {
+            font-family: youshe;
+            font-size: adaptiveFontSize(20);
+            color: #ffffff;
+            padding-left: adaptiveWidth(15);
+        }
+
+        img {
+            width: adaptiveWidth(8);
+            height: adaptiveHeight(8);
+            padding-right: adaptiveWidth(10);
+            cursor: pointer;
+        }
+    }
+
+    .rctDialog_bottom {
+        width: adaptiveWidth(420);
+        height: adaptiveHeight(200);
+        margin: adaptiveHeight(10) auto;
+    }
+}
+
+
+
+.rzDialog {
+    width: adaptiveWidth(440);
+    height: adaptiveHeight(280);
+    background: url("/public/img/弹窗背景.png") no-repeat;
+    background-size: 100% 100%;
+    position: absolute;
+    top: adaptiveHeight(100);
+    right: adaptiveWidth(480);
     z-index: 10;
 
     .rctDialog_top {
@@ -1502,6 +1430,15 @@ $design-height: 1080;
     top: adaptiveHeight(5);
 }
 
+
+.cssRadio {
+    float: right;
+    margin-right: adaptiveWidth(10);
+    margin-top: adaptiveHeight(6);
+    // position: relative;
+    // top: adaptiveHeight(5);
+}
+
 .group :deep(.el-radio-button.is-active .el-radio-button__original-radio:not(:disabled) + .el-radio-button__inner) {
     background: rgba(255, 255, 255, 0.8);
     color: rgba(7, 36, 57, 1);
@@ -1540,5 +1477,10 @@ $design-height: 1080;
     height: adaptiveHeight(24);
     margin-right: adaptiveWidth(11);
     margin-left: adaptiveWidth(180);
+}
+
+.rctDialog_content_inputcss {
+    margin-left: adaptiveWidth(20);
+    margin-top: adaptiveHeight(5);
 }
 </style>

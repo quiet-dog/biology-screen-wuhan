@@ -3,7 +3,7 @@ import { cePingJieGuoTongJi, getPingGuJieGuoFenXi, getResultNum } from "../../ap
 import * as echarts from "echarts"
 import { useIntervalFn } from "@vueuse/core"
 import { xlFangAnList } from "../../api/xlFangAn"
-import { jiWeiBaoJingZhanBi, xwAlarmList } from "../../api/xwAlarm"
+import { jianCeShuJuTongJi, jiWeiBaoJingZhanBi, jiWeiQuShiBianHua, xwAlarmList } from "../../api/xwAlarm"
 export function userOther() {
     const resultDetail = ref()
     const resultDetailVis = ref(false)
@@ -303,6 +303,146 @@ export function useRenYuanXingWeiShiBieShuJu() {
     return {
         xwAlarmlist
     }
+}
+
+export function useJianCeShuJuTongJi() {
+    let option = {
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            },
+            formatter: function (params) {
+                // params 是一个数组，柱状图通常只有一个系列，所以取 params[0]
+                let item = params[0];
+                return item.axisValue + '月: ' + item.data;
+            }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: [
+            {
+                type: 'category',
+                data: [],
+                axisTick: {
+                    alignWithLabel: true
+                }
+            }
+        ],
+        yAxis: [
+            {
+                type: 'value'
+            }
+        ],
+        series: [
+            {
+                name: 'Direct',
+                type: 'bar',
+                barWidth: '60%',
+                data: []
+            }
+        ]
+    }
+    const jianCeShuJuTongJiRef = ref()
+    // @ts-expect-error
+    let jianCeShuJuTongJiChart = null;
+
+    const getData = async () => {
+        jianCeShuJuTongJi().then(res => {
+            // @ts-expect-error
+            if (jianCeShuJuTongJiChart == null) {
+                jianCeShuJuTongJiChart = echarts.init(jianCeShuJuTongJiRef.value)
+            }
+            option.xAxis[0].data = res.data.data.xData;
+            option.series[0].data = res.data.data.sData;
+            jianCeShuJuTongJiChart.setOption(option, true);
+        })
+    }
+
+    const jianCeShuJuTongJiTimer = useIntervalFn(() => {
+        jianCeShuJuTongJiTimer.pause()
+        getData().finally(() => {
+            jianCeShuJuTongJiTimer.resume()
+        })
+    }, 5000)
+
+
+    const jiWeiQuShiBianHuaVis = ref(false)
+    let jiWeiQuShiBianHuaVisOption = {
+        xAxis: {
+            type: 'category',
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        },
+        yAxis: {
+            type: 'value',
+            minInterval: 1,
+        },
+        series: [
+            {
+                data: [150, 230, 224, 218, 135, 147, 260],
+                type: 'line'
+            }
+        ],
+        grid: {
+            left: 30,
+            right: 10,
+            bottom: 60,
+            top: 10
+        }
+    }
+    const jiWeiQuShiBianHuaRef = ref()
+    const jiWeiQuShiBianHuaRadio = ref("week")
+    const jiWeiQuShiBianHuaInput = ref("")
+    // @ts-expect-error
+    let jiWeiQuShiBianHuaChart = null
+    const jiWeiQuShiBianHuaGet = () => {
+        jiWeiQuShiBianHua({ dayType: jiWeiQuShiBianHuaRadio.value, seatNumber: jiWeiQuShiBianHuaInput.value }).then(res => {
+            jiWeiQuShiBianHuaVisOption.xAxis.data = res.data.data.xData;
+            jiWeiQuShiBianHuaVisOption.series[0].data = res.data.data.sData;
+            // @ts-expect-error
+            if (jiWeiQuShiBianHuaChart == null) {
+                jiWeiQuShiBianHuaChart = echarts.init(jiWeiQuShiBianHuaRef.value)
+            }
+            // @ts-expect-error
+            jiWeiQuShiBianHuaChart.setOption(jiWeiQuShiBianHuaVisOption, true);
+        })
+    }
+
+    const jiWeiQuShiBianHuaChangeRadio = () => {
+        jiWeiQuShiBianHuaGet()
+    }
+
+
+    const jiWeiQuShiBianHuaOpen = () => {
+        jiWeiQuShiBianHuaVis.value = true
+        jiWeiQuShiBianHuaGet()
+    }
+
+    const jiWeiQuShiBianHuaClose = () => {
+        jiWeiQuShiBianHuaVis.value = false
+    }
+
+
+    onMounted(() => {
+        getData()
+    })
+
+    return {
+        jianCeShuJuTongJiRef,
+        jiWeiQuShiBianHuaOpen,
+        jiWeiQuShiBianHuaVis,
+        jiWeiQuShiBianHuaInput,
+        jiWeiQuShiBianHuaRef,
+        jiWeiQuShiBianHuaClose,
+        jiWeiQuShiBianHuaRadio,
+        jiWeiQuShiBianHuaChangeRadio,
+        jiWeiQuShiBianHuaGet
+    }
+
 }
 
 export function useJiWeiBaoJingZhanBi() {

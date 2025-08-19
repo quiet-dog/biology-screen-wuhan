@@ -21,3 +21,19 @@ export function jiWeiBaoJingZhanBi(params: {
   })
 }
 
+
+export function jianCeShuJuTongJi() {
+  return http.get("/manage/xwAlarm/jianCeShuJuTongJi")
+}
+
+export function jiWeiQuShiBianHua(data: {
+  dayType?: string;
+  seatNumber: string;
+}) {
+  return http.get("/manage/xwAlarm/jiWeiQuShiBianHua", {
+    params: data
+  })
+}
+
+
+
