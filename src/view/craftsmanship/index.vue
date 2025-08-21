@@ -116,12 +116,8 @@
                 <span :style="{
                   color: item.isHighRisk ? 'red' : '#ffffff',
                 }">{{ item.nodeName }}</span>
-                <span :style="{
-                  color: item.isHighRisk ? 'red' : '#ffffff',
-                }">{{ item.craftArchive.craftArchiveName }}</span>
-                <span :style="{
-                  color: item.isHighRisk ? 'red' : '#ffffff',
-                }">{{ item.isHighRisk ? "是" : "否" }}</span>
+                <span>{{ item.craftArchive.craftArchiveName }}</span>
+                <span>{{ item.isHighRisk ? "是" : "否" }}</span>
               </div>
             </div>
           </Vue3SeamlessScroll>
@@ -151,7 +147,7 @@
             <span style="font-size: 18px">工艺要素</span>
             <span style="font-size: 28px; padding-left: 25px">{{
               processTotal
-            }}</span>
+              }}</span>
           </div>
           <div>
             <span>
@@ -212,8 +208,8 @@
                   }"></div>
                 </div>
                 <ElTooltip :content="item.craftArchiveName">
-                <span>{{ item.craftArchiveName }}</span>
-              </ElTooltip>
+                  <span>{{ item.craftArchiveName }}</span>
+                </ElTooltip>
               </div>
               <div>{{ item.version }}</div>
               <div :style="{
@@ -346,11 +342,7 @@
         <el-scrollbar height="100%">
           <div class="processflowchart_con">
             <el-steps direction="vertical" :active="0">
-              <el-step id="stepMy" v-for="(item,index) in rbInfoList" :title="item.nodeOrder">
-                <!-- <template v-if="item.isHighRisk"  #icon>
-                    {{ index+1 }}
-                  </div>
-                </template> -->
+              <el-step id="stepMy" v-for="item in rbInfoList" :title="item.nodeOrder">
                 <template #title>
                   <div>
                     <span :style="{
@@ -396,7 +388,6 @@ import center from "../../components/center.vue";
 import img9 from "../../../public/img/叉号.png";
 import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
 import { useIntervalFn } from '@vueuse/core'
-import { ElStep } from "element-plus";
 
 
 const bigscreenLBRef = ref();
@@ -648,8 +639,11 @@ const processSelstClick = async (item, v, i) => {
       j.status = false;
     }
   });
-  processFormData.value.craftArchiveId = item.craftArchiveId;
-  const { data } = await processList(processFormData.value);
+  // processFormData.value.craftArchiveId = item.craftArchiveId;
+  const { data } = await processList({
+    ...processFormData.value,
+    craftArchiveId:item.craftArchiveId
+  });
   processlist2.value = data.data.rows;
 };
 
@@ -675,6 +669,13 @@ const nodelistFun = async () => {
     return { ...item, img: imgList[index % imgList.length], status: false };
   });
 };
+
+const nodelistFunTimer = useIntervalFn(() => {
+  nodelistFunTimer.pause();
+  nodelistFun().finally(() => {
+    nodelistFunTimer.resume();
+  })
+}, 10000)
 const lbShow = ref(false);
 const lbInfo = ref()
 const lbClick = (item: any) => {
@@ -767,7 +768,7 @@ const processlistTimer = useIntervalFn(() => {
   processlistFun().finally(() => {
     processlistTimer.resume();
   })
-}, 3600000)
+}, 5000)
 const rtShow = ref(false);
 const rtInfo = ref()
 const rtClcik = (item) => {
@@ -829,6 +830,7 @@ $design-height: 1080;
 .processflowchart {
   height: adaptiveHeight(250);
   padding-left: adaptiveWidth(30);
+  padding-bottom: adaptiveHeight(5);
 
   .processflowchart_con {
     height: 100%;
@@ -1371,6 +1373,10 @@ $design-height: 1080;
           justify-content: space-between;
           align-items: center;
           cursor: pointer;
+          background: url("/public/img/craftsmanship/yaosuback.png") no-repeat;
+          background-size: 100% 100%;
+          // 上下间隔
+          margin-bottom: adaptiveHeight(10);
 
           div {
             width: 33%;
@@ -1388,11 +1394,11 @@ $design-height: 1080;
             align-items: center;
 
             white-space: nowrap;
-          /* 禁止换行 */
-          overflow: hidden;
-          /* 超出内容隐藏 */
-          text-overflow: ellipsis;
-          /* 显示省略号 */
+            /* 禁止换行 */
+            overflow: hidden;
+            /* 超出内容隐藏 */
+            text-overflow: ellipsis;
+            /* 显示省略号 */
 
             .bigscreen_rb_bottom_nei_item1_div {
               width: adaptiveWidth(10);

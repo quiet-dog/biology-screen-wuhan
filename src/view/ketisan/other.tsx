@@ -69,7 +69,7 @@ export function useCePingJieGuoFenXi() {
     const selectValue = ref("心理调查评估问卷")
     //     bigscreenRBChart = echarts.init(bigscreenRBRef.value);
     // bigscreenRBChart.setOption(bigscreenRBoption,true);
-    let cePingJieGuoFenXiChart = null;
+    let cePingJieGuoFenXiChart: any = null;
     const cePingJieGuoFenXiRef = ref()
     async function changeSelectValue(value: string) {
         getPingGuJieGuoFenXi({
@@ -94,10 +94,18 @@ export function useCePingJieGuoFenXi() {
     onMounted(() => {
         changeSelectValue(selectValue.value)
     })
+
+    window.addEventListener("resize", () => {
+        if (cePingJieGuoFenXiChart != null) {
+            cePingJieGuoFenXiChart.resize();
+        }
+    })
+
     return {
         selectValue,
         changeSelectValue,
-        cePingJieGuoFenXiRef
+        cePingJieGuoFenXiRef,
+        cePingJieGuoFenXiChart
     }
 }
 
@@ -155,13 +163,18 @@ export function useCePingJieGuoTongJi() {
         loadMoreCePingJieGuoTongJiSelect()
     })
 
+    window.addEventListener("resize", () => {
+        if (cePingJieGuoTongJiChart != null) {
+            cePingJieGuoTongJiChart.resize();
+        }
+    })
     return {
         handleSelectCePingJieGuoTongJi,
         cePingJieGuoTongJiRef,
         cePingJieGuoTongJiSelect,
         loadMoreCePingJieGuoTongJiSelect,
-        selectXlFangAnList
-
+        selectXlFangAnList,
+        cePingJieGuoTongJiChart
     }
 }
 
@@ -431,6 +444,12 @@ export function useJianCeShuJuTongJi() {
         getData()
     })
 
+    window.addEventListener("resize", () => {
+        if (jianCeShuJuTongJiChart != null) {
+            jianCeShuJuTongJiChart.resize();
+        }
+    })
+
     return {
         jianCeShuJuTongJiRef,
         jiWeiQuShiBianHuaOpen,
@@ -440,7 +459,8 @@ export function useJianCeShuJuTongJi() {
         jiWeiQuShiBianHuaClose,
         jiWeiQuShiBianHuaRadio,
         jiWeiQuShiBianHuaChangeRadio,
-        jiWeiQuShiBianHuaGet
+        jiWeiQuShiBianHuaGet,
+        jianCeShuJuTongJiChart
     }
 
 }
@@ -513,9 +533,15 @@ export function useJiWeiBaoJingZhanBi() {
     onMounted(() => {
         getJiWeiAlarm()
     })
+    window.addEventListener("resize", () => {
+        if (jiWeiBaoJingZhanBiChart != null) {
+            jiWeiBaoJingZhanBiChart.resize();
+        }
+    })
     return {
         jiWeiBaoJingZhanBiRef,
         rbRadio,
-        changeRbRadio
+        changeRbRadio,
+        jiWeiBaoJingZhanBiChart
     }
 }

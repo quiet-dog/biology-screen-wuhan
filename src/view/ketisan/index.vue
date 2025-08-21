@@ -61,7 +61,8 @@
                 <img src="/public/img/光标.png" alt="" />
                 <span>测评结果统计</span>
             </div>
-            <ElSelect @change="handleSelectCePingJieGuoTongJi" v-model="cePingJieGuoTongJiSelect" class="cascaderCss inputcss">
+            <ElSelect @change="handleSelectCePingJieGuoTongJi" v-model="cePingJieGuoTongJiSelect"
+                class="cascaderCss inputcss">
                 <div v-infinite-scroll="loadMoreCePingJieGuoTongJiSelect">
                     <ElOption v-for="item in selectXlFangAnList.data" :label="item.name" :value="item.xlFangAnId" />
                 </div>
@@ -171,8 +172,10 @@
             <img @click="jiWeiQuShiBianHuaClose" :src="img9" alt="" srcset="" />
         </div>
         <div class="rctDialog_content">
-            <ElInput class="inputcss rctDialog_content_inputcss" @change="jiWeiQuShiBianHuaGet" v-model="jiWeiQuShiBianHuaInput" />
-            <el-radio-group v-model="jiWeiQuShiBianHuaRadio" @change="jiWeiQuShiBianHuaChangeRadio" class="group cssRadio">
+            <ElInput class="inputcss rctDialog_content_inputcss" @change="jiWeiQuShiBianHuaGet"
+                v-model="jiWeiQuShiBianHuaInput" />
+            <el-radio-group v-model="jiWeiQuShiBianHuaRadio" @change="jiWeiQuShiBianHuaChangeRadio"
+                class="group cssRadio">
                 <el-radio-button label="天" value="day" />
                 <el-radio-button label="周" value="week" />
                 <el-radio-button label="月" value="month" />
@@ -187,7 +190,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted,  } from "vue";
+import { ref, onMounted, } from "vue";
 import { Search } from "@element-plus/icons-vue";
 import center from "../../components/center.vue";
 import dayjs from "dayjs";
@@ -199,13 +202,13 @@ import { xlFangAnList } from "../../api/xlFangAn";
 import { useCePingJieGuoFenXi, useCePingJieGuoTongJi, useJianCeShuJuTongJi, useJiWeiBaoJingZhanBi, useRenYuanXingWeiShiBieShuJu, userOther } from "./other";
 
 const { resultDetail, resultDetailVis, handleResultDetailVis, resultFangAn } = userOther()
-const { selectValue, changeSelectValue, cePingJieGuoFenXiRef } = useCePingJieGuoFenXi()
-const { handleSelectCePingJieGuoTongJi, cePingJieGuoTongJiRef, cePingJieGuoTongJiSelect, loadMoreCePingJieGuoTongJiSelect, selectXlFangAnList } = useCePingJieGuoTongJi()
+const { selectValue, changeSelectValue, cePingJieGuoFenXiRef, cePingJieGuoFenXiChart } = useCePingJieGuoFenXi()
+const { handleSelectCePingJieGuoTongJi, cePingJieGuoTongJiRef, cePingJieGuoTongJiSelect, loadMoreCePingJieGuoTongJiSelect, selectXlFangAnList, cePingJieGuoTongJiChart } = useCePingJieGuoTongJi()
 const { xwAlarmlist } = useRenYuanXingWeiShiBieShuJu()
-const { jiWeiBaoJingZhanBiRef, rbRadio, changeRbRadio } = useJiWeiBaoJingZhanBi()
+const { jiWeiBaoJingZhanBiRef, rbRadio, changeRbRadio, jiWeiBaoJingZhanBiChart } = useJiWeiBaoJingZhanBi()
 const { jianCeShuJuTongJiRef, jiWeiQuShiBianHuaOpen,
     jiWeiQuShiBianHuaVis, jiWeiQuShiBianHuaInput, jiWeiQuShiBianHuaRef, jiWeiQuShiBianHuaClose,
-jiWeiQuShiBianHuaRadio,jiWeiQuShiBianHuaChangeRadio,jiWeiQuShiBianHuaGet } = useJianCeShuJuTongJi()
+    jiWeiQuShiBianHuaRadio, jiWeiQuShiBianHuaChangeRadio, jiWeiQuShiBianHuaGet, jianCeShuJuTongJiChart } = useJianCeShuJuTongJi()
 
 
 //监测数据
@@ -227,6 +230,7 @@ const xlFangAnlistTimer = useIntervalFn(() => {
         xlFangAnlistTimer.resume();
     })
 }, 10000)
+
 
 
 
@@ -665,6 +669,7 @@ $design-height: 1080;
                 text-align: center;
                 font-style: normal;
                 text-transform: none;
+                min-width: adaptiveWidth(120);
                 background: linear-gradient(to bottom,
                         #c7e5fd 42%,
                         #3582c7 100%);

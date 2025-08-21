@@ -16,18 +16,10 @@
               background: `url('${item.back}') no-repeat`,
               backgroundSize: '100% 100%',
             }">
-              <!-- <span>{{ item?.equipment?.equipmentCode }}</span> -->
+              <span>{{ item?.equipment?.equipmentCode }}</span>
 
-              <ElTooltip :content="item?.equipment?.equipmentCode">
-                <span>{{ item?.equipment?.equipmentCode }}</span>
-              </ElTooltip>
-              <!-- <span :style="{
-                color: item.back !== '/img/红色背景.png' ? '#00FFF9' : '#FFBCC0',
-              }">
-                {{ item?.equipment?.equipmentName }}
-              </span> -->
               <ElTooltip :content="item?.equipment?.equipmentName">
-                <span :style="{
+                <span class="single-line-ellipsis" :style="{
                   color: item.back !== '/img/红色背景.png' ? '#00FFF9' : '#FFBCC0',
                 }">
                   {{ item?.equipment?.equipmentName }}
@@ -36,7 +28,7 @@
               <span :style="{
                 color: getEquipmentDataColor(item)
               }">
-                {{ item.equipmentData + "" + item?.threshold?.unit }}
+                {{ Math.round(item.equipmentData * 100) / 100 + "" + item?.threshold?.unit }}
               </span>
             </div>
           </div>
@@ -67,17 +59,25 @@
             step: 5,
           }" hover class="scrool">
             <div class="bigscreen_lc_bottom_nei_b" v-for="item in equipmentlist">
-              <ElTooltip :content="item.equipmentCode">
-                <span>
-                  {{ item.equipmentCode }}
-                </span>
-              </ElTooltip>
-              <ElTooltip :content="item.equipmentName">
-                <span>{{ item.equipmentName }}</span>
-              </ElTooltip>
-              <ElTooltip :content="item.equipmentType">
-                <span>{{ item.equipmentType }}</span>
-              </ElTooltip>
+              <el-popover effect="dark" class="box-item" :content="item.equipmentCode" placement="top-start">
+                <template #reference>
+                  <span>
+                    {{ item.equipmentCode }}
+                  </span>
+                </template>
+              </el-popover>
+              <!-- <span>
+                {{ item.equipmentCode }}
+              </span> -->
+              <el-popover effect="dark" class="box-item" :content="item.equipmentName" placement="top-start">
+                <template #reference>
+                  <span>
+                    {{ item.equipmentName }}
+                  </span>
+                </template>
+              </el-popover>
+              <!-- <span>{{ item.equipmentName }}</span> -->
+              <span>{{ item.equipmentType }}</span>
               <span>{{ dayjs(item.purchaseDate).format("YYYY-MM-DD") }}</span>
             </div>
           </Vue3SeamlessScroll>
@@ -93,12 +93,11 @@
       </div>
       <el-cascader :options="equipmentlist2" v-model="equipmentIds" @change="cascaderChange" class="cascaderCss" :props="{
         value: 'id',
-        label: 'label',
+        label: 'name',
         children: 'thresholdList',
       }" />
     </div>
     <div class="bigscreen_lb_bottom">
-      <div class="bigscreen_lb_bottom_text">运行时间:{{ allTime }}</div>
       <div @mouseenter="historicalStatisticsListTimer.pause()" @mouseleave="historicalStatisticsListTimer.resume()"
         class="bigscreen_lb_bottom_nei" ref="bigscreenLBRef"></div>
     </div>
@@ -167,10 +166,7 @@
       <div class="bigscreen_rb_top_l">
         <img src="/public/img/光标.png" alt="" />
         <span>巡检记录</span>
-        <ElButton link style="color: white;" @click="ciShuDig = true" class="bigscreen_rb_top_l_rg">巡检趋势分析</ElButton>
       </div>
-
-
     </div>
     <div class="bigscreen_rb_bottom">
       <img src="/public/img/xujian.png" alt="" />
@@ -220,27 +216,6 @@
         </div>
       </div>
     </div>
-    <div class="rb_dialog" v-show="ciShuDig">
-      <div class="rb_dialog_top">
-        <span>巡检趋势</span>
-        <img @click="ciShuDig = false" class="rb_dialog_top_x" :src="img9" alt="" srcset="" />
-
-        <div class="pickerCss">
-          <img src="/public/img/zuo.svg" alt="" @click="ciShuLeftClick" style="margin-left: 5px" />
-          <span>{{
-            dayjs(ciShuTimer.startTime).format("MM月DD日")
-          }}</span>
-          <span>-</span>
-          <span>{{
-            dayjs(ciShuTimer.endTime).format("MM月DD日")
-          }}</span>
-          <img src="/public/img/you.svg" alt="" @click="ciShuRightClick" style="margin-right: 5px" />
-        </div>
-      </div>
-      <div class="rb_dialog_bottom">
-        <div class="rb_dialog_bottom_echart" ref="qushiRef"></div>
-      </div>
-    </div>
   </div>
 
   <template v-for="item in repairList">
@@ -276,7 +251,7 @@
             <span>{{ item.repairContent }}</span>
           </div>
           <div>
-            <span>故障原因：</span>
+            <span>维修原因：</span>
             <span>{{ item.faultReason }}</span>
           </div>
         </div>
@@ -359,8 +334,6 @@ import {
   equipmentList,
   historicalStatisticsList,
   repairStatistics,
-  dailyCishuInspectionList,
-  getAllTime,
 } from "../../api/equipment/index";
 import dayjs from "dayjs";
 import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
@@ -369,8 +342,6 @@ import { getChannelListApi, getStreamUrlApi } from "../../api/video";
 import Video from "../home/components/Video.vue";
 import { thresholdDataList } from "../../api/riskassessment";
 import { useIntervalFn } from '@vueuse/core'
-import { ElButton } from "element-plus";
-import { useXunJianQushiHook } from "./qushi";
 
 
 const rtStatus = ref(false);
@@ -407,7 +378,7 @@ const ltequipmentFormData = ref({
 const ltequipmentlist = ref<any[]>([]);
 // 修改获取设备数据颜色的方法
 const getEquipmentDataColor = row => {
-  if (!row.threshold?.values?.length) return "inherit";
+  if (!row.threshold?.values?.length) return "white";
 
   const value = Number(row.equipmentData);
   const thresholds = row.threshold.values;
@@ -443,14 +414,13 @@ const getEquipmentDataColor = row => {
           return "#00B42A"; // 一般 - 绿色
         case "轻微":
           return "#00B42A"; // 一般 - 绿色
-
         default:
-          return "#168CFF";
+          return "white";
       }
     }
   }
 
-  return "inherit";
+  return "white";
 };
 const ltequipmentListFun = async () => {
   // const { data } = await equipmentList(ltequipmentFormData.value);
@@ -538,26 +508,25 @@ const equipmentListFun = async () => {
       id: item.equipmentId,
       name: item.equipmentName,
       thresholdList: list,
-      label: item.equipmentName + "-" + item.equipmentCode,
     };
   });
   equipmentId.value = data.data.rows[0].equipmentId;
   equipmentIds.value = [
     equipmentlist2.value[0].equipmentId,
-    equipmentlist2.value[0]?.thresholdList[0]?.thresholdId,
+    equipmentlist2.value[0].thresholdList[0].thresholdId,
   ];
-  thresholdId.value = equipmentlist2?.value[0].thresholdList[0]?.thresholdId;
+  thresholdId.value = equipmentlist2.value[0].thresholdList[0].thresholdId;
   historicalStatisticsListFun();
 };
 const searchEquipment = (val) => {
   equipmentListFun();
 };
-const equipmentListTimer = useIntervalFn(() => {
-  equipmentListTimer.pause();
-  equipmentListFun().finally(() => {
-    equipmentListTimer.resume();
-  })
-}, 10000)
+// const equipmentListTimer = useIntervalFn(() => {
+//   equipmentListTimer.pause();
+//   equipmentListFun().finally(() => {
+//     equipmentListTimer.resume();
+//   })
+// }, 10000)
 
 //设备运行状态
 let bigscreenLBChart: any = null;
@@ -637,7 +606,7 @@ const historicalStatisticsListFun = async () => {
   if (bigscreenLBRef.value && bigscreenLBChart == null) {
     bigscreenLBChart = echarts.init(bigscreenLBRef.value);
   }
-  bigscreenLBChart.setOption(bigscreenLBoption);
+  bigscreenLBChart.setOption(bigscreenLBoption,true);
 
 };
 const historicalStatisticsListTimer = useIntervalFn(() => {
@@ -647,31 +616,9 @@ const historicalStatisticsListTimer = useIntervalFn(() => {
   })
 }, 10000)
 
-const allTime = ref("0")
-function getFormatTime(data: number) {
-  const days = Math.floor(data / 1440);     // 1天 = 1440分钟
-  const hours = Math.floor((data % 1440) / 60);
-  const mins = data % 60;
-  if (days > 0) {
-    return `${days}天${hours}小时${mins}分`
-  }
-  if (hours > 0) {
-    return `${hours}小时${mins}分`
-  }
-  return `${mins}分`
-}
 const cascaderChange = (val) => {
-  console.log("val", val)
   thresholdId.value = val[1];
   historicalStatisticsListFun();
-  getAllTime(val[0]).then(res => {
-    // 转成几天几小时
-    if (res.data?.data?.totalTime != null) {
-      allTime.value = getFormatTime(res.data?.data?.totalTime)
-    } else {
-      allTime.value = "0"
-    }
-  })
 };
 
 //维修记录
@@ -744,8 +691,13 @@ const bigscreenRCoption = {
       },
     },
     axisLabel: {
-      color: "#ffffff",
+      formatter: function (value) {
+        return Math.round(value);
+      }
     },
+    // interval: 20,
+    min: 'dataMin',
+    max: 'dataMax',
   },
   series: [
     {
@@ -857,20 +809,12 @@ window.onresize = function () {
   bigscreenLBChart.resize();
 };
 
-const { ciShuTimer,
-  ciShuLeftClick,
-  ciShuRightClick,
-  dailyCishuInspectionListFunc,
-  qushiRef,
-  ciShuDig } = useXunJianQushiHook()
-
 onMounted(() => {
   equipmentRepairListFun();
   inspectionListFun();
   equipmentListFun();
   ltequipmentListFun();
   getVideoList()
-  dailyCishuInspectionListFunc();
 });
 </script>
 
@@ -890,79 +834,11 @@ $design-height: 1080;
   @return #{$px / $design-width * 100}vw;
 }
 
-.rb_dialog {
-  width: adaptiveWidth(350);
-  height: adaptiveHeight(270);
-  position: absolute;
-  top: 0;
-  left: - adaptiveWidth(350);
-  background: url("/public/img/弹窗背景.png") no-repeat;
-  background-size: 100% 100%;
-}
-
-.rb_dialog_top {
-  width: 100%;
-  height: adaptiveHeight(45);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  .rb_dialog_top_x {
-    position: absolute;
-    right: adaptiveWidth(7);
-  }
-
-  span {
-    font-family: youshe;
-    font-size: adaptiveFontSize(20);
-    color: #ffffff;
-    padding-left: adaptiveWidth(15);
-  }
-}
-
-.rb_dialog_bottom {
-  height: adaptiveHeight(225);
-}
-
-.rb_dialog_bottom_echart {
-  width: adaptiveWidth(350);
-  ;
-  height: adaptiveHeight(225);
-}
-
 .yzInput {
   position: relative;
   left: adaptiveWidth(20);
   top: adaptiveHeight(5);
 }
-
-.bigscreen_rb_top_l_rg {
-  margin-left: adaptiveWidth(260);
-}
-
-.pickerCss {
-
-  width: adaptiveWidth(155);
-  height: adaptiveHeight(24);
-  border: 1px solid rgba(227, 233, 243, 0.2);
-  border-radius: 5px;
-  margin-right: adaptiveWidth(11);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-  top: adaptiveWidth(6);
-  left: - adaptiveWidth(20);
-
-  span {
-    color: #ffffff;
-    font-size: adaptiveFontSize(10);
-    font-family: unset !important;
-    font-weight: 100 !important;
-  }
-}
-
-
 
 .bigscreen_lt,
 .bigscreen_lc,
@@ -1053,31 +929,18 @@ $design-height: 1080;
             &:nth-child(1) {
               font-size: adaptiveFontSize(12);
               color: #ffffff;
-              padding: 0 0 0 adaptiveWidth(32);
-              width: adaptiveWidth(30);
-              white-space: nowrap;
-              /* 不换行 */
-              overflow: hidden;
-              /* 超出隐藏 */
-              text-overflow: ellipsis;
-              /* 超出部分显示省略号 */
+              padding: 0 adaptiveWidth(32);
             }
 
             &:nth-child(2) {
               font-family: youshe;
               font-size: adaptiveFontSize(20);
-              white-space: nowrap;
-              /* 不换行 */
-              overflow: hidden;
-              /* 超出隐藏 */
-              text-overflow: ellipsis;
-              /* 超出部分显示省略号 */
             }
 
             &:nth-child(3) {
               // font-family: youshe;
               font-size: adaptiveFontSize(12);
-              margin-left: auto;
+              margin-left: adaptiveFontSize(30);
             }
           }
         }
@@ -1176,17 +1039,16 @@ $design-height: 1080;
             width: 25%;
             color: #ffffff;
             font-size: adaptiveFontSize(12);
+            // 超出部分隐藏
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
 
+            &:nth-child(1),
             &:nth-child(2),
             &:nth-child(3),
             &:nth-child(4) {
               text-align: center;
-              white-space: nowrap;
-              /* 不换行 */
-              overflow: hidden;
-              /* 超出隐藏 */
-              text-overflow: ellipsis;
-              /* 超出部分显示省略号 */
             }
           }
         }
@@ -1243,17 +1105,9 @@ $design-height: 1080;
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
 
-    .bigscreen_lb_bottom_text {
-      height: adaptiveHeight(20);
-      text-align: right;
-      padding-right: adaptiveWidth(20);
-      padding-top: adaptiveHeight(10);
-      color: white;
-    }
-
     .bigscreen_lb_bottom_nei {
       width: 100%;
-      height: adaptiveHeight(221);
+      height: 100%;
     }
   }
 }
@@ -1920,10 +1774,13 @@ $design-height: 1080;
   border-radius: 2px;
 }
 
-
 .single-line-ellipsis {
-  white-space: nowrap;        /* 不换行 */
-  overflow: hidden;           /* 溢出隐藏 */
-  text-overflow: ellipsis;    /* 超出部分显示省略号 */
+  max-width: adaptiveWidth(100);
+  white-space: nowrap;
+  /* 不换行 */
+  overflow: hidden;
+  /* 溢出隐藏 */
+  text-overflow: ellipsis;
+  /* 超出部分显示省略号 */
 }
 </style>

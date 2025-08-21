@@ -72,12 +72,12 @@
         <img @click="closeShow" :src="img9" alt="" srcset="" />
       </div>
       <div class="ltTrendDialog_bottom">
-        <ElTable id="tableMy" :header-cell-style="tableHeaderColor" :cell-style="handleChangeCellStyle"
+        <ElTable :header-cell-style="tableHeaderColor" :cell-style="handleChangeCellStyle" id="tableMy"
           header-row-class-name="headerTr" style="width: 100%;background: #002547;" height="100%" :data="hisList">
           <el-table-column width="150" fixed prop="createTime" label="报警时间">
             <template #default="{ row }">
               <span>{{
-                dayjs(row.createTime).format("YYYY-MM-DD hh:mm:ss") }}</span>
+                row.createTime }}</span>
             </template>
           </el-table-column>
           <el-table-column fixed width="80" prop="level" label="报警级别">
@@ -87,28 +87,15 @@
               </el-tag>
             </template>
           </el-table-column>
-          <!-- <el-table-column prop="type" label="类型">
-          <template #default="{ row }">
-            <span>{{ row.type }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column fixed width="80" prop="level" label="数值">
-          <template #default="{ row }">
-            {{ getValue(row) }}
-          </template>
-        </el-table-column>
-        <el-table-column width="100" prop="description" label="报警编号">
-          <template #default="{ row }">
-            <span>{{ row.eventId }}</span>
-          </template>
-        </el-table-column> -->
           <el-table-column prop="description" label="报警描述">
             <template #default="{ row }">
               <span>{{ row.description }}</span>
             </template>
           </el-table-column>
-
-
+          <template #append>
+            <el-pagination id="popperHis" v-model:current-page="hisPage" v-model:page-size="hisPageSize"
+              :background="false" :small="true" @change="changeHisPag" layout="prev, pager, next" :total="hisTotal" />
+          </template>
         </ElTable>
       </div>
 
@@ -754,8 +741,15 @@ let hisStart = "";
 let hisEnd = "";
 let hisIndex = 0;
 let hisList = ref([])
+let hisTotal = ref(0);
+let hisPage = ref(1);
+let hisPageSize = ref(10);
 let hisDayType = ref("week");
 const hisShow = ref(false);
+const changeHisPag = (currentPage: number, pageSize: number) => {
+  // console.log("currentPage", currentPage, "pageSize", pageSize);
+  getEmEvent();
+}
 // 修改报警级别样式映射函数
 const getLevelStyle = (level: string) => {
   const colorMap = {
@@ -822,6 +816,19 @@ const getLevelStyle = (level: string) => {
 
 const lbRadio = ref("week");
 const bigScreenInit = ref(false)
+const getEmEvent = () => {
+  alarmEventsList({
+    beginTime: hisStart,
+    endTime: hisEnd,
+    pageNum: hisPage.value,
+    pageSize: hisPageSize.value,
+    orderColumn: "createTime",
+    orderDirection: "descending"
+  }).then((res) => {
+    hisList.value = res.data.data.rows;
+    hisTotal.value = res.data.data.total;
+  })
+}
 const geteventTotalFun = async () => {
   const { data } = await geteventTotal({ dayType: lbRadio.value });
 
@@ -850,20 +857,26 @@ const geteventTotalFun = async () => {
             enData = dayjs(cuData).endOf("month").format("YYYY-MM-DD")
           }
 
+          hisPage.value = 1;
+          hisPageSize.value = 10;
           hisStart = cuData;
           hisEnd = enData;
-          alarmEventsList({
-            beginTime: cuData,
-            endTime: enData,
-            pageNum: 1,
-            pageSize: 100
-          }).then((res) => {
-            hisList.value = res.data.data.rows;
-          })
+          getEmEvent();
+          // alarmEventsList({
+          //   beginTime: cuData,
+          //   endTime: enData,
+          //   pageNum: hisPage.value,
+          //   pageSize: hisPageSize.value,
+          //   orderColumn: "createTime",
+          //   orderDirection: "descending"
+          // }).then((res) => {
+          //   hisList.value = res.data.data.rows;
+          //   hisTotal.value = res.data.data.total;
+          // })
         }
       });
     }
-    bigscreenLBChart.setOption(bigscreenLBoption);
+    bigscreenLBChart.setOption(bigscreenLBoption, true);
 
   }
 };
@@ -894,7 +907,7 @@ const closeShow = () => {
   hisShow.value = false
 }
 
-const { yzRef, yzTableData, etDialog, handleDialogClose } = useAlarmHook();
+const { yzRef, yzTableData, etDialog, handleDialogClose, et } = useAlarmHook();
 
 function tableHeaderColor(data) {
   return {

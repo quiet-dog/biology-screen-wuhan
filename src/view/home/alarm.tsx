@@ -31,7 +31,7 @@ export function useAlarmHook() {
             }
         ]
     }
-    const et = ref()
+    let et: any = null;
     const etDialog = ref(false)
     function handleDialogClose() {
         etDialog.value = false
@@ -56,7 +56,26 @@ export function useAlarmHook() {
                     }
                 }
             })
-            et.value.setOption(yzOption)
+            if (et == null) {
+                et = echarts.init(yzRef.value)
+                et.off().on("click", (params) => {
+                    if (params.name === "设备报警") {
+                        getAllEquipmentAreaEchart().then(res => {
+                            yzTableData.value = res.data.data
+                        }).finally(() => {
+                            etDialog.value = true
+                        })
+                    }
+                    if (params.name === "环境报警") {
+                        getAllEnvironmentAreaEchart().then(res => {
+                            yzTableData.value = res.data.data
+                        }).finally(() => {
+                            etDialog.value = true
+                        })
+                    }
+                })
+            }
+            et.setOption(yzOption)
         })
     }
 
@@ -64,25 +83,15 @@ export function useAlarmHook() {
 
     onMounted(() => {
         nextTick(() => {
-            et.value = echarts.init(yzRef.value)
+            et = echarts.init(yzRef.value)
             getEchartData()
-            et.value.off().on("click", (params) => {
-                if (params.name === "设备报警") {
-                    getAllEquipmentAreaEchart().then(res => {
-                        yzTableData.value = res.data.data
-                    }).finally(() => {
-                        etDialog.value = true
-                    })
-                }
-                if (params.name === "环境报警") {
-                    getAllEnvironmentAreaEchart().then(res => {
-                        yzTableData.value = res.data.data
-                    }).finally(() => {
-                        etDialog.value = true
-                    })
-                }
-            })
+
         })
+    })
+    window.addEventListener("resize", () => {
+        if (et != null) {
+            et.resize();
+        }
     })
 
     return {
