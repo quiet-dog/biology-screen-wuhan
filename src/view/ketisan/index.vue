@@ -61,7 +61,7 @@
                 <img src="/public/img/光标.png" alt="" />
                 <span>测评结果统计</span>
             </div>
-            <ElSelect @change="handleSelectCePingJieGuoTongJi" v-model="cePingJieGuoTongJiSelect" class="cascaderCss">
+            <ElSelect @change="handleSelectCePingJieGuoTongJi" v-model="cePingJieGuoTongJiSelect" class="cascaderCss inputcss">
                 <div v-infinite-scroll="loadMoreCePingJieGuoTongJiSelect">
                     <ElOption v-for="item in selectXlFangAnList.data" :label="item.name" :value="item.xlFangAnId" />
                 </div>
@@ -1406,6 +1406,7 @@ $design-height: 1080;
 
 .inputcss {
     --el-fill-color-blank: transparent !important;
+    // --el-border-color:transparent !important;
     width: adaptiveWidth(148);
     height: adaptiveHeight(24);
     margin-right: adaptiveWidth(11);
