@@ -80,6 +80,14 @@ const routes: RouteRecordRaw[] = [
           title: "课题三",
         },
       },
+      {
+        path: "/ketisi",
+        name: "ketisi",
+        component: () => import("../view/ketisi/index.vue"),
+        meta: {
+          title: "课题四",
+        },
+      },
     ],
   },
 ];

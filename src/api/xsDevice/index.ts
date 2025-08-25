@@ -12,3 +12,7 @@ export function addXsDevice(data: AddXsDeviceReq) {
     data
   })
 }
+
+export function getXsOnlineCount() {
+  return http.get("/manage/xsDevice/getOnlineCount")
+}

@@ -3,29 +3,27 @@
         <div class="bigscreen_lt_top">
             <div class="bigscreen_lt_top_l">
                 <img src="/public/img/光标.png" alt="" />
-                <span>心理测评方案</span>
+                <span>监测设备状态</span>
             </div>
         </div>
         <div class="bigscreen_lt_bottom">
             <div class="bigscreen_lt_bottom_nei_t">
-                <span>方案名称</span>
-                <span>测评内容</span>
-                <span>评估时间</span>
+                <span>设备编号</span>
+                <span>所属区域</span>
+                <span>状态</span>
             </div>
-            <div @mouseenter="xlFangAnlistTimer.pause()" @mouseleave="xlFangAnlistTimer.resume()"
-                class="bigscreen_lt_bottomnei">
-                <Vue3SeamlessScroll :list="xlFangAnlist" :step="1" :singleHeight="70" hover class="scrool">
-                    <div class="bigscreen_lt_bottom_nei" v-for="(item, index) in xlFangAnlist">
-                        <div @click="handleResultDetailVis(item)">
+            <div class="bigscreen_lt_bottomnei">
+                <Vue3SeamlessScroll :list="jianCeList" :step="1" :singleHeight="70" hover class="scrool">
+                    <div class="bigscreen_lt_bottom_nei" v-for="(item, index) in jianCeList">
+                        <div>
                             <ElTooltip :content="item?.name">
                                 <span>{{ item?.name }}</span>
                             </ElTooltip>
-
-                            <ElTooltip :content="item?.shiJuanTypesStr">
-                                <span>{{ item.shiJuanTypesStr }}</span>
+                            <ElTooltip :content="item?.area">
+                                <span>{{ item.area }}</span>
                             </ElTooltip>
-                            <ElTooltip :content="item?.pingGuTimeStr">
-                                <span>{{ item.pingGuTimeStr }}</span>
+                            <ElTooltip :content="item?.isOnlineStr">
+                                <span>{{ item.isOnlineStr }}</span>
                             </ElTooltip>
                         </div>
                     </div>
@@ -37,76 +35,27 @@
         <div class="bigscreen_lc_top">
             <div class="bigscreen_lc_top_l">
                 <img src="/public/img/光标.png" alt="" />
-                <span>评估结果分析</span>
+                <span>采集设备状态</span>
             </div>
-            <!-- <el-input class="inputcss" placeholder="请输入设备名称" clearable :prefix-icon="Search"
-                v-model="equipmentFormData.equipmentName" @change="searchEquipment" /> -->
-            <el-select v-model="selectValue" @change="changeSelectValue" class="inputcss">
-                <el-option value="心理调查评估问卷">心理调查评估问卷</el-option>
-                <el-option value="SAS量表">SAS量表</el-option>
-                <el-option value="SDS量表">SDS量表</el-option>
-            </el-select>
         </div>
         <div class="bigscreen_lc_bottom">
-            <div class="bigscreen_lc_bottom_nei">
-                <div class="bigscreen_lc_bottom_neib" ref="cePingJieGuoFenXiRef">
-
-                </div>
+            <div class="bigscreen_lc_bottom_nei_t">
+                <span>设备编号</span>
+                <span>所属区域</span>
+                <span>状态</span>
             </div>
-        </div>
-    </div>
-    <div class="bigscreen_lb">
-        <div class="bigscreen_lb_top">
-            <div class="bigscreen_lb_top_l">
-                <img src="/public/img/光标.png" alt="" />
-                <span>测评结果统计</span>
-            </div>
-            <ElSelect @change="handleSelectCePingJieGuoTongJi" v-model="cePingJieGuoTongJiSelect"
-                class="cascaderCss inputcss">
-                <div v-infinite-scroll="loadMoreCePingJieGuoTongJiSelect">
-                    <ElOption v-for="item in selectXlFangAnList.data" :label="item.name" :value="item.xlFangAnId" />
-                </div>
-            </ElSelect>
-        </div>
-        <div class="bigscreen_lb_bottom">
-            <div class="bigscreen_lb_bottom_nei" ref="cePingJieGuoTongJiRef"></div>
-        </div>
-    </div>
-    <center></center>
-    <div class="bigscreen_rt">
-        <div class="bigscreen_rt_top">
-            <div class="bigscreen_rt_top_l">
-                <img src="/public/img/光标.png" alt="" />
-                <span>人体行为识别数据</span>
-            </div>
-            <ElButton @click="jiWeiQuShiBianHuaOpen" class="inputcssright" placeholder="请输入监控点位" :prefix-icon="Search">
-                趋势分析
-            </ElButton>
-        </div>
-        <div class="bigscreen_rt_bottom">
-            <div class="bigscreen_rt_bottom_nei_t">
-                <span>机位号</span>
-                <span>摄像头ID</span>
-                <span>区域</span>
-                <span>报警时间</span>
-            </div>
-            <div class="bigscreen_rt_bottomnei">
-                <Vue3SeamlessScroll :list="xwAlarmlist" :step="1" :singleHeight="70" hover class="scrool">
-                    <div class="bigscreen_rt_bottom_nei" v-for="(item, index) in xwAlarmlist">
+            <div class="bigscreen_lc_bottomnei">
+                <Vue3SeamlessScroll :list="caiYangList" :step="1" :singleHeight="70" hover class="scrool">
+                    <div class="bigscreen_lc_bottom_nei" v-for="(item, index) in caiYangList">
                         <div>
-                            <ElTooltip class="myTooltip" :content="item?.seatNumber">
-                                <span>{{ item?.seatNumber }}</span>
+                            <ElTooltip :content="item?.name">
+                                <span>{{ item?.name }}</span>
                             </ElTooltip>
-
-                            <ElTooltip class="myTooltip" :content="item?.cameraId">
-                                <span>{{ item.cameraId }}</span>
-                            </ElTooltip>
-                            <ElTooltip class="myTooltip" :content="item?.area">
+                            <ElTooltip :content="item?.area">
                                 <span>{{ item.area }}</span>
                             </ElTooltip>
-                            <ElTooltip class="myTooltip"
-                                :content="dayjs(item?.timeStamp).format('yyyy-MM-DD hh:mm:ss')">
-                                <span>{{ dayjs(item?.timeStamp).format("yyyy-MM-DD hh:mm:ss") }}</span>
+                            <ElTooltip :content="item?.isOnlineStr">
+                                <span>{{ item.isOnlineStr }}</span>
                             </ElTooltip>
                         </div>
                     </div>
@@ -114,17 +63,60 @@
             </div>
         </div>
     </div>
+    <div class="bigscreen_lb">
+        <div class="bigscreen_lb_top">
+            <div class="bigscreen_lb_top_l">
+                <img src="/public/img/光标.png" alt="" />
+                <span>消杀设备状态</span>
+            </div>
+        </div>
+        <div class="bigscreen_lb_bottom">
+            <div class="bigscreen_lb_bottom_nei_t">
+                <span>设备编号</span>
+                <span>所属区域</span>
+                <span>状态</span>
+            </div>
+            <div class="bigscreen_lb_bottomnei">
+                <Vue3SeamlessScroll :list="xsList" :step="1" :singleHeight="70" hover class="scrool">
+                    <div class="bigscreen_lb_bottom_nei" v-for="(item, index) in xsList">
+                        <div>
+                            <ElTooltip :content="item?.name">
+                                <span>{{ item?.name }}</span>
+                            </ElTooltip>
+                            <ElTooltip :content="item?.area">
+                                <span>{{ item.area }}</span>
+                            </ElTooltip>
+                            <ElTooltip :content="item?.isOnlineStr">
+                                <span>{{ item.isOnlineStr }}</span>
+                            </ElTooltip>
+                        </div>
+                    </div>
+                </Vue3SeamlessScroll>
+            </div>
+        </div>
+    </div>
+    <center></center>
+    <div class="bigscreen_rt">
+        <div class="bigscreen_rt_top">
+            <div class="bigscreen_rt_top_l">
+                <img src="/public/img/光标.png" alt="" />
+                <span>监测设备统计</span>
+            </div>
+        </div>
+        <div class="bigscreen_rt_bottom" ref="jianCeRef">
+        </div>
+    </div>
     <div class="bigscreen_rc">
         <div class="bigscreen_rc_top">
             <div class="bigscreen_rc_top_l">
                 <img src="/public/img/光标.png" alt="" />
-                <span>监测数据统计</span>
+                <span>采集设备统计</span>
             </div>
             <div class="bigscreen_rc_top_r">
             </div>
         </div>
         <div class="bigscreen_rc_bottom">
-            <div class="bigscreen_rc_bottom_nei" ref="jianCeShuJuTongJiRef">
+            <div class="bigscreen_rc_bottom_nei" ref="caiYangRef">
             </div>
         </div>
     </div>
@@ -132,112 +124,30 @@
         <div class="bigscreen_rb_top">
             <div class="bigscreen_rb_top_l">
                 <img src="/public/img/光标.png" alt="" />
-                <span>机位报警占比</span>
+                <span>消杀设备统计</span>
             </div>
-            <el-radio-group v-model="rbRadio" class="group" @change="changeRbRadio">
-                <el-radio-button label="周" value="week" />
-                <el-radio-button label="月" value="month" />
-            </el-radio-group>
         </div>
-        <div class="bigscreen_rb_bottom" ref="jiWeiBaoJingZhanBiRef">
+        <div class="bigscreen_rb_bottom" ref="xsDeviceRef">
 
         </div>
     </div>
 
-    <div v-if="resultDetailVis" class="ltDialog">
-        <div class="rctDialog_top">
-            <span>测评结果统计</span>
-            <img :src="img9" alt="" srcset="" @click="resultDetailVis = false" />
-        </div>
-        <div class="rctDialog_bottom">
-            <ElScrollbar height="100%">
-                <template v-for="item in resultFangAn.shiJuanTypes">
-                    <ElDescriptions class="resultDetailCss" :column="1" :title="item">
-                        <template v-if="resultDetail != undefined && resultDetail[item] != undefined">
-                            <ElDescriptionsItem label-class-name="labelClassName"
-                                v-for="key in Object.keys(resultDetail[item])" :label="key">
-                                <span style="color: white;">{{ resultDetail[item][key] }}人</span>
-                            </ElDescriptionsItem>
-                        </template>
-                    </ElDescriptions>
-                </template>
-            </ElScrollbar>
 
-        </div>
-    </div>
-
-    <div v-if="jiWeiQuShiBianHuaVis" class="rzDialog">
-        <div class="rctDialog_top">
-            <span>趋势分析</span>
-            <img @click="jiWeiQuShiBianHuaClose" :src="img9" alt="" srcset="" />
-        </div>
-        <div class="rctDialog_content">
-            <ElInput class="inputcss rctDialog_content_inputcss" @change="jiWeiQuShiBianHuaGet"
-                v-model="jiWeiQuShiBianHuaInput" />
-            <el-radio-group v-model="jiWeiQuShiBianHuaRadio" @change="jiWeiQuShiBianHuaChangeRadio"
-                class="group cssRadio">
-                <el-radio-button label="天" value="day" />
-                <el-radio-button label="周" value="week" />
-                <el-radio-button label="月" value="month" />
-                <!-- <el-radio-button label="年" value="year" /> -->
-            </el-radio-group>
-        </div>
-        <div class="rctDialog_bottom" ref="jiWeiQuShiBianHuaRef">
-        </div>
-    </div>
 
 
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, } from "vue";
-import { Search } from "@element-plus/icons-vue";
 import center from "../../components/center.vue";
-import dayjs from "dayjs";
 import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
-import img9 from "../../../public/img/叉号.png";
-import { useIntervalFn } from '@vueuse/core'
-import { ElButton, ElDescriptions, ElDescriptionsItem, ElForm, ElFormItem, ElInput, ElScrollbar, ElSelect } from "element-plus";
-import { xlFangAnList } from "../../api/xlFangAn";
-import { useCePingJieGuoFenXi, useCePingJieGuoTongJi, useJianCeShuJuTongJi, useJiWeiBaoJingZhanBi, useRenYuanXingWeiShiBieShuJu, userOther } from "./other";
+import { useCaiYangDeviceStatus, useJianCeDeviceStatus, useXsDeviceStatus } from "./other.tsx";
 
-const { resultDetail, resultDetailVis, handleResultDetailVis, resultFangAn } = userOther()
-const { selectValue, changeSelectValue, cePingJieGuoFenXiRef, cePingJieGuoFenXiChart } = useCePingJieGuoFenXi()
-const { handleSelectCePingJieGuoTongJi, cePingJieGuoTongJiRef, cePingJieGuoTongJiSelect, loadMoreCePingJieGuoTongJiSelect, selectXlFangAnList, cePingJieGuoTongJiChart } = useCePingJieGuoTongJi()
-const { xwAlarmlist } = useRenYuanXingWeiShiBieShuJu()
-const { jiWeiBaoJingZhanBiRef, rbRadio, changeRbRadio, jiWeiBaoJingZhanBiChart } = useJiWeiBaoJingZhanBi()
-const { jianCeShuJuTongJiRef, jiWeiQuShiBianHuaOpen,
-    jiWeiQuShiBianHuaVis, jiWeiQuShiBianHuaInput, jiWeiQuShiBianHuaRef, jiWeiQuShiBianHuaClose,
-    jiWeiQuShiBianHuaRadio, jiWeiQuShiBianHuaChangeRadio, jiWeiQuShiBianHuaGet, jianCeShuJuTongJiChart } = useJianCeShuJuTongJi()
-
-
-//监测数据
-const xlFangAnFormData = ref({
-    pageNum: 1,
-    pageSize: 100,
-    orderColumn: "createTime",
-    orderDirection: "descending",
-});
-const xlFangAnlist = ref<any[]>([]);
-const xlFangAnListFun = async () => {
-    // @ts-expect-error
-    const { data } = await xlFangAnList(xlFangAnFormData.value);
-    xlFangAnlist.value = data.data.rows
-};
-const xlFangAnlistTimer = useIntervalFn(() => {
-    xlFangAnlistTimer.pause();
-    xlFangAnListFun().finally(() => {
-        xlFangAnlistTimer.resume();
-    })
-}, 10000)
+const { caiYangList, caiYangRef } = useCaiYangDeviceStatus()
+const { xsList, xsDeviceRef } = useXsDeviceStatus()
+const { jianCeList, jianCeRef } = useJianCeDeviceStatus()
 
 
 
-
-onMounted(() => {
-
-    xlFangAnListFun();
-});
 </script>
 
 <style lang="scss" scoped>
@@ -437,16 +347,14 @@ $design-height: 1080;
                         &:nth-child(1) {
                             font-size: adaptiveFontSize(12);
                             color: #ffffff;
-                            padding: 0 0 0 adaptiveWidth(0);
-                            width: adaptiveWidth(100);
+                            padding: 0 0 0 adaptiveWidth(20);
+                            width: adaptiveWidth(165);
                             white-space: nowrap;
                             /* 不换行 */
                             overflow: hidden;
                             /* 超出隐藏 */
                             text-overflow: ellipsis;
                             /* 超出部分显示省略号 */
-                            text-align: center;
-
                         }
 
                         &:nth-child(2) {
@@ -457,15 +365,13 @@ $design-height: 1080;
                             /* 超出隐藏 */
                             text-overflow: ellipsis;
                             /* 超出部分显示省略号 */
-                            width: adaptiveWidth(200);
-                            text-align: center;
+                            width: adaptiveWidth(150);
                         }
 
                         &:nth-child(3) {
                             // font-family: youshe;
                             font-size: adaptiveFontSize(12);
                             margin: auto;
-                            text-align: right;
                         }
                     }
                 }
@@ -524,57 +430,83 @@ $design-height: 1080;
         margin-top: adaptiveHeight(5);
         background: url("/public/img/背景下层.png") no-repeat;
         background-size: 100% 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
 
-        .bigscreen_lc_bottom_nei {
-            width: adaptiveWidth(407);
-            margin: 0 auto;
 
-            .bigscreen_lc_bottom_nei_t {
-                width: 100%;
-                height: adaptiveHeight(30);
-                margin-top: adaptiveHeight(15);
-                background: url("/public/img/equipment/tabletop.png") no-repeat;
-                background-size: 100% 100%;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
+        .bigscreen_lc_bottom_nei_t {
+            width: 100%;
+            height: adaptiveHeight(30);
+            margin-top: adaptiveHeight(15);
+            background: url("/public/img/equipment/tabletop.png") no-repeat;
+            background-size: 100% 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
 
-                span {
-                    width: 25%;
-                    color: #9eabb7;
-                    font-size: adaptiveFontSize(14);
-                    text-align: center;
-                }
+            span {
+                width: 25%;
+                color: #9eabb7;
+                font-size: adaptiveFontSize(14);
+                text-align: center;
             }
+        }
 
-            .bigscreen_lc_bottom_neib {
-                width: 100%;
-                height: adaptiveHeight(250);
-                overflow: hidden;
+        .bigscreen_lc_bottomnei {
+            overflow: hidden;
+            height: adaptiveHeight(251);
+            width: 100%;
 
-                .bigscreen_lc_bottom_nei_b {
+            .bigscreen_lc_bottom_nei {
+                display: flex;
+                // justify-content: center;
+                align-items: center;
+                padding: 0 adaptiveWidth(10);
+
+                div {
                     width: 100%;
-                    height: adaptiveHeight(33);
+                    height: adaptiveHeight(39);
                     display: flex;
-                    justify-content: space-between;
                     align-items: center;
-                    margin-top: adaptiveHeight(5);
+                    //   gap: adaptiveWidth(40);
+
+                    &:nth-child(2) {
+                        margin: adaptiveHeight(18) 0;
+                    }
 
                     span {
-                        width: 25%;
-                        color: #ffffff;
-                        font-size: adaptiveFontSize(12);
+                        color: white;
 
-                        &:nth-child(2),
-                        &:nth-child(3),
-                        &:nth-child(4) {
-                            text-align: center;
+                        &:nth-child(1) {
+                            font-size: adaptiveFontSize(12);
+                            color: #ffffff;
+                            padding: 0 0 0 adaptiveWidth(20);
+                            width: adaptiveWidth(165);
                             white-space: nowrap;
                             /* 不换行 */
                             overflow: hidden;
                             /* 超出隐藏 */
                             text-overflow: ellipsis;
                             /* 超出部分显示省略号 */
+                        }
+
+                        &:nth-child(2) {
+                            font-size: adaptiveFontSize(12);
+                            white-space: nowrap;
+                            /* 不换行 */
+                            overflow: hidden;
+                            /* 超出隐藏 */
+                            text-overflow: ellipsis;
+                            /* 超出部分显示省略号 */
+                            width: adaptiveWidth(150);
+                        }
+
+                        &:nth-child(3) {
+                            // font-family: youshe;
+                            font-size: adaptiveFontSize(12);
+                            margin: auto;
                         }
                     }
                 }
@@ -625,23 +557,92 @@ $design-height: 1080;
     }
 
     .bigscreen_lb_bottom {
+
         width: 100%;
         height: adaptiveHeight(251);
         margin-top: adaptiveHeight(5);
         background: url("/public/img/背景下层.png") no-repeat;
         background-size: 100% 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
 
-        .bigscreen_lb_bottom_text {
-            height: adaptiveHeight(20);
-            text-align: right;
-            padding-right: adaptiveWidth(20);
-            padding-top: adaptiveHeight(10);
-            color: white;
+        .bigscreen_lb_bottom_nei_t {
+            width: 100%;
+            height: adaptiveHeight(30);
+            margin-top: adaptiveHeight(15);
+            background: url("/public/img/equipment/tabletop.png") no-repeat;
+            background-size: 100% 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            span {
+                width: 25%;
+                color: #9eabb7;
+                font-size: adaptiveFontSize(14);
+                text-align: center;
+            }
         }
 
-        .bigscreen_lb_bottom_nei {
+        .bigscreen_lb_bottomnei {
+            overflow: hidden;
+            height: adaptiveHeight(251);
             width: 100%;
-            height: adaptiveHeight(221);
+
+            .bigscreen_lb_bottom_nei {
+                display: flex;
+                // justify-content: center;
+                align-items: center;
+                padding: 0 adaptiveWidth(10);
+
+                div {
+                    width: 100%;
+                    height: adaptiveHeight(39);
+                    display: flex;
+                    align-items: center;
+                    //   gap: adaptiveWidth(40);
+
+                    &:nth-child(2) {
+                        margin: adaptiveHeight(18) 0;
+                    }
+
+                    span {
+                        color: white;
+
+                        &:nth-child(1) {
+                            font-size: adaptiveFontSize(12);
+                            color: #ffffff;
+                            padding: 0 0 0 adaptiveWidth(20);
+                            width: adaptiveWidth(165);
+                            white-space: nowrap;
+                            /* 不换行 */
+                            overflow: hidden;
+                            /* 超出隐藏 */
+                            text-overflow: ellipsis;
+                            /* 超出部分显示省略号 */
+                        }
+
+                        &:nth-child(2) {
+                            font-size: adaptiveFontSize(12);
+                            white-space: nowrap;
+                            /* 不换行 */
+                            overflow: hidden;
+                            /* 超出隐藏 */
+                            text-overflow: ellipsis;
+                            /* 超出部分显示省略号 */
+                            width: adaptiveWidth(150);
+                        }
+
+                        &:nth-child(3) {
+                            // font-family: youshe;
+                            font-size: adaptiveFontSize(12);
+                            margin: auto;
+                        }
+                    }
+                }
+            }
         }
     }
 }

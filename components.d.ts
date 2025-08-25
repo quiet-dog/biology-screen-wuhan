@@ -26,6 +26,7 @@ declare module 'vue' {
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ElTabPane: typeof import('element-plus/es')['ElTabPane']
+    ElTabs: typeof import('element-plus/es')['ElTabs']
     ElTag: typeof import('element-plus/es')['ElTag']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     Officereview: typeof import('./src/components/officereview.vue')['default']
@@ -36,6 +37,7 @@ declare module 'vue' {
     Tuone: typeof import('./src/components/tuone/index.vue')['default']
     Tuthree: typeof import('./src/components/tuthree/index.vue')['default']
     Tutwo: typeof import('./src/components/tutwo/index.vue')['default']
+    XinDianEchart: typeof import('./src/components/XinDianEchart/index.vue')['default']
   }
   export interface ComponentCustomProperties {
     vInfiniteScroll: typeof import('element-plus/es')['ElInfiniteScroll']

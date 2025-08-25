@@ -35,60 +35,55 @@
       </div>
     </div>
   </div>
-  <!-- <div class="bigscreen_lb">
-    <div class="bigscreen_lb_top">
-      <div class="bigscreen_lb_top_l">
+
+  <div class="bigscreen_lb_1">
+    <div class="bigscreen_lb_1_top">
+      <div class="bigscreen_lb_1_top_l">
         <img src="/public/img/光标.png" alt="" />
-        <span>特征指标</span>
+        <span>体征监测</span>
+        <ElInput v-model="tiZhengPageInfo.deviceSn" @change="getTiZhengJianList" placeholder="请输入设备sn"
+          class="inputcss tizhengInput" />
       </div>
-      <el-input class="inputcss" v-model="healthyFormData.name" placeholder="请输入员工姓名" :prefix-icon="Search"
-        @change="healthyChange" />
     </div>
-    <div class="bigscreen_lb_bottom">
-      <div class="bigscreen_lb_bottom_neis">
-        <Vue3SeamlessScroll :list="healthylist" :class-option="{
-          step: 5,
-        }" hover class="scrool">
-          <div class="bigscreen_lb_bottom_nei" v-for="(item, index) in healthylist" @click="lbClick(item, index)">
-            <div class="bigscreen_lb_bottom_nei_count">
-              <div class="left">
-                <div :style="{
-                  width: '79px',
-                  height: '27px',
-                  background: `url(${item.img}) no-repeat`,
-                  backgroundSize: '100% 100%',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  fontSize: '13px',
-                  color: '#ffffff',
-                }">
-                  {{ item.personnel.name }}
-                </div>
-                <div style="color: #ffffff; margin-top: 10px">
-                  {{ item.personnel.code }}
-                </div>
-              </div>
-              <div class="right">
-                <span class="right_text">
-                  <span>体温：{{ item.temperature }}℃</span>
-                  <span style="padding-left: 15px">心率：{{ item.heartRate }}/分钟</span>
-                </span>
-                <span class="right_text">
-                  <span>血压：{{ item.lowBloodPressure }}mmHg</span>
-                  <span style="padding-left: 15px">{{ item.highBloodPressure }}mmHg</span>
-                </span>
-                <span class="right_text">
-                  <span>监测时间：{{ item.createTime }}</span>
-                </span>
-              </div>
+    <div class="bigscreen_lb_1_bottom">
+      <div class="bigscreen_lb_1_bottom_nei_t">
+        <span>操作员</span>
+        <span>心率</span>
+        <span>血氧</span>
+        <span>体态</span>
+        <span>体温</span>
+        <span>时间</span>
+      </div>
+      <div class="bigscreen_lb_1_bottomnei">
+        <Vue3SeamlessScroll :list="tiZhengJianCeList" :step="1" :singleHeight="70" hover class="scrool">
+          <div class="bigscreen_lb_1_bottom_nei" @click="handleTiZhengOpen(item)"
+            v-for="(item, index) in tiZhengJianCeList">
+            <div>
+              <ElTooltip :content="item?.personnelName">
+                <span>{{ item?.personnelName }}</span>
+              </ElTooltip>
+
+              <ElTooltip :content="item?.xinlv">
+                <span>{{ item.xinlv }}</span>
+              </ElTooltip>
+              <ElTooltip :content="item?.xueYang">
+                <span>{{ item.xueYang }}</span>
+              </ElTooltip>
+              <ElTooltip :content="item?.tiTai">
+                <span>{{ item.tiTai }}</span>
+              </ElTooltip>
+              <ElTooltip :content="item?.temp">
+                <span>{{ item.temp }}</span>
+              </ElTooltip>
+              <ElTooltip :content="item?.createTime">
+                <span>{{ item.createTime }}</span>
+              </ElTooltip>
             </div>
-            <div class="bigscreen_lb_bottom_nei_dizuo"></div>
           </div>
         </Vue3SeamlessScroll>
       </div>
     </div>
-  </div> -->
+  </div>
   <center></center>
   <div class="bigscreen_rt">
     <div class="bigscreen_rt_top">
@@ -98,41 +93,61 @@
       </div>
     </div>
     <div class="bigscreen_rt_bottom">
-      <!-- <swiper
-        :slides-per-view="1"
-        :space-between="10"
-        pagination
-        style="width: 100%; height: 100%"
-      > -->
       <div class="rtDialog_bottom">
-        <!-- <img src="/public/img/监控视频尺寸.png" alt="" /> -->
         <Video style="width:100%" class="rtDialog_bottom_video" ref="videoRef" />
-        <!-- <div>倍速播放×1</div> -->
       </div>
-      <!-- <swiper-slide v-for="(item, index) in slides" :key="index">
-          <img :src="item.image" alt="" />
-        </swiper-slide> -->
-      <!-- </swiper> -->
     </div>
   </div>
+
+  <div class="bigscreen_rz">
+    <div class="bigscreen_rz_top">
+      <div class="bigscreen_rz_top_l">
+        <img src="/public/img/光标.png" alt="" />
+        <span>在线设备统计</span>
+      </div>
+    </div>
+    <div class="bigscreen_rz_bottom">
+      <div class="rzDialog_bottom">
+        <div class="bigscreen_rz_1_bottom_nei_t">
+          <span>设备sn号</span>
+          <span>设备名称</span>
+          <span>所在区域</span>
+        </div>
+        <div class="bigscreen_rz_1_bottomnei">
+          <Vue3SeamlessScroll :list="smDeviceListTable" :step="1" :singleHeight="70" hover class="scrool">
+            <div class="bigscreen_rz_1_bottom_nei" v-for="(item, index) in smDeviceListTable">
+              <div>
+                <ElTooltip :content="item?.deviceSn">
+                  <span>{{ item?.deviceSn }}</span>
+                </ElTooltip>
+
+                <ElTooltip :content="item?.name">
+                  <span>{{ item.name }}</span>
+                </ElTooltip>
+                <ElTooltip :content="item?.area">
+                  <span>{{ item.area }}</span>
+                </ElTooltip>
+              </div>
+            </div>
+          </Vue3SeamlessScroll>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="bigscreen_rb">
     <div class="bigscreen_rb_top">
       <div class="bigscreen_rb_top_l">
         <img src="/public/img/光标.png" alt="" />
-        <span>视频监控</span>
+        <span>历史异常指标排名</span>
+        <ElButton class="inputcssright" @click="handleSmAlarmOpen">报警次数统计</ElButton>
       </div>
-      <!-- <el-radio-group v-model="radio1" @change="changeRadio1" class="group">
-        <el-radio-button label="周" value="week" />
-        <el-radio-button label="年" value="year" />
-      </el-radio-group> -->
     </div>
-    <div class="bigscreen_rb_bottom">
-      <!-- <div class="bigscreen_rb_bottom_nei" ref="bigscreenRBRef"></div> -->
-      <Video style="width:100%" class="rtDialog_bottom_video" ref="video2Ref" />
+    <div class="bigscreen_rb_bottom" ref="liShiYiChangRef">
     </div>
   </div>
 
-  <!-- <template v-for="item in accesscontrollist"> -->
+
   <div v-if="personnelShow" class="ltDialog">
     <div class="ltDialog_top">
       <span>查看人员信息</span>
@@ -170,7 +185,47 @@
       </div>
     </div>
   </div>
-  <!-- </template> -->
+
+  <div v-if="tiZhengJianDetailVis" class="lt1Dialog">
+    <div class="lt1Dialog_top">
+      <span>监测数据</span>
+      <img :src="img9" alt="" srcset="" @click="handleTiZhengClose" />
+    </div>
+    <div class="lt1Dialog_bottom">
+      <div class="lt1Dialog_bottom_nei">
+        <ElTabs class="lt1Dialog_bottom_nei_tabs" style="width: 100%;">
+          <ElTabPane label="数据信息">
+            <ElDescriptions>
+              <ElDescriptionsItem label="序号">{{ tiZhengJianDetail.smDataId }}</ElDescriptionsItem>
+              <ElDescriptionsItem label="设备SN号">{{ tiZhengJianDetail.deviceSn }}</ElDescriptionsItem>
+              <ElDescriptionsItem label="操作员">{{ tiZhengJianDetail.personnelName }}</ElDescriptionsItem>
+              <ElDescriptionsItem label="心率">{{ tiZhengJianDetail.xinlv }}</ElDescriptionsItem>
+              <ElDescriptionsItem label="血氧">{{ tiZhengJianDetail.xueYang }}</ElDescriptionsItem>
+              <ElDescriptionsItem label="体温">{{ tiZhengJianDetail.temp }}</ElDescriptionsItem>
+              <ElDescriptionsItem label="二氧化碳浓度">{{ tiZhengJianDetail.co2 }}</ElDescriptionsItem>
+              <ElDescriptionsItem label="体态">{{ tiZhengJianDetail.tiTai }}</ElDescriptionsItem>
+              <ElDescriptionsItem label="时间">{{ tiZhengJianDetail.createTime }}</ElDescriptionsItem>
+            </ElDescriptions>
+          </ElTabPane>
+          <ElTabPane label="心电数据">
+            <v-echarts :option="xinDianOption" ref="xinDianEchartRef" class="xinDianEchartChart" />
+          </ElTabPane>
+          <ElTabPane label="呼吸率数据">
+            <v-echarts :option="huXiLvOption" ref="huXiLvRef" class="xinDianEchartChart" />
+          </ElTabPane>
+        </ElTabs>
+      </div>
+    </div>
+  </div>
+
+
+  <div v-show="smAlarmQuShiFenXiVis" class="rbDialog">
+    <div class="rbDialog_top">
+      <span>趋势分析</span>
+      <img :src="img9" alt="" srcset="" @click="handleSmAlarmClose" />
+    </div>
+    <div ref="smAlarmQuShiFenXiRef" class="rbDialog_bottom"></div>
+  </div>
 
   <div v-show="showPersonnelDialog" class="lbDialog">
     <div class="lbDialog_top">
@@ -207,7 +262,16 @@ import {
 import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
 import { getChannelListApi, getPersonnelListAllApi, getStreamUrlApi } from "../../api/video/index.ts";
 import { useIntervalFn } from '@vueuse/core'
+import { useLiShiYiChangPaiMing, useTiZhengJianCe, useZaiXianShengMingDevice } from "./index.tsx";
+import { ElButton, ElDescriptions, ElDescriptionsItem, ElInput, ElTabPane } from "element-plus";
+import VEcharts from 'vue-echarts'
 
+const { tiZhengJianCeList, tiZhengPageInfo, getTiZhengJianList, tiZhengJianDetailVis,
+  handleTiZhengOpen, handleTiZhengClose, tiZhengJianDetail, xinDianOption, xinDianEchartRef,
+  huXiLvRef, huXiLvOption } = useTiZhengJianCe()
+
+const { smDeviceListTable } = useZaiXianShengMingDevice()
+const { liShiYiChangRef, smAlarmQuShiFenXiVis, handleSmAlarmOpen, handleSmAlarmClose, smAlarmQuShiFenXiRef } = useLiShiYiChangPaiMing()
 
 
 const radio1 = ref("week");
@@ -726,9 +790,9 @@ $design-height: 1080;
   @return #{$px / $design-width * 100}vw;
 }
 
-.rtDialog_bottom {
+.rzDialog_bottom {
   width: adaptiveWidth(420);
-  height: adaptiveHeight(415);
+  height: adaptiveHeight(190);
   margin-left: adaptiveWidth(10);
   display: flex;
   flex-direction: column;
@@ -736,27 +800,108 @@ $design-height: 1080;
   justify-content: center;
   overflow: hidden;
 
-  .rtDialog_bottom_video {
-    :deep(#container) {
-      width: adaptiveWidth(420);
-      height: adaptiveHeight(215);
-      object-fit: cover;
-    }
+  .bigscreen_rz_1_bottom_nei_t {
+    width: 100%;
+    height: adaptiveHeight(30);
+    margin-top: adaptiveHeight(15);
+    background: url("/public/img/equipment/tabletop.png") no-repeat;
+    background-size: 100% 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
-    object-fit: cover;
+    span {
+      width: 15%;
+      color: #9eabb7;
+      font-size: adaptiveFontSize(14);
+      text-align: center;
+
+      &:nth-child(6) {
+        width: 25%;
+      }
+    }
+  }
+
+  .bigscreen_rz_1_bottomnei {
+    overflow: hidden;
+    height: adaptiveHeight(160);
+    width: 100%;
+
+    .bigscreen_rz_1_bottom_nei {
+      display: flex;
+      // justify-content: center;
+      align-items: center;
+      padding: 0 adaptiveWidth(10);
+
+      div {
+        width: 100%;
+        height: adaptiveHeight(39);
+        display: flex;
+        align-items: center;
+        //   gap: adaptiveWidth(40);
+
+        &:nth-child(2) {
+          margin: adaptiveHeight(18) 0;
+        }
+
+        span {
+          color: white;
+
+          // margin-left: ad;
+          &:nth-child(1) {
+            font-size: adaptiveFontSize(12);
+            color: #ffffff;
+            padding: 0 0 0 adaptiveWidth(0);
+            width: adaptiveWidth(175);
+            white-space: nowrap;
+            /* 不换行 */
+            overflow: hidden;
+            /* 超出隐藏 */
+            text-overflow: ellipsis;
+            /* 超出部分显示省略号 */
+          }
+
+          &:nth-child(2) {
+            font-size: adaptiveFontSize(12);
+            white-space: nowrap;
+            /* 不换行 */
+            overflow: hidden;
+            /* 超出隐藏 */
+            text-overflow: ellipsis;
+            /* 超出部分显示省略号 */
+            width: adaptiveWidth(160);
+          }
+
+          &:nth-child(3) {
+            font-size: adaptiveFontSize(12);
+            white-space: nowrap;
+            /* 不换行 */
+            overflow: hidden;
+            /* 超出隐藏 */
+            text-overflow: ellipsis;
+            width: adaptiveWidth(65);
+            text-align: center;
+          }
+
+        }
+      }
+    }
   }
 }
 
-.bigscreen_lb,
-.bigscreen_rt,
-.bigscreen_rb {
+.bigscreen_lb {
   width: adaptiveWidth(443);
   height: adaptiveHeight(445);
 }
 
 .bigscreen_lt {
   width: adaptiveWidth(443);
-  height: adaptiveHeight(850);
+  height: adaptiveHeight(450);
+}
+
+.bigscreen_rt {
+  width: adaptiveWidth(443);
+  height: adaptiveHeight(350);
 }
 
 .bigscreen_lt {
@@ -801,7 +946,7 @@ $design-height: 1080;
 
   .bigscreen_lt_bottom {
     width: 100%;
-    height: adaptiveHeight(850);
+    height: adaptiveHeight(450);
     margin-top: adaptiveHeight(5);
     background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
@@ -886,8 +1031,9 @@ $design-height: 1080;
 
 .bigscreen_lb {
   position: absolute;
-  bottom: adaptiveHeight(85);
+  // bottom: adaptiveHeight(85);
   left: adaptiveWidth(26);
+  top: adaptiveHeight(450);
 
   .bigscreen_lb_top {
     width: 100%;
@@ -1034,7 +1180,7 @@ $design-height: 1080;
 
   .bigscreen_rt_bottom {
     width: 100%;
-    height: adaptiveHeight(406);
+    height: adaptiveHeight(306);
     margin-top: adaptiveHeight(5);
     background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
@@ -1083,6 +1229,8 @@ $design-height: 1080;
   position: absolute;
   bottom: adaptiveHeight(85);
   right: adaptiveWidth(26);
+  width: adaptiveWidth(443);
+  height: adaptiveHeight(280);
 
   .bigscreen_rb_top {
     width: 100%;
@@ -1128,7 +1276,7 @@ $design-height: 1080;
 
   .bigscreen_rb_bottom {
     width: 100%;
-    height: adaptiveHeight(406);
+    height: adaptiveHeight(240);
     margin-top: adaptiveHeight(5);
     background: url("/public/img/bigback.png") no-repeat;
     background-size: 100% 100%;
@@ -1268,6 +1416,46 @@ $design-height: 1080;
   }
 }
 
+
+
+.rbDialog {
+  width: adaptiveWidth(440);
+  height: adaptiveHeight(297);
+  background: url("/public/img/弹窗背景.png") no-repeat;
+  background-size: 100% 100%;
+  position: absolute;
+  bottom: adaptiveHeight(80);
+  right: adaptiveWidth(480);
+  z-index: 10;
+
+  .rbDialog_top {
+    width: 100%;
+    height: adaptiveHeight(45);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    span {
+      font-size: adaptiveFontSize(20);
+      color: #ffffff;
+      padding-left: adaptiveWidth(15);
+      font-family: youshe;
+    }
+
+    img {
+      width: adaptiveWidth(8);
+      height: adaptiveHeight(8);
+      padding-right: adaptiveWidth(10);
+      cursor: pointer;
+    }
+  }
+
+  .rbDialog_bottom {
+    width: adaptiveWidth(440);
+    height: adaptiveHeight(230);
+  }
+}
+
 :deep(.selectcss) {
   position: absolute;
   z-index: 10;
@@ -1325,5 +1513,345 @@ $design-height: 1080;
   border-color: rgba(255, 255, 255, 0);
   font-size: 12px;
   border-radius: 2px;
+}
+
+
+.bigscreen_lb_1 {
+  position: absolute;
+  bottom: adaptiveHeight(0);
+  left: adaptiveWidth(26);
+  width: adaptiveWidth(443);
+  height: adaptiveHeight(450);
+
+  .bigscreen_lb_1_top {
+    width: 100%;
+    height: adaptiveHeight(40);
+    background: url("/public/img/背景-上层(1).gif") no-repeat;
+    background-size: 110% 110%;
+    display: flex;
+    align-items: center;
+
+    .bigscreen_lb_1_top_l {
+      display: flex;
+      align-items: center;
+
+      img {
+        margin-left: adaptiveWidth(11);
+      }
+
+      span {
+        font-weight: 600;
+        font-size: adaptiveFontSize(16);
+        text-align: center;
+        font-style: normal;
+        text-transform: none;
+        background: linear-gradient(to bottom,
+            #c7e5fd 42%,
+            #3582c7 100%);
+        /* 渐变背景 */
+        background-clip: text;
+        /* 让背景应用到文本 */
+        -webkit-text-fill-color: transparent;
+        /* 使文本颜色透明 */
+        padding-left: adaptiveWidth(10);
+      }
+    }
+  }
+
+  .bigscreen_lb_1_bottom {
+    width: 100%;
+    height: adaptiveHeight(251);
+    margin-top: adaptiveHeight(5);
+    background: url("/public/img/背景下层.png") no-repeat;
+    background-size: 100% 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .bigscreen_lb_1_bottom_nei_t {
+      width: 100%;
+      height: adaptiveHeight(30);
+      margin-top: adaptiveHeight(15);
+      background: url("/public/img/equipment/tabletop.png") no-repeat;
+      background-size: 100% 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      span {
+        width: 15%;
+        color: #9eabb7;
+        font-size: adaptiveFontSize(14);
+        text-align: center;
+
+        &:nth-child(6) {
+          width: 25%;
+        }
+      }
+    }
+
+    .bigscreen_lb_1_bottomnei {
+      overflow: hidden;
+      height: adaptiveHeight(251);
+      width: 100%;
+
+      .bigscreen_lb_1_bottom_nei {
+        display: flex;
+        // justify-content: center;
+        align-items: center;
+        padding: 0 adaptiveWidth(10);
+
+        div {
+          width: 100%;
+          height: adaptiveHeight(39);
+          display: flex;
+          align-items: center;
+          //   gap: adaptiveWidth(40);
+
+          &:nth-child(2) {
+            margin: adaptiveHeight(18) 0;
+          }
+
+          span {
+            color: white;
+
+            // margin-left: ad;
+            &:nth-child(1) {
+              font-size: adaptiveFontSize(12);
+              color: #ffffff;
+              padding: 0 0 0 adaptiveWidth(0);
+              width: adaptiveWidth(75);
+              white-space: nowrap;
+              /* 不换行 */
+              overflow: hidden;
+              /* 超出隐藏 */
+              text-overflow: ellipsis;
+              /* 超出部分显示省略号 */
+            }
+
+            &:nth-child(2) {
+              font-size: adaptiveFontSize(12);
+              white-space: nowrap;
+              /* 不换行 */
+              overflow: hidden;
+              /* 超出隐藏 */
+              text-overflow: ellipsis;
+              /* 超出部分显示省略号 */
+              width: adaptiveWidth(70);
+            }
+
+            &:nth-child(3) {
+              font-size: adaptiveFontSize(12);
+              white-space: nowrap;
+              /* 不换行 */
+              overflow: hidden;
+              /* 超出隐藏 */
+              text-overflow: ellipsis;
+              width: adaptiveWidth(65);
+            }
+
+            &:nth-child(4) {
+              font-size: adaptiveFontSize(12);
+              white-space: nowrap;
+              /* 不换行 */
+              overflow: hidden;
+              /* 超出隐藏 */
+              text-overflow: ellipsis;
+              width: adaptiveWidth(70);
+            }
+
+            &:nth-child(5) {
+              font-size: adaptiveFontSize(12);
+              white-space: nowrap;
+              /* 不换行 */
+              overflow: hidden;
+              /* 超出隐藏 */
+              text-overflow: ellipsis;
+              width: adaptiveWidth(40);
+            }
+
+            &:nth-child(6) {
+              font-size: adaptiveFontSize(12);
+              white-space: nowrap;
+              /* 不换行 */
+              overflow: hidden;
+              /* 超出隐藏 */
+              text-overflow: ellipsis;
+              width: adaptiveWidth(100);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.tizhengInput {
+  margin-left: adaptiveWidth(180);
+}
+
+
+.lt1Dialog {
+  width: adaptiveWidth(440);
+  height: adaptiveHeight(280);
+  background: url("/public/img/弹窗背景.png") no-repeat;
+  background-size: 100% 100%;
+  position: absolute;
+  // top: adaptiveHeight(100);
+  left: adaptiveWidth(480);
+  bottom: adaptiveHeight(140);
+  z-index: 10;
+
+  .lt1Dialog_top {
+    width: 100%;
+    height: adaptiveHeight(45);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    span {
+      font-size: adaptiveFontSize(20);
+      color: #ffffff;
+      padding-left: adaptiveWidth(15);
+      font-family: youshe;
+    }
+
+    img {
+      width: adaptiveWidth(8);
+      height: adaptiveHeight(8);
+      padding-right: adaptiveWidth(10);
+      cursor: pointer;
+    }
+  }
+
+  .lt1Dialog_bottom {
+    width: 100%;
+    height: adaptiveHeight(230);
+
+    .lt1Dialog_bottom_nei {
+      width: 100%;
+      height: 100%;
+      padding: 0 adaptiveWidth(20);
+      // display: flex;
+      // align-items: center;
+      // justify-content: space-between;
+
+    }
+  }
+}
+
+.lt1Dialog_bottom_nei_tabs {
+  // --el-fill-color-light:transparent;
+  --el-text-color-primary: white;
+  --el-fill-color-blank: transparent;
+  width: adaptiveWidth(400) !important;
+  height: 100% !important;
+}
+
+.xinDianEchartChart {
+  width: adaptiveWidth(400);
+  height: adaptiveHeight(170);
+}
+
+
+
+.bigscreen_rz {
+  position: absolute;
+  top: adaptiveHeight(460);
+  right: adaptiveWidth(26);
+  width: adaptiveWidth(443);
+  height: adaptiveHeight(240);
+
+
+  .bigscreen_rz_top {
+    width: 100%;
+    height: adaptiveHeight(40);
+    background: url("/public/img/背景-上层(1).gif") no-repeat;
+    background-size: 110% 110%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .bigscreen_rz_top_l {
+      display: flex;
+      align-items: center;
+
+      img {
+        margin-left: adaptiveWidth(11);
+      }
+
+      span {
+        font-weight: 600;
+        font-size: adaptiveFontSize(16);
+        text-align: center;
+        font-style: normal;
+        text-transform: none;
+        background: linear-gradient(to bottom,
+            #c7e5fd 42%,
+            #3582c7 100%);
+        /* 渐变背景 */
+        background-clip: text;
+        /* 让背景应用到文本 */
+        -webkit-text-fill-color: transparent;
+        /* 使文本颜色透明 */
+        padding-left: adaptiveHeight(10);
+      }
+    }
+  }
+
+  .bigscreen_rz_bottom {
+    width: 100%;
+    height: adaptiveHeight(190);
+    margin-top: adaptiveHeight(5);
+    background: url("/public/img/bigback.png") no-repeat;
+    background-size: 100% 100%;
+
+    .bigscreen_rz_bottom_nei {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+
+      img {
+        width: adaptiveWidth(126);
+        height: adaptiveHeight(176);
+        margin-right: adaptiveWidth(28);
+      }
+
+      .bigscreen_rz_bottom_r {
+        width: adaptiveWidth(218);
+        height: adaptiveHeight(167);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        div {
+          width: 100%;
+          height: adaptiveHeight(41);
+          background: url("/public/img/半透明背景1.png") no-repeat;
+          background-size: 100% 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          span {
+            font-size: adaptiveFontSize(14);
+            color: rgba(255, 255, 255, 1);
+            margin-left: adaptiveWidth(10);
+          }
+        }
+      }
+    }
+  }
+}
+
+.inputcssright {
+  --el-fill-color-blank: transparent !important;
+
+  height: adaptiveHeight(24);
+  margin-right: adaptiveWidth(11);
+  margin-left: adaptiveWidth(180);
 }
 </style>

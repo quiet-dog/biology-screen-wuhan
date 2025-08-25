@@ -264,10 +264,17 @@ function generatePsychChartOption(responseData) {
             data: allSubCategories,
             top: 0,
             selectedMode: series.length > 1 ? 'multiple' : false,
-            show: false
+            show: true,
+            icon: "circle", // 圆点
+            itemWidth: 8,   // 小圆点直径
+            itemHeight: 8,  // 小圆点直径
+            textStyle: {
+                fontSize: 12, // 字体大小
+                color: '#fff'  // 字体颜色白色
+            }
         },
         grid: {
-            top: 50,
+            top: 70,
             left: 10,
             right: 10,
             bottom: 5,
@@ -284,7 +291,8 @@ function generatePsychChartOption(responseData) {
         },
         yAxis: {
             type: 'value',
-            name: '人数'
+            name: '人数',
+            minInterval: 1
         },
         series: series
     };
