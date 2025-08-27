@@ -83,6 +83,14 @@ export function useCaiYangDeviceStatus() {
         getJianCeOption()
     })
 
+    window.addEventListener("resize", () => {
+        // @ts-expect-error
+        if (jianCeEchart != null) {
+            // @ts-expect-error
+            jianCeEchart.resize()
+        }
+    })
+
 
     return {
         caiYangList,
@@ -166,6 +174,14 @@ export function useJianCeDeviceStatus() {
     onMounted(() => {
         getJianCeDeviceList()
         getJianCeOption()
+    })
+
+    window.addEventListener("resize", () => {
+        // @ts-expect-error
+        if (jianCeEchart != null) {
+            // @ts-expect-error
+            jianCeEchart.resize();
+        }
     })
 
 
@@ -263,6 +279,13 @@ export function useXsDeviceStatus() {
         getXsOptions()
     })
 
+    window.addEventListener("resize", () => {
+        // @ts-expect-error
+        if (xsDeviceEchart != null) {
+            // @ts-expect-error
+            xsDeviceEchart.resize()
+        }
+    })
 
     return {
         xsList,

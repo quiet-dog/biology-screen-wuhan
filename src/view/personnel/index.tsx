@@ -158,6 +158,15 @@ export function useTiZhengJianCe() {
     onMounted(() => {
         getTiZhengJianList()
     })
+
+    window.addEventListener("resize", () => {
+        if (smAlarmQuShiFenXiChart != null) {
+            smAlarmQuShiFenXiChart.resize()
+        }
+        if (huXiLvRef.value != null && huXiLvRef.value.render != null) {
+            huXiLvRef.value.render()
+        }
+    })
     return {
         tiZhengJianCeList,
         tiZhengPageInfo,
@@ -286,6 +295,15 @@ export function useLiShiYiChangPaiMing() {
 
     onMounted(() => {
         getLiShiYiChangZhiBiao()
+    })
+
+    window.addEventListener("resize", () => {
+        if (smAlarmQuShiFenXiChart != null) {
+            smAlarmQuShiFenXiChart.resize()
+        }
+        if (liShiYaChangChart != null) {
+            liShiYaChangChart.resize()
+        }
     })
 
     return {
