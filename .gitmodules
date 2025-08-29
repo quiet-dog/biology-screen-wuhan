@@ -1,0 +1,3 @@
+[submodule "src/package/vue3-seamless-scroll"]
+	path = src/package/vue3-seamless-scroll
+	url = https://github.com/xfy520/vue3-seamless-scroll.git

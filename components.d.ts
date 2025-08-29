@@ -9,6 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     Center: typeof import('./src/components/center.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
+    ElCard: typeof import('element-plus/es')['ElCard']
     ElCascader: typeof import('element-plus/es')['ElCascader']
     ElForm: typeof import('element-plus/es')['ElForm']
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
@@ -29,7 +30,10 @@ declare module 'vue' {
     ElTabs: typeof import('element-plus/es')['ElTabs']
     ElTag: typeof import('element-plus/es')['ElTag']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
+    FaMenXiJie: typeof import('./src/components/FaMenXiJie/index.vue')['default']
+    NongDuXiJie: typeof import('./src/components/NongDuXiJie/index.vue')['default']
     Officereview: typeof import('./src/components/officereview.vue')['default']
+    RenTiXiJie: typeof import('./src/components/RenTiXiJie/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Select: typeof import('./src/components/ReIcon/src/Select.vue')['default']
@@ -37,7 +41,9 @@ declare module 'vue' {
     Tuone: typeof import('./src/components/tuone/index.vue')['default']
     Tuthree: typeof import('./src/components/tuthree/index.vue')['default']
     Tutwo: typeof import('./src/components/tutwo/index.vue')['default']
+    XiJie: typeof import('./src/components/XiJie/index.vue')['default']
     XinDianEchart: typeof import('./src/components/XinDianEchart/index.vue')['default']
+    ZhongXinCeShuJuHuiZong: typeof import('./src/components/ZhongXinCeShuJuHuiZong/index.vue')['default']
   }
   export interface ComponentCustomProperties {
     vInfiniteScroll: typeof import('element-plus/es')['ElInfiniteScroll']

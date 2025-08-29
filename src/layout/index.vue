@@ -6,7 +6,7 @@
         src="/public/img/高生物安全动态监管平台.png"
         alt=""
       /> -->
-      <div class="text-my">高生物安全风险车间<br/>生物安全关键技术研究数字孪生平台</div>
+      <div class="text-my">高生物安全风险车间<br />生物安全关键技术研究数字孪生平台</div>
       <div class="bigscreen_header_r">
         <span>{{ time }}</span>
         <span>{{ dayOfWeek }}</span>
@@ -22,24 +22,14 @@
     </div>
     <div class="bigscreen_bottom">
       <div class="bigscreen_bottom_nei">
-        <div
-          class="bigscreen_bottom_neis"
-          v-for="item in btnfun"
-          @click="bigscreenBtn(item.path)"
-        >
-          <div
-            :style="{
-              color: $route.path === item.path ? '#ffffff' : '#00ABFF',
-            }"
-          >
+        <div class="bigscreen_bottom_neis" v-for="item in btnfun" @click="bigscreenBtn(item.path)">
+          <div :style="{
+            color: $route.path === item.path ? '#ffffff' : '#00ABFF',
+          }">
             {{ item.title }}
           </div>
-          <img
-            v-if="$route.path === item.path"
-            style="position: absolute; bottom: 0"
-            src="/public/img/切换图标.png"
-            alt=""
-          />
+          <img v-if="$route.path === item.path" style="position: absolute; bottom: 0" src="/public/img/切换图标.png"
+            alt="" />
         </div>
       </div>
     </div>
@@ -136,11 +126,16 @@ const btnfun = [
     name: "ketisi",
     path: "/ketisi",
   },
-  // {
-  //   title: "事件管理",
-  //   name: "incident",
-  //   path: "/incident",
-  // },
+  {
+    title: "课题五",
+    name: "keitiwu",
+    path: "/ketiwu",
+  },
+  {
+    title: "中心侧平",
+    name: "center",
+    path: "/center",
+  },
 ];
 
 const bigscreenBtn = (val: string) => {
@@ -179,7 +174,7 @@ $design-height: 1080;
   @return #{$px / $design-width * 100}vw;
 }
 
-.text-my{
+.text-my {
   font-size: adaptiveFontSize(30);
   color: white;
   // 水平居中
@@ -197,6 +192,7 @@ $design-height: 1080;
   // background-color: #002857;
   background-color: #021322;
   position: relative;
+
   .bigscreen_header {
     width: 100%;
     height: adaptiveHeight(251);
@@ -204,6 +200,7 @@ $design-height: 1080;
     background-size: 100% 100%;
     position: absolute;
     top: 0;
+
     .bigscreen_header_l {
       position: absolute;
       top: adaptiveHeight(18);
@@ -212,38 +209,46 @@ $design-height: 1080;
       width: adaptiveWidth(482);
       height: adaptiveHeight(63);
     }
+
     .bigscreen_header_r {
       height: adaptiveHeight(100);
       display: flex;
       align-items: center;
       position: absolute;
       right: 0;
+
       span {
         font-size: adaptiveFontSize(20);
         color: rgba(255, 255, 255, 1);
+
         &:nth-child(2) {
           padding-left: adaptiveWidth(30);
         }
+
         &:nth-child(5) {
           padding-right: adaptiveWidth(40);
         }
       }
+
       img {
         &:nth-child(3) {
           width: adaptiveWidth(44);
           height: adaptiveHeight(44);
           padding-left: adaptiveWidth(25);
         }
+
         &:nth-child(4) {
           padding-left: adaptiveWidth(6);
         }
       }
     }
   }
+
   .bigscreen_center {
     width: 100%;
     height: 100%;
   }
+
   .bigscreen_bottom {
     width: 100%;
     height: adaptiveHeight(112);
@@ -251,6 +256,7 @@ $design-height: 1080;
     background-size: 100% 100%;
     position: absolute;
     bottom: 0;
+
     .bigscreen_bottom_nei {
       width: adaptiveWidth(960);
       height: adaptiveHeight(75);
@@ -261,9 +267,13 @@ $design-height: 1080;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: adaptiveWidth(10); // ★ 子元素间距，可按需调整
+
+
       .bigscreen_bottom_neis {
         div {
-          width: adaptiveWidth(112);
+          // width: adaptiveWidth(112);
+          width: 100%;
           height: adaptiveHeight(56);
           background: url("/img/dbwenan.png") no-repeat;
           background-size: 100% 100%;
@@ -272,11 +282,15 @@ $design-height: 1080;
           align-items: center;
           cursor: pointer;
         }
+
         img {
           width: adaptiveWidth(34);
           height: adaptiveHeight(21);
         }
-        width: adaptiveWidth(112);
+
+        flex: 1;
+        // width: adaptiveWidth(112);
+        max-width: adaptiveWidth(112);
         height: 100%;
         display: flex;
         flex-direction: column;
