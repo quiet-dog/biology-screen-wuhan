@@ -8,3 +8,7 @@ export function getLiShiYiChangPaiMing() {
 export function getBaoJingCiShuTongJiByRecentWeek() {
     return http.get("/manage/smAlarm/getBaoJingCiShuTongJiByRecentWeek")
 }
+
+export function getDayExceptionCount() {
+    return http.get("/manage/smAlarm/getDayExceptionCount")
+}

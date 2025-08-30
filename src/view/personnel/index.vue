@@ -41,8 +41,8 @@
       <div class="bigscreen_lb_1_top_l">
         <img src="/public/img/光标.png" alt="" />
         <span>体征监测</span>
-        <ElInput v-model="tiZhengPageInfo.deviceSn" @change="getTiZhengJianList" placeholder="请输入设备sn"
-          class="inputcss tizhengInput" />
+        <ElInput :prefix-icon="Search" v-model="tiZhengPageInfo.smDeviceSn" @change="getTiZhengJianList"
+          placeholder="请输入操作员" class="inputcss tizhengInput" />
       </div>
     </div>
     <div class="bigscreen_lb_1_bottom">
@@ -193,24 +193,27 @@
     </div>
     <div class="lt1Dialog_bottom">
       <div class="lt1Dialog_bottom_nei">
-        <ElTabs class="lt1Dialog_bottom_nei_tabs" style="width: 100%;">
-          <ElTabPane label="数据信息">
-            <ElDescriptions>
-              <ElDescriptionsItem label="序号">{{ tiZhengJianDetail.smDataId }}</ElDescriptionsItem>
-              <ElDescriptionsItem label="设备SN号">{{ tiZhengJianDetail.deviceSn }}</ElDescriptionsItem>
-              <ElDescriptionsItem label="操作员">{{ tiZhengJianDetail.personnelName }}</ElDescriptionsItem>
-              <ElDescriptionsItem label="心率">{{ tiZhengJianDetail.xinlv }}</ElDescriptionsItem>
-              <ElDescriptionsItem label="血氧">{{ tiZhengJianDetail.xueYang }}</ElDescriptionsItem>
-              <ElDescriptionsItem label="体温">{{ tiZhengJianDetail.temp }}</ElDescriptionsItem>
-              <ElDescriptionsItem label="二氧化碳浓度">{{ tiZhengJianDetail.co2 }}</ElDescriptionsItem>
-              <ElDescriptionsItem label="体态">{{ tiZhengJianDetail.tiTai }}</ElDescriptionsItem>
-              <ElDescriptionsItem label="时间">{{ tiZhengJianDetail.createTime }}</ElDescriptionsItem>
-            </ElDescriptions>
+        <ElTabs class="lt1Dialog_bottom_nei_tabs" style="width: 100%;height: 100%;">
+          <ElTabPane label="数据信息" style="height: 100%;">
+            <!-- 每行只展示一个 -->
+            <ElScrollbar height="100%">
+              <ElDescriptions  class="my_descriptions" :column="1">
+                <ElDescriptionsItem :width="'100px'" :min-width="'100px'" :label-align="'right'" label="序号:">{{ tiZhengJianDetail.smDataId }}</ElDescriptionsItem>
+                <ElDescriptionsItem :width="'100px'" :min-width="'100px'" :label-align="'right'" label="设备SN号:">{{ tiZhengJianDetail.deviceSn }}</ElDescriptionsItem>
+                <ElDescriptionsItem :width="'100px'" :min-width="'100px'" :label-align="'right'" label="操作员:">{{ tiZhengJianDetail.personnelName }}</ElDescriptionsItem>
+                <ElDescriptionsItem :width="'100px'" :min-width="'100px'" :label-align="'right'" label="心率:">{{ tiZhengJianDetail.xinlv }}</ElDescriptionsItem>
+                <ElDescriptionsItem :width="'100px'" :min-width="'100px'" :label-align="'right'" label="血氧:">{{ tiZhengJianDetail.xueYang }}</ElDescriptionsItem>
+                <ElDescriptionsItem :width="'100px'" :min-width="'100px'" :label-align="'right'" label="体温:">{{ tiZhengJianDetail.temp }}</ElDescriptionsItem>
+                <ElDescriptionsItem :width="'100px'" :min-width="'100px'" :label-align="'right'" label="二氧化碳浓度:">{{ tiZhengJianDetail.co2 }}</ElDescriptionsItem>
+                <ElDescriptionsItem :width="'100px'" :min-width="'100px'" :label-align="'right'" label="体态:">{{ tiZhengJianDetail.tiTai }}</ElDescriptionsItem>
+                <ElDescriptionsItem :width="'100px'" :min-width="'100px'" :label-align="'right'" label="时间:">{{ tiZhengJianDetail.createTime }}</ElDescriptionsItem>
+              </ElDescriptions>
+            </ElScrollbar>
           </ElTabPane>
-          <ElTabPane label="心电数据">
+          <ElTabPane label="心电数据" class="lt1Dialog_bottom_nei_tabs_tab">
             <v-echarts :option="xinDianOption" ref="xinDianEchartRef" class="xinDianEchartChart" />
           </ElTabPane>
-          <ElTabPane label="呼吸率数据">
+          <ElTabPane label="呼吸率数据" class="lt1Dialog_bottom_nei_tabs_tab">
             <v-echarts :option="huXiLvOption" ref="huXiLvRef" class="xinDianEchartChart" />
           </ElTabPane>
         </ElTabs>
@@ -221,7 +224,7 @@
 
   <div v-show="smAlarmQuShiFenXiVis" class="rbDialog">
     <div class="rbDialog_top">
-      <span>趋势分析</span>
+      <span>报警次数统计</span>
       <img :src="img9" alt="" srcset="" @click="handleSmAlarmClose" />
     </div>
     <div ref="smAlarmQuShiFenXiRef" class="rbDialog_bottom"></div>
@@ -753,7 +756,7 @@ const lbcanleClick = (item, index) => {
 };
 
 window.onresize = function () {
-  bigscreenRBChart.resize();
+  // bigscreenRBChart.resize();
 };
 
 // ============================我自己写的=======================
@@ -791,13 +794,14 @@ $design-height: 1080;
 }
 
 .rzDialog_bottom {
-  width: adaptiveWidth(420);
+  // width: adaptiveWidth(420);
+  width: 100%;
   height: adaptiveHeight(190);
-  margin-left: adaptiveWidth(10);
+  // margin-left: adaptiveWidth(10);
   display: flex;
   flex-direction: column;
   // align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   overflow: hidden;
 
   .bigscreen_rz_1_bottom_nei_t {
@@ -809,6 +813,8 @@ $design-height: 1080;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-sizing: border-box;
+    padding: 0 adaptiveWidth(30);
 
     span {
       width: 15%;
@@ -816,9 +822,9 @@ $design-height: 1080;
       font-size: adaptiveFontSize(14);
       text-align: center;
 
-      &:nth-child(6) {
-        width: 25%;
-      }
+      // &:nth-child(6) {
+      //   width: 25%;
+      // }
     }
   }
 
@@ -838,51 +844,30 @@ $design-height: 1080;
         height: adaptiveHeight(39);
         display: flex;
         align-items: center;
-        //   gap: adaptiveWidth(40);
+        justify-content: space-between;
+        padding: 0 adaptiveWidth(20);
 
-        &:nth-child(2) {
-          margin: adaptiveHeight(18) 0;
-        }
 
         span {
           color: white;
-
-          // margin-left: ad;
-          &:nth-child(1) {
-            font-size: adaptiveFontSize(12);
-            color: #ffffff;
-            padding: 0 0 0 adaptiveWidth(0);
-            width: adaptiveWidth(175);
-            white-space: nowrap;
-            /* 不换行 */
-            overflow: hidden;
-            /* 超出隐藏 */
-            text-overflow: ellipsis;
-            /* 超出部分显示省略号 */
-          }
+          flex: 1;
+          // 超出隐藏
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
 
           &:nth-child(2) {
-            font-size: adaptiveFontSize(12);
-            white-space: nowrap;
-            /* 不换行 */
-            overflow: hidden;
-            /* 超出隐藏 */
-            text-overflow: ellipsis;
-            /* 超出部分显示省略号 */
-            width: adaptiveWidth(160);
-          }
-
-          &:nth-child(3) {
-            font-size: adaptiveFontSize(12);
-            white-space: nowrap;
-            /* 不换行 */
-            overflow: hidden;
-            /* 超出隐藏 */
-            text-overflow: ellipsis;
-            width: adaptiveWidth(65);
             text-align: center;
           }
 
+          &:last-child {
+            // 右对齐
+            text-align: right;
+          }
+
+          &:first-child {
+            text-align: left;
+          }
         }
       }
     }
@@ -1255,6 +1240,7 @@ $design-height: 1080;
         text-align: center;
         font-style: normal;
         text-transform: none;
+        min-width: adaptiveWidth(100);
         background: linear-gradient(to bottom,
             #c7e5fd 42%,
             #3582c7 100%);
@@ -1518,10 +1504,10 @@ $design-height: 1080;
 
 .bigscreen_lb_1 {
   position: absolute;
-  bottom: adaptiveHeight(0);
+  bottom: adaptiveHeight(20);
   left: adaptiveWidth(26);
   width: adaptiveWidth(443);
-  height: adaptiveHeight(450);
+  height: adaptiveHeight(440);
 
   .bigscreen_lb_1_top {
     width: 100%;
@@ -1560,14 +1546,14 @@ $design-height: 1080;
 
   .bigscreen_lb_1_bottom {
     width: 100%;
-    height: adaptiveHeight(251);
+    height: adaptiveHeight(321);
     margin-top: adaptiveHeight(5);
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    // justify-content: center;
 
     .bigscreen_lb_1_bottom_nei_t {
       width: 100%;
@@ -1580,27 +1566,28 @@ $design-height: 1080;
       align-items: center;
 
       span {
-        width: 15%;
+        // width: 15%;
+        flex: 1;
         color: #9eabb7;
         font-size: adaptiveFontSize(14);
         text-align: center;
 
-        &:nth-child(6) {
-          width: 25%;
-        }
+        // &:nth-child(6) {
+        //   width: 25%;
+        // }
       }
     }
 
     .bigscreen_lb_1_bottomnei {
       overflow: hidden;
-      height: adaptiveHeight(251);
+      height: adaptiveHeight(271);
       width: 100%;
 
       .bigscreen_lb_1_bottom_nei {
         display: flex;
         // justify-content: center;
         align-items: center;
-        padding: 0 adaptiveWidth(10);
+        // padding: 0 adaptiveWidth(10);
 
         div {
           width: 100%;
@@ -1615,71 +1602,13 @@ $design-height: 1080;
 
           span {
             color: white;
+            flex: 1;
 
-            // margin-left: ad;
-            &:nth-child(1) {
-              font-size: adaptiveFontSize(12);
-              color: #ffffff;
-              padding: 0 0 0 adaptiveWidth(0);
-              width: adaptiveWidth(75);
-              white-space: nowrap;
-              /* 不换行 */
-              overflow: hidden;
-              /* 超出隐藏 */
-              text-overflow: ellipsis;
-              /* 超出部分显示省略号 */
-            }
-
-            &:nth-child(2) {
-              font-size: adaptiveFontSize(12);
-              white-space: nowrap;
-              /* 不换行 */
-              overflow: hidden;
-              /* 超出隐藏 */
-              text-overflow: ellipsis;
-              /* 超出部分显示省略号 */
-              width: adaptiveWidth(70);
-            }
-
-            &:nth-child(3) {
-              font-size: adaptiveFontSize(12);
-              white-space: nowrap;
-              /* 不换行 */
-              overflow: hidden;
-              /* 超出隐藏 */
-              text-overflow: ellipsis;
-              width: adaptiveWidth(65);
-            }
-
-            &:nth-child(4) {
-              font-size: adaptiveFontSize(12);
-              white-space: nowrap;
-              /* 不换行 */
-              overflow: hidden;
-              /* 超出隐藏 */
-              text-overflow: ellipsis;
-              width: adaptiveWidth(70);
-            }
-
-            &:nth-child(5) {
-              font-size: adaptiveFontSize(12);
-              white-space: nowrap;
-              /* 不换行 */
-              overflow: hidden;
-              /* 超出隐藏 */
-              text-overflow: ellipsis;
-              width: adaptiveWidth(40);
-            }
-
-            &:nth-child(6) {
-              font-size: adaptiveFontSize(12);
-              white-space: nowrap;
-              /* 不换行 */
-              overflow: hidden;
-              /* 超出隐藏 */
-              text-overflow: ellipsis;
-              width: adaptiveWidth(100);
-            }
+            text-align: center;
+            // 文字不换行，超出省略号
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
         }
       }
@@ -1853,5 +1782,16 @@ $design-height: 1080;
   height: adaptiveHeight(24);
   margin-right: adaptiveWidth(11);
   margin-left: adaptiveWidth(180);
+}
+
+.my_descriptions {
+  --el-text-color-primary: #687f92 !important;
+  --el-text-color-regular: white !important;
+
+ 
+}
+
+.lt1Dialog_bottom_nei_tabs_tab{
+  height: adaptiveHeight(170);
 }
 </style>

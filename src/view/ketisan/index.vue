@@ -10,7 +10,7 @@
             <div class="bigscreen_lt_bottom_nei_t">
                 <span>方案名称</span>
                 <span>测评内容</span>
-                <span>评估时间</span>
+                <span>预计评估时间</span>
             </div>
             <div @mouseenter="xlFangAnlistTimer.pause()" @mouseleave="xlFangAnlistTimer.resume()"
                 class="bigscreen_lt_bottomnei">
@@ -41,7 +41,7 @@
             </div>
             <!-- <el-input class="inputcss" placeholder="请输入设备名称" clearable :prefix-icon="Search"
                 v-model="equipmentFormData.equipmentName" @change="searchEquipment" /> -->
-            <el-select v-model="selectValue" @change="changeSelectValue" class="inputcss">
+            <el-select class="selectcss inputcss" size="small" v-model="selectValue" @change="changeSelectValue">
                 <el-option value="心理调查评估问卷">心理调查评估问卷</el-option>
                 <el-option value="SAS量表">SAS量表</el-option>
                 <el-option value="SDS量表">SDS量表</el-option>
@@ -61,15 +61,18 @@
                 <img src="/public/img/光标.png" alt="" />
                 <span>测评结果统计</span>
             </div>
-            <ElSelect @change="handleSelectCePingJieGuoTongJi" v-model="cePingJieGuoTongJiSelect"
-                class="cascaderCss inputcss">
+            <!-- <ElSelect size="small" class="selectcss inputcss" @change="handleSelectCePingJieGuoTongJi" v-model="cePingJieGuoTongJiSelect"
+             >
                 <div v-infinite-scroll="loadMoreCePingJieGuoTongJiSelect">
                     <ElOption v-for="item in selectXlFangAnList.data" :label="item.name" :value="item.xlFangAnId" />
                 </div>
-            </ElSelect>
+            </ElSelect> -->
+            <ElInput class="inputcss" size="small" :prefix-icon="Search" v-model="cePingJieGuoTongJiSelectName"
+                @change="handleSelectCePingJieGuoTongJi" placeholder="请输入方案名称" />
         </div>
         <div class="bigscreen_lb_bottom">
             <div class="bigscreen_lb_bottom_nei" ref="cePingJieGuoTongJiRef"></div>
+
         </div>
     </div>
     <center></center>
@@ -77,11 +80,14 @@
         <div class="bigscreen_rt_top">
             <div class="bigscreen_rt_top_l">
                 <img src="/public/img/光标.png" alt="" />
-                <span>人体行为识别数据</span>
+                <span>人员行为识别数据</span>
             </div>
-            <ElButton @click="jiWeiQuShiBianHuaOpen" class="inputcssright" placeholder="请输入监控点位" :prefix-icon="Search">
-                趋势分析
-            </ElButton>
+            <div class="bigscreen_rt_top_r" @click="jiWeiQuShiBianHuaOpen">
+                <span>
+                    趋势变化
+                </span>
+            </div>
+
         </div>
         <div class="bigscreen_rt_bottom">
             <div class="bigscreen_rt_bottom_nei_t">
@@ -94,20 +100,29 @@
                 <Vue3SeamlessScroll :list="xwAlarmlist" :step="1" :singleHeight="70" hover class="scrool">
                     <div class="bigscreen_rt_bottom_nei" v-for="(item, index) in xwAlarmlist">
                         <div>
-                            <ElTooltip class="myTooltip" :content="item?.seatNumber">
-                                <span>{{ item?.seatNumber }}</span>
-                            </ElTooltip>
+                            <span>
+                                <ElTooltip class="myTooltip" :content="item?.seatNumber">
+                                    <span>{{ item?.seatNumber }}</span>
+                                </ElTooltip>
+                            </span>
 
-                            <ElTooltip class="myTooltip" :content="item?.cameraId">
-                                <span>{{ item.cameraId }}</span>
-                            </ElTooltip>
-                            <ElTooltip class="myTooltip" :content="item?.area">
-                                <span>{{ item.area }}</span>
-                            </ElTooltip>
-                            <ElTooltip class="myTooltip"
-                                :content="dayjs(item?.timeStamp).format('yyyy-MM-DD hh:mm:ss')">
-                                <span>{{ dayjs(item?.timeStamp).format("yyyy-MM-DD hh:mm:ss") }}</span>
-                            </ElTooltip>
+                            <span>
+                                <ElTooltip class="myTooltip" :content="item?.cameraId">
+                                    <span>{{ item.cameraId }}</span>
+                                </ElTooltip>
+                            </span>
+                            <span>
+                                <ElTooltip class="myTooltip" :content="item?.area">
+                                    <span>{{ item.area }}</span>
+                                </ElTooltip>
+                            </span>
+                            <span>
+                                <ElTooltip class="myTooltip"
+                                    :content="item?.createTime">
+                                    <span>{{ item?.createTime }}</span>
+                                </ElTooltip>
+                            </span>
+
                         </div>
                     </div>
                 </Vue3SeamlessScroll>
@@ -168,15 +183,15 @@
 
     <div v-if="jiWeiQuShiBianHuaVis" class="rzDialog">
         <div class="rctDialog_top">
-            <span>趋势分析</span>
+            <span>趋势变化</span>
             <img @click="jiWeiQuShiBianHuaClose" :src="img9" alt="" srcset="" />
         </div>
         <div class="rctDialog_content">
-            <ElInput class="inputcss rctDialog_content_inputcss" @change="jiWeiQuShiBianHuaGet"
+            <ElInput size="small" :prefix-icon="Search" class="inputcss rctDialog_content_inputcss" @change="jiWeiQuShiBianHuaGet"
                 v-model="jiWeiQuShiBianHuaInput" />
-            <el-radio-group v-model="jiWeiQuShiBianHuaRadio" @change="jiWeiQuShiBianHuaChangeRadio"
+            <el-radio-group v-model="jiWeiQuShiBianHuaRadio" size="small" @change="jiWeiQuShiBianHuaChangeRadio"
                 class="group cssRadio">
-                <el-radio-button label="天" value="day" />
+                <el-radio-button label="日" value="day" />
                 <el-radio-button label="周" value="week" />
                 <el-radio-button label="月" value="month" />
                 <!-- <el-radio-button label="年" value="year" /> -->
@@ -203,7 +218,7 @@ import { useCePingJieGuoFenXi, useCePingJieGuoTongJi, useJianCeShuJuTongJi, useJ
 
 const { resultDetail, resultDetailVis, handleResultDetailVis, resultFangAn } = userOther()
 const { selectValue, changeSelectValue, cePingJieGuoFenXiRef, cePingJieGuoFenXiChart } = useCePingJieGuoFenXi()
-const { handleSelectCePingJieGuoTongJi, cePingJieGuoTongJiRef, cePingJieGuoTongJiSelect, loadMoreCePingJieGuoTongJiSelect, selectXlFangAnList, cePingJieGuoTongJiChart } = useCePingJieGuoTongJi()
+const { handleSelectCePingJieGuoTongJi, cePingJieGuoTongJiRef, cePingJieGuoTongJiSelect, loadMoreCePingJieGuoTongJiSelect, selectXlFangAnList, cePingJieGuoTongJiSelectName } = useCePingJieGuoTongJi()
 const { xwAlarmlist } = useRenYuanXingWeiShiBieShuJu()
 const { jiWeiBaoJingZhanBiRef, rbRadio, changeRbRadio, jiWeiBaoJingZhanBiChart } = useJiWeiBaoJingZhanBi()
 const { jianCeShuJuTongJiRef, jiWeiQuShiBianHuaOpen,
@@ -642,6 +657,7 @@ $design-height: 1080;
         .bigscreen_lb_bottom_nei {
             width: 100%;
             height: adaptiveHeight(221);
+
         }
     }
 }
@@ -683,6 +699,21 @@ $design-height: 1080;
                 -webkit-text-fill-color: transparent;
                 /* 使文本颜色透明 */
                 padding-left: adaptiveWidth(10);
+            }
+        }
+
+        .bigscreen_rt_top_r {
+            display: flex;
+            // align-items: center;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: adaptiveFontSize(12);
+            margin-right: adaptiveWidth(11);
+            flex: 1;
+
+            span {
+                // float: right;
+                margin-left: auto;
             }
         }
     }
@@ -741,48 +772,16 @@ $design-height: 1080;
                     span {
                         color: white;
 
-                        &:nth-child(1) {
-                            font-size: adaptiveFontSize(12);
-                            color: #ffffff;
-                            padding: 0 0 0 adaptiveWidth(0);
-                            width: adaptiveWidth(100);
-                            white-space: nowrap;
-                            /* 不换行 */
-                            overflow: hidden;
-                            /* 超出隐藏 */
-                            text-overflow: ellipsis;
-                            /* 超出部分显示省略号 */
-                            text-align: center;
-
-                        }
-
-                        &:nth-child(2) {
-                            font-size: adaptiveFontSize(12);
-                            white-space: nowrap;
-                            /* 不换行 */
-                            overflow: hidden;
-                            /* 超出隐藏 */
-                            text-overflow: ellipsis;
-                            /* 超出部分显示省略号 */
-                            width: adaptiveWidth(100);
-                            text-align: center;
-                        }
-
-                        &:nth-child(3) {
-                            // font-family: youshe;
-                            font-size: adaptiveFontSize(12);
-                            margin: auto;
-                            text-align: center;
-                        }
-
-                        &:nth-child(4) {
-                            margin-left: adaptiveWidth(4);
-                            white-space: nowrap;
-                            /* 不换行 */
-                            overflow: hidden;
-                            /* 超出隐藏 */
-                            text-overflow: ellipsis;
-                        }
+                        width: 25%;
+                        font-size: adaptiveFontSize(12);
+                        color: #ffffff;
+                        white-space: nowrap;
+                        /* 不换行 */
+                        overflow: hidden;
+                        /* 超出隐藏 */
+                        text-overflow: ellipsis;
+                        /* 超出部分显示省略号 */
+                        text-align: center;
                     }
                 }
             }
@@ -967,7 +966,8 @@ $design-height: 1080;
         .bigscreen_rb_top_r {
             display: flex;
             align-items: center;
-            margin-right: adaptiveWidth(11);
+            // margin-right: adaptiveWidth(11);
+            float: right;
         }
     }
 
@@ -1297,6 +1297,7 @@ $design-height: 1080;
         width: adaptiveWidth(420);
         height: adaptiveHeight(150);
         margin: adaptiveHeight(10) auto;
+        box-sizing: border-box;
     }
 
     .rctDialog_content {}
@@ -1398,20 +1399,6 @@ $design-height: 1080;
     }
 }
 
-:deep(.selectcss) {
-    .el-select__wrapper {
-        background-color: transparent !important;
-        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2) !important;
-    }
-
-    .el-select__placeholder {
-        color: rgba(255, 255, 255, 0.6) !important;
-    }
-
-    .el-select__selected-item {
-        color: rgba(255, 255, 255, 0.6) !important;
-    }
-}
 
 .inputcss {
     --el-fill-color-blank: transparent !important;
@@ -1479,13 +1466,30 @@ $design-height: 1080;
 .resultDetailCss {
     --el-fill-color-blank: transparent !important;
     --el-text-color-primary: white !important;
+    padding-left: adaptiveWidth(20);
 }
+
+:deep(.selectcss) {
+    .el-select__wrapper {
+        background-color: transparent !important;
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2) !important;
+    }
+
+    .el-select__placeholder {
+        color: rgba(255, 255, 255, 0.6) !important;
+    }
+
+    .el-select__selected-item {
+        color: rgba(255, 255, 255, 0.6) !important;
+    }
+}
+
 
 .inputcssright {
     --el-fill-color-blank: transparent !important;
 
     height: adaptiveHeight(24);
-    margin-right: adaptiveWidth(11);
+    margin-right: adaptiveWidth(10);
     margin-left: adaptiveWidth(180);
 }
 

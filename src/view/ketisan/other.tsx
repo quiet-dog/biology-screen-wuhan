@@ -4,6 +4,40 @@ import * as echarts from "echarts"
 import { useIntervalFn } from "@vueuse/core"
 import { xlFangAnList } from "../../api/xlFangAn"
 import { jianCeShuJuTongJi, jiWeiBaoJingZhanBi, jiWeiQuShiBianHua, xwAlarmList } from "../../api/xwAlarm"
+
+const kongData = {
+    title: {
+        text: '',
+        left: 'center'
+    },
+    xAxis: {
+        type: 'category',
+        data: [] // 没有数据
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [
+        {
+            type: 'bar',
+            data: [] // 没有数据
+        }
+    ],
+    graphic: [
+        {
+            type: 'text',
+            left: 'center',
+            top: 'middle',
+            style: {
+                text: '暂无数据',
+                fill: '#ffffff',
+                fontSize: 30,
+                fontWeight: 'bold'
+            }
+        }
+    ]
+}
+
 export function userOther() {
     const resultDetail = ref()
     const resultDetailVis = ref(false)
@@ -29,7 +63,7 @@ export function userOther() {
 export function useCePingJieGuoFenXi() {
     let option = {
         title: {
-            text: '心理测评结果',
+            text: '',
             left: 'center',
             "textStyle": {
                 "color": "#ffffff"  // 标题字体颜色
@@ -40,14 +74,15 @@ export function useCePingJieGuoFenXi() {
             formatter: function (params) {
                 // params.percent 是该扇区的百分比
                 return `${params.name}: ${params.percent}%`;
-            }
+            },
         },
         legend: {
             orient: 'vertical',
             left: 'left',
             "textStyle": {
                 "color": "#ffffff"  // 标题字体颜色
-            }
+            },
+            show: false
         },
         series: [
             {
@@ -79,8 +114,18 @@ export function useCePingJieGuoFenXi() {
             if (cePingJieGuoFenXiChart == null || cePingJieGuoFenXiChart === undefined) {
                 cePingJieGuoFenXiChart = echarts.init(cePingJieGuoFenXiRef.value)
             }
-            console.log(option)
-            cePingJieGuoFenXiChart.setOption(option)
+            let isShow = false
+            res.data.data.series.forEach(item => {
+                if (item.value > 0) {
+                    isShow = true
+                }
+            })
+            if (isShow) {
+                cePingJieGuoFenXiChart.setOption(option, true)
+            } else {
+                cePingJieGuoFenXiChart.setOption(kongData, true)
+            }
+            // 如果data为空，则不显示
         })
     }
 
@@ -109,21 +154,43 @@ export function useCePingJieGuoFenXi() {
     }
 }
 
+
 export function useCePingJieGuoTongJi() {
     const cePingJieGuoTongJiRef = ref()
+    const isShow = ref(false)
+
     // @ts-expect-error
     let cePingJieGuoTongJiChart;
     const cePingJieGuoTongJiSelect = ref(0)
-    function handleSelectCePingJieGuoTongJi(value: number) {
+    const cePingJieGuoTongJiSelectName = ref("")
+    function handleSelectCePingJieGuoTongJi(value: string) {
         cePingJieGuoTongJi({
-            xlFangAnId: value
+            // xlFangAnId: value
+            fangAnName: cePingJieGuoTongJiSelectName.value
         }).then(res => {
             let option = generatePsychChartOption(res.data)
+            // @ts-expect-error
             if (cePingJieGuoTongJiChart == null || cePingJieGuoTongJiChart == undefined) {
                 cePingJieGuoTongJiChart = echarts.init(cePingJieGuoTongJiRef.value)
             }
-            console.log(option)
-            cePingJieGuoTongJiChart.setOption(option, true)
+            isShow.value = false
+            option.series.forEach(item => {
+                if (Array.isArray(item.data) && item.data.length > 0) {
+                    item.data.forEach(i => {
+                        if (i > 0) {
+                            isShow.value = true
+                        }
+                    })
+                }
+            })
+            if (isShow.value) {
+                // @ts-expect-error
+                cePingJieGuoTongJiChart.setOption(option, true)
+            } else {
+                // 直接在ecahrt写上暂无数据放在中间
+                // @ts-expect-error
+                cePingJieGuoTongJiChart.setOption(kongData, true)
+            }
         })
     }
 
@@ -161,6 +228,8 @@ export function useCePingJieGuoTongJi() {
     onMounted(() => {
         // getTongJiSelect()
         loadMoreCePingJieGuoTongJiSelect()
+
+        handleSelectCePingJieGuoTongJi("")
     })
 
     window.addEventListener("resize", () => {
@@ -174,7 +243,9 @@ export function useCePingJieGuoTongJi() {
         cePingJieGuoTongJiSelect,
         loadMoreCePingJieGuoTongJiSelect,
         selectXlFangAnList,
-        cePingJieGuoTongJiChart
+        cePingJieGuoTongJiChart,
+        isShow,
+        cePingJieGuoTongJiSelectName
     }
 }
 
@@ -210,7 +281,11 @@ function generatePsychChartOption(responseData) {
         name: subCategory,
         type: 'bar',
         data: mainCategories.map(mainCategory => datasets[mainCategory][subCategory] || 0),
-        barGap: 0 // 确保同主类别下的柱子紧挨着
+        barGap: 0, // 确保同主类别下的柱子紧挨着,
+        // 字体白色
+        textStyle: {
+            color: '#ffffff'
+        }
     }));
 
     // 如果没有有效数据，返回空图表配置
@@ -219,7 +294,11 @@ function generatePsychChartOption(responseData) {
             title: {
                 text: '心理评估数据分布',
                 left: 'center',
-                show: false
+                show: false,
+                // 字体白色
+                textStyle: {
+                    color: '#ffffff'
+                }
             },
             grid: {
                 top: 0,
@@ -228,8 +307,8 @@ function generatePsychChartOption(responseData) {
                 bottom: 10,
                 containLabel: true
             },
-            xAxis: { type: 'category', data: [] },
-            yAxis: { type: 'value', name: '人数' },
+            xAxis: { type: 'category', data: [], axisLabel: { color: '#ffffff' } },
+            yAxis: { type: 'value', name: '人数', axisLabel: { color: '#ffffff' } },
             series: [],
             tooltip: { show: false },
             legend: { show: false }
@@ -253,7 +332,10 @@ function generatePsychChartOption(responseData) {
         title: {
             text: '心理评估数据分布',
             left: 'center',
-            show: false
+            show: false,
+            textStyle: {
+                color: '#ffffff'
+            }
         },
         tooltip: {
             trigger: 'axis',
@@ -286,13 +368,22 @@ function generatePsychChartOption(responseData) {
             axisLabel: {
                 rotate: 0,
                 interval: 0,
-                fontSize: 10
-            }
+                fontSize: 10,
+                color: '#ffffff'
+            },
         },
         yAxis: {
             type: 'value',
             name: '人数',
-            minInterval: 1
+            minInterval: 1,
+            axisLabel: {
+                color: '#ffffff'
+            },
+            axisLine: {
+                lineStyle: {
+                    color: '#ffffff'
+                }
+            }
         },
         series: series
     };
@@ -396,11 +487,18 @@ export function useJianCeShuJuTongJi() {
     let jiWeiQuShiBianHuaVisOption = {
         xAxis: {
             type: 'category',
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            // 文字白色
+            axisLabel: {
+                color: '#ffffff'
+            },
         },
         yAxis: {
             type: 'value',
             minInterval: 1,
+            axisLabel: {
+                color: '#ffffff'
+            },
         },
         series: [
             {
@@ -424,6 +522,21 @@ export function useJianCeShuJuTongJi() {
         jiWeiQuShiBianHua({ dayType: jiWeiQuShiBianHuaRadio.value, seatNumber: jiWeiQuShiBianHuaInput.value }).then(res => {
             jiWeiQuShiBianHuaVisOption.xAxis.data = res.data.data.xData;
             jiWeiQuShiBianHuaVisOption.series[0].data = res.data.data.sData;
+            let show = false;
+            if (Array.isArray(jiWeiQuShiBianHuaVisOption.series[0].data) && jiWeiQuShiBianHuaVisOption.series[0].data.length > 0) {
+                jiWeiQuShiBianHuaVisOption.series[0].data.forEach(item => {
+                    if (item > 0) {
+                        show = true
+                    }
+                })
+            }
+            if (!show) {
+                jiWeiQuShiBianHuaVisOption.yAxis.min = 0
+                jiWeiQuShiBianHuaVisOption.yAxis.max = 5
+            } else {
+                jiWeiQuShiBianHuaVisOption.yAxis.min = null
+                jiWeiQuShiBianHuaVisOption.yAxis.max = null
+            }
             // @ts-expect-error
             if (jiWeiQuShiBianHuaChart == null) {
                 jiWeiQuShiBianHuaChart = echarts.init(jiWeiQuShiBianHuaRef.value)
@@ -445,6 +558,7 @@ export function useJianCeShuJuTongJi() {
 
     const jiWeiQuShiBianHuaClose = () => {
         jiWeiQuShiBianHuaVis.value = false
+        jiWeiQuShiBianHuaChart = null
     }
 
 
@@ -480,13 +594,18 @@ export function useJiWeiBaoJingZhanBi() {
             left: 'center',
             "textStyle": {
                 "color": "#ffffff"  // 标题字体颜色
-            }
+            },
+            show: false
         },
         tooltip: {
             trigger: 'item',
             formatter: function (params) {
                 // params.percent 是该扇区的百分比
                 return `${params.name}: ${params.percent}%`;
+            },
+            // 白色文字
+            textStyle: {
+                // color: '#ffffff'
             }
         },
         legend: {
@@ -494,7 +613,8 @@ export function useJiWeiBaoJingZhanBi() {
             left: 'left',
             "textStyle": {
                 "color": "#ffffff"  // 标题字体颜色
-            }
+            },
+            show: false
         },
         series: [
             {
@@ -508,6 +628,18 @@ export function useJiWeiBaoJingZhanBi() {
                         shadowBlur: 10,
                         shadowOffsetX: 0,
                         shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                },
+                textStyle: {
+                    color: '#ffffff'
+                },
+                label: {
+                    color: '#fff',   // ✅ 设置标签文字为白色
+                    fontSize: 14
+                },
+                labelLine: {
+                    lineStyle: {
+                        color: '#fff'  // ✅ 如果连线也要白色，可以加上这个
                     }
                 }
             }

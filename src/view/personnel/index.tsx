@@ -2,16 +2,16 @@ import { ref } from "vue"
 import { smDataList } from "../../api/smData"
 import { useIntervalFn } from "@vueuse/core"
 import { smDeviceList } from "../../api/smDevice"
-import { getBaoJingCiShuTongJiByRecentWeek, getLiShiYiChangPaiMing } from "../../api/smAlarm"
+import { getBaoJingCiShuTongJiByRecentWeek, getDayExceptionCount, getLiShiYiChangPaiMing } from "../../api/smAlarm"
 import * as echarts from "echarts"
 export function useTiZhengJianCe() {
     const tiZhengJianCeList = ref([])
     const tiZhengPageInfo = ref({
         pageNum: 1,
         pageSize: 10,
-        deviceSn: ""
+        smDeviceSn: ""
     })
-    async function getTiZhengJianList() {
+    async function getTiZhengJianList(value) {
         // @ts-expect-error
         smDataList(tiZhengPageInfo.value).then(res => {
             tiZhengJianCeList.value = res.data.data.rows;
@@ -28,7 +28,7 @@ export function useTiZhengJianCe() {
 
     const tiZhengJianDetailVis = ref(false)
     const tiZhengJianDetail = ref()
-    const xinDianEchartRef = ref()
+    const xinDianEchartRef = ref(null)
     function handleTiZhengOpen(item) {
         tiZhengJianDetailVis.value = true
         tiZhengJianDetail.value = item
@@ -152,7 +152,7 @@ export function useTiZhengJianCe() {
         ]
     })
 
-    const huXiLvRef = ref()
+    const huXiLvRef = ref(null)
 
 
     onMounted(() => {
@@ -160,11 +160,13 @@ export function useTiZhengJianCe() {
     })
 
     window.addEventListener("resize", () => {
-        if (smAlarmQuShiFenXiChart != null) {
-            smAlarmQuShiFenXiChart.resize()
+
+        console.log("huXiLvRef.value", huXiLvRef.value)
+        if (huXiLvRef.value != null) {
+            huXiLvRef.value.resize()
         }
-        if (huXiLvRef.value != null && huXiLvRef.value.render != null) {
-            huXiLvRef.value.render()
+        if (xinDianEchartRef.value != null) {
+            xinDianEchartRef.value.resize()
         }
     })
     return {
@@ -215,17 +217,44 @@ export function useLiShiYiChangPaiMing() {
     const liShiYiChangRef = ref()
     let liShiYaChangChart = null
     let options = {
+        title: {
+            text: '当天异常人数',
+            left: 'center',
+            textStyle: {
+                color: '#fff'
+            },
+            // 靠左边
+            left: '10px',
+        },
         xAxis: {
             type: 'category',
-            data: []
+            data: [],
+            // 字体白色
+            axisLabel: { color: '#fff' }
         },
         yAxis: {
-            type: 'value'
+            type: 'value',
+            // 字体白色
+            axisLabel: { color: '#fff' }
         },
         series: [
             {
                 type: 'bar',
-                data: []
+                data: [],
+                itemStyle: {
+                    color: function (params) {
+                        // 可以自定义颜色数组
+                        let colorList = [
+                            "#E74C3C", // 心率 - 红色 (心脏/血液)
+                            "#1ABC9C", // 血氧 - 青绿色 (氧气/健康)
+                            "#F1C40F", // 提问 - 黄色 (提示/关注)
+                            "#3498DB", // CO₂ - 蓝色 (气体/呼吸)
+                            "#2ECC71", // 呼吸 - 绿色 (呼吸/生命)
+                            "#9B59B6"  // 心电 - 紫色 (医疗仪器/电信号)
+                        ];
+                        return colorList[params.dataIndex % colorList.length];
+                    }
+                }
             }
         ],
         tooltip: {
@@ -234,12 +263,19 @@ export function useLiShiYiChangPaiMing() {
     };
 
     async function getLiShiYiChangZhiBiao() {
+
+        getDayExceptionCount().then(res => {
+            options.title.text = `当天异常人数:${res.data.data}`
+        })
+
         getLiShiYiChangPaiMing().then(res => {
+            // @ts-expect-error
             if (liShiYaChangChart == null) {
                 liShiYaChangChart = echarts.init(liShiYiChangRef.value)
             }
             options.xAxis.data = res.data.data.xData
             options.series[0].data = res.data.data.seris
+            // @ts-expect-error
             liShiYaChangChart.setOption(options, true)
         })
     }
@@ -259,7 +295,9 @@ export function useLiShiYiChangPaiMing() {
     let smAlarmQuShiFenXiOption = {
         xAxis: {
             type: 'category',
-            data: []
+            data: [],
+            // 字体为白色
+            axisLabel: { color: '#fff' }
         },
         yAxis: {
             type: 'value',
@@ -284,6 +322,14 @@ export function useLiShiYiChangPaiMing() {
             console.log("res", res.data)
             smAlarmQuShiFenXiOption.xAxis.data = res.data.data.xData
             smAlarmQuShiFenXiOption.series[0].data = res.data.data.series
+            if (smAlarmQuShiFenXiOption.series[0].data.every(item => item == 0)) {
+                smAlarmQuShiFenXiOption.yAxis.min = 0
+                smAlarmQuShiFenXiOption.yAxis.max = 5
+            } else {
+                smAlarmQuShiFenXiOption.yAxis.min = null
+                smAlarmQuShiFenXiOption.yAxis.max = null
+            }
+            // 如过data都是0或者null，则不展示,纵坐标显示
             // @ts-expect-error
             smAlarmQuShiFenXiChart.setOption(smAlarmQuShiFenXiOption, true)
         })
