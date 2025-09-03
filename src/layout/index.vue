@@ -131,11 +131,11 @@ const btnfun = [
     name: "keitiwu",
     path: "/ketiwu",
   },
-  {
-    title: "中心侧平",
-    name: "center",
-    path: "/center",
-  },
+  // {
+  //   title: "中心侧平",
+  //   name: "center",
+  //   path: "/center",
+  // },
 ];
 
 const bigscreenBtn = (val: string) => {

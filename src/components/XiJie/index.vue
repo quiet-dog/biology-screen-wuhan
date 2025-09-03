@@ -3,6 +3,9 @@ import { useIntervalFn } from "@vueuse/core";
 // @ts-expect-error
 import Vue3SeamlessScroll from "../../package/vue3-seamless-scroll/packages/Vue3SeamlessScroll.vue";
 import { ref } from "vue";
+import 北京 from "./img/北京图标.png";
+import 武汉 from "./img/武汉图标.png";
+import 长春 from "./img/长春图标.png";
 
 const { type = "", address = "", url = "" } = defineProps<{
     type: string,
@@ -46,6 +49,18 @@ const timer = useIntervalFn(async () => {
     timer.resume()
 }, 5000)
 
+function getImgUrl() {
+    if (address === "北京") {
+        return 北京
+    } else if (address === "武汉") {
+        return 武汉
+    } else if (address === "长春") {
+        return 长春
+    }
+}
+
+
+
 onMounted(() => {
     axios.get(url + "/api/manage/event", {
         headers: {
@@ -77,15 +92,16 @@ onMounted(() => {
         </div>
     </div>
     <div class="table_box">
-        <div class="table_box_column">
-            <span>数据描述</span>
-            <span>时间</span>
+        <div class="table_box_left">
+            <img :src="getImgUrl()" alt="" srcset="">
+            <span>{{ address }}</span>
         </div>
         <div class="table_box_content">
             <Vue3SeamlessScroll :key="key" :list="tableList" :step="1" :direction="'up'" hover>
                 <template v-slot="{ data }">
                     <div class="table_box_content_item">
-                        <span>
+
+                        <!-- <span>
                             <el-tooltip :content="data.description" placement="top">
                                 <span>{{ data.description }}</span>
                             </el-tooltip>
@@ -94,8 +110,11 @@ onMounted(() => {
                             <el-tooltip :content="data.createTime" placement="top">
                                 <span>{{ data.createTime }}</span>
                             </el-tooltip>
-                        </span>
+                        </span> -->
 
+                        <el-tooltip :content="data.description" placement="top">
+                            {{ data.description }}
+                        </el-tooltip>
                     </div>
                 </template>
             </Vue3SeamlessScroll>
@@ -166,21 +185,34 @@ $design-height: 1080;
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     flex: 1;
 
 
-    .table_box_column {
-        width: 100%;
-        // 让下面的span均匀分布
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        box-sizing: border-box;
-        padding: adaptiveHeight(5) adaptiveWidth(20);
-        background: url("/public/img/equipment/tabletop.png") no-repeat;
-        background-size: 100% 100%;
+    .table_box_left {
+        width: adaptiveWidth(120);
+        height: adaptiveHeight(100);
+        align-self: center;
+        justify-content: center;
+        text-align: center;
+        font-family: "youshe";
+        font-size: adaptiveFontSize(26);
 
+        img {
+            width: 100%;
+            height: 100%;
+        }
+
+        span {
+            /* 上下渐变文字 */
+            background: linear-gradient(to bottom, #ffffff, #006fd0);
+            /* 上红下蓝，可换颜色 */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
     }
 
     .table_box_content {
@@ -200,41 +232,39 @@ $design-height: 1080;
     justify-content: space-between;
     align-items: center;
     box-sizing: border-box;
+    background: url("./img/工艺要素文案背景.png") no-repeat;
+    height: adaptiveHeight(50);
+    width: 100%;
+    // 文字超出省略号
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: adaptiveFontSize(10);
+    box-sizing: border-box;
+    padding-left: adaptiveWidth(5);
+    // 上下居中
+    align-items: center;
+    // justify-content: center;
+    margin-bottom: adaptiveHeight(5);
 }
 
 
-.table_box_content_item span {
-    text-align: center; // 文字居中
-    white-space: nowrap; // 不换行
-    overflow: hidden; // 超出隐藏
-    text-overflow: ellipsis; // 超出显示省略号
-}
+// .table_box_content_item span {
+//     text-align: center; // 文字居中
+//     white-space: nowrap; // 不换行
+//     overflow: hidden; // 超出隐藏
+//     text-overflow: ellipsis; // 超出显示省略号
+// }
 
-// 可选：如果最左最右 span 不需要占剩余空间
-.table_box_content_item span:first-child {
-    text-align: left;
-    flex: 1; // 每个 span 占等宽
-}
-
-
-
-.table_box_content_item span:last-child {
-    text-align: right;
-    flex: 1; // 每个 span 占等宽
-}
-
-.table_box_column span {
-    text-align: center; // 文字居中
-}
+// // 可选：如果最左最右 span 不需要占剩余空间
+// .table_box_content_item span:first-child {
+//     text-align: left;
+//     flex: 1; // 每个 span 占等宽
+// }
 
 
-.table_box_column span:first-child {
-    flex: 1; // 每个 span 占等宽
-    text-align: left;
-}
 
-.table_box_column span:last-child {
-    flex: 1; // 每个 span 占等宽
-    text-align: right;
-}
-</style>
+// .table_box_content_item span:last-child {
+//     text-align: right;
+//     flex: 1; // 每个 span 占等宽
+// }</style>

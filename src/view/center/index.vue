@@ -1,103 +1,6 @@
 <template>
-    <!-- <div class="bigscreen_lt">
-        <div class="bigscreen_lt_top">
-            <div class="bigscreen_lt_top_l">
-                <img src="/public/img/光标.png" alt="" />
-                <span>监测设备状态</span>
-            </div>
-        </div>
-        <div class="bigscreen_lt_bottom">
-            <div class="bigscreen_lt_bottom_nei_t">
-                <span>设备编号</span>
-                <span>所属区域</span>
-                <span>状态</span>
-            </div>
-            <div class="bigscreen_lt_bottomnei">
-                <Vue3SeamlessScroll :list="jianCeList" :step="1" :singleHeight="70" hover class="scrool">
-                    <div class="bigscreen_lt_bottom_nei" v-for="(item, index) in jianCeList">
-                        <div>
-                            <ElTooltip :content="item?.name">
-                                <span>{{ item?.name }}</span>
-                            </ElTooltip>
-                            <ElTooltip :content="item?.area">
-                                <span>{{ item.area }}</span>
-                            </ElTooltip>
-                            <ElTooltip :content="item?.isOnlineStr">
-                                <span>{{ item.isOnlineStr }}</span>
-                            </ElTooltip>
-                        </div>
-                    </div>
-                </Vue3SeamlessScroll>
-            </div>
-        </div>
-    </div>
-    <div class="bigscreen_lc">
-        <div class="bigscreen_lc_top">
-            <div class="bigscreen_lc_top_l">
-                <img src="/public/img/光标.png" alt="" />
-                <span>采集设备状态</span>
-            </div>
-        </div>
-        <div class="bigscreen_lc_bottom">
-            <div class="bigscreen_lc_bottom_nei_t">
-                <span>设备编号</span>
-                <span>所属区域</span>
-                <span>状态</span>
-            </div>
-            <div class="bigscreen_lc_bottomnei">
-                <Vue3SeamlessScroll :list="caiYangList" :step="1" :singleHeight="70" hover class="scrool">
-                    <div class="bigscreen_lc_bottom_nei" v-for="(item, index) in caiYangList">
-                        <div>
-                            <ElTooltip :content="item?.name">
-                                <span>{{ item?.name }}</span>
-                            </ElTooltip>
-                            <ElTooltip :content="item?.area">
-                                <span>{{ item.area }}</span>
-                            </ElTooltip>
-                            <ElTooltip :content="item?.isOnlineStr">
-                                <span>{{ item.isOnlineStr }}</span>
-                            </ElTooltip>
-                        </div>
-                    </div>
-                </Vue3SeamlessScroll>
-            </div>
-        </div>
-    </div>
-    <div class="bigscreen_lb">
-        <div class="bigscreen_lb_top">
-            <div class="bigscreen_lb_top_l">
-                <img src="/public/img/光标.png" alt="" />
-                <span>消杀设备状态</span>
-            </div>
-        </div>
-        <div class="bigscreen_lb_bottom">
-            <div class="bigscreen_lb_bottom_nei_t">
-                <span>设备编号</span>
-                <span>所属区域</span>
-                <span>状态</span>
-            </div>
-            <div class="bigscreen_lb_bottomnei">
-                <Vue3SeamlessScroll :list="xsList" :step="1" :singleHeight="70" hover class="scrool">
-                    <div class="bigscreen_lb_bottom_nei" v-for="(item, index) in xsList">
-                        <div>
-                            <ElTooltip :content="item?.name">
-                                <span>{{ item?.name }}</span>
-                            </ElTooltip>
-                            <ElTooltip :content="item?.area">
-                                <span>{{ item.area }}</span>
-                            </ElTooltip>
-                            <ElTooltip :content="item?.isOnlineStr">
-                                <span>{{ item.isOnlineStr }}</span>
-                            </ElTooltip>
-                        </div>
-                    </div>
-                </Vue3SeamlessScroll>
-            </div>
-        </div>
-    </div> -->
 
     <div class="left_main_box">
-        <!-- :modules="[Autoplay]" -->
         <swiper class="left_main_swiper" direction="vertical" :slides-per-view="3" :slides-per-group="1"
             :space-between="40" :loop="true" :autoplay="{ delay: 2000, disableOnInteraction: false }">
             <swiper-slide class="left_main_swiper_item" v-for="item in leftConfig">
@@ -108,48 +11,15 @@
 
     <center></center>
     <div class="right_main_box">
-        <swiper class="right_main_swiper" :modules="[Autoplay]" direction="vertical" :slides-per-view="3" :slides-per-group="1"
-            :space-between="40" :loop="true" :autoplay="{ delay: 2000, disableOnInteraction: false }">
+        <!--  :modules="[Autoplay]" -->
+        <swiper class="right_main_swiper" direction="vertical" :slides-per-view="3"
+            :slides-per-group="1" :space-between="40" :loop="true"
+            :autoplay="{ delay: 2000, disableOnInteraction: false }">
             <swiper-slide class="right_main_swiper_item" v-for="item in rightConfig">
                 <component :is="item.component" :url="item.Url" :address="item.address" :type="item.type" />
             </swiper-slide>
         </swiper>
     </div>
-    <!-- <div class="bigscreen_rt">
-        <div class="bigscreen_rt_top">
-            <div class="bigscreen_rt_top_l">
-                <img src="/public/img/光标.png" alt="" />
-                <span>监测设备统计</span>
-            </div>
-        </div>
-        <div class="bigscreen_rt_bottom" ref="jianCeRef">
-        </div>
-    </div>
-    <div class="bigscreen_rc">
-        <div class="bigscreen_rc_top">
-            <div class="bigscreen_rc_top_l">
-                <img src="/public/img/光标.png" alt="" />
-                <span>采集设备统计</span>
-            </div>
-            <div class="bigscreen_rc_top_r">
-            </div>
-        </div>
-        <div class="bigscreen_rc_bottom">
-            <div class="bigscreen_rc_bottom_nei" ref="caiYangRef">
-            </div>
-        </div>
-    </div>
-    <div class="bigscreen_rb">
-        <div class="bigscreen_rb_top">
-            <div class="bigscreen_rb_top_l">
-                <img src="/public/img/光标.png" alt="" />
-                <span>消杀设备统计</span>
-            </div>
-        </div>
-        <div class="bigscreen_rb_bottom" ref="xsDeviceRef">
-
-        </div>
-    </div> -->
 </template>
 
 <script lang="ts" setup>
@@ -163,7 +33,7 @@ import 'swiper/css/autoplay';
 import { useAllCity } from "./index.tsx";
 
 
-const { leftConfig,rightConfig } = useAllCity()
+const { leftConfig, rightConfig } = useAllCity()
 
 
 

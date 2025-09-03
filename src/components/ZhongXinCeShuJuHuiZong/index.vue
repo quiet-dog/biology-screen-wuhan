@@ -13,24 +13,24 @@ const urls = reactive(["http://192.168.1.141:9200", "http://192.168.1.141:9200",
 
 const tableList = ref([{
     source: '北京',
-    description: '123',
+    description: '无路木器无路木器无路木器无路木器无路木器无路木器无路木器无路木器无路木器',
     createTime: '2025-04-01 12:00:00',
 },
 {
     source: '武汉',
-    description: '123',
+    description: '无路木器无路木器无路木器无路木器无路木器无路木器无路木器无路木器无路木器',
     createTime: '2025-04-01 12:00:00',
 },
 {
-    source: '123',
-    description: '123',
+    source: '无路木器',
+    description: '无路木器无路木器无路木器无路木器无路木器无路木器无路木器无路木器无路木器',
     createTime: '2025-04-01 12:00:00',
 },
 ])
 
-const timer = useIntervalFn(async() => {
+const timer = useIntervalFn(async () => {
     timer.pause()
-    for(let i=0;i<urls.length;i++){
+    for (let i = 0; i < urls.length; i++) {
         const res = await axios.get(urls[i] + "/api/manage/event", {
             headers: {
                 "Authorization": "Bearer MASTER_TOKEN_123456"
@@ -43,7 +43,7 @@ const timer = useIntervalFn(async() => {
                 orderType: 'desc'
             }
         })
-        
+
         if (res.status === 200) {
             if (Array.isArray(res.data.data.rows) && res.data.data.rows.length > 0) {
                 tableList.value[i].createTime = res.data.data.rows[0].createTime
@@ -51,8 +51,8 @@ const timer = useIntervalFn(async() => {
             }
         }
     }
-    
-  
+
+
     timer.resume()
 
 }, 2000)
@@ -60,23 +60,23 @@ const timer = useIntervalFn(async() => {
 </script>
 
 <template>
-    <div class="title_box">
+    <!-- <div class="title_box">
         <div class="title_box_content">
             <img src="/public/img/光标.png" alt="" />
             <span>监测设备状态</span>
         </div>
-    </div>
+    </div> -->
     <div class="table_box">
-        <div class="table_box_column">
+        <!-- <div class="table_box_column">
             <span>数据来源</span>
             <span>数据描述</span>
             <span>时间</span>
-        </div>
+        </div> -->
         <div class="table_box_content">
-            <Vue3SeamlessScroll :visibleCount="5" :list="tableList" :step="1":singleHeight="70" hover>
+            <Vue3SeamlessScroll :visibleCount="5" :list="tableList" :step="1" :singleHeight="70" hover>
                 <template v-slot="{ data }">
                     <div class="table_box_content_item">
-                        <span>
+                        <!-- <span>
                             <el-tooltip :content="data.source" placement="top">
                                 <span>{{ data.source }}</span>
                             </el-tooltip>
@@ -90,7 +90,18 @@ const timer = useIntervalFn(async() => {
                             <el-tooltip :content="data.createTime" placement="top">
                                 <span>{{ data.createTime }}</span>
                             </el-tooltip>
-                        </span>
+                        </span> -->
+                        <div class="address">
+                            <span>
+                                {{ data.source }}
+                            </span>
+                        </div>
+                        <div class="description">
+                            <el-tooltip :content="data.description" placement="top">
+                                <span>{{ data.description }}</span>
+                            </el-tooltip>
+                        </div>
+
                     </div>
                 </template>
             </Vue3SeamlessScroll>
@@ -156,7 +167,7 @@ $design-height: 1080;
 
 .table_box {
     width: 100%;
-    height: adaptiveHeight(251);
+    height: 100%;
     margin-top: adaptiveHeight(5);
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
@@ -165,18 +176,18 @@ $design-height: 1080;
     flex: 1;
 
 
-    .table_box_column {
-        width: 100%;
-        // 让下面的span均匀分布
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        box-sizing: border-box;
-        padding: adaptiveHeight(5) adaptiveWidth(20);
-        background: url("/public/img/equipment/tabletop.png") no-repeat;
-        background-size: 100% 100%;
+    // .table_box_column {
+    //     width: 100%;
+    //     // 让下面的span均匀分布
+    //     display: flex;
+    //     justify-content: space-between;
+    //     align-items: center;
+    //     box-sizing: border-box;
+    //     padding: adaptiveHeight(5) adaptiveWidth(20);
+    //     background: url("/public/img/equipment/tabletop.png") no-repeat;
+    //     background-size: 100% 100%;
 
-    }
+    // }
 
     .table_box_content {
         // height: calc(100% - adaptiveHeight(40));
@@ -195,47 +206,87 @@ $design-height: 1080;
     justify-content: space-between;
     align-items: center;
     box-sizing: border-box;
+    margin-bottom: adaptiveHeight(10);
+    height: adaptiveHeight(50);
+    background: url("../../assets/center/ZhongXinCeShuJuHuiZong/背景1.png") no-repeat;
+    background-size: 100% 100%;
+    font-size: adaptiveFontSize(10);
+
 }
 
 
-.table_box_content_item span {
-    text-align: center; // 文字居中
-    white-space: nowrap; // 不换行
-    overflow: hidden; // 超出隐藏
-    text-overflow: ellipsis; // 超出显示省略号
+.address {
+    width: adaptiveWidth(100);
+    height: 100%;
+    text-align: center;
+    // 文字上下居中
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    span {
+        background: url("../../assets/center/ZhongXinCeShuJuHuiZong/北京.png") no-repeat;
+        background-position: center;
+        width: adaptiveWidth(51);
+        height: adaptiveHeight(28);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 }
+
+.description {
+    width: calc(100% - adaptiveWidth(100));
+    height: 100%;
+    // 允许换行 超出高度省略号隐藏
+    display: flex;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    word-break: break-all;
+    max-height: 100%;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+// .table_box_content_item span {
+//     text-align: center; // 文字居中
+//     white-space: nowrap; // 不换行
+//     overflow: hidden; // 超出隐藏
+//     text-overflow: ellipsis; // 超出显示省略号
+// }
 
 // 可选：如果最左最右 span 不需要占剩余空间
-.table_box_content_item span:first-child {
-    text-align: left;
-    flex: 1; // 每个 span 占等宽
-}
+// .table_box_content_item span:first-child {
+//     text-align: left;
+//     flex: 1; // 每个 span 占等宽
+// }
 
-.table_box_content_item span:nth-child(2) {
-    // font-size: adaptiveFontSize(10);
-    flex: 3;
-}
+// .table_box_content_item span:nth-child(2) {
+//     // font-size: adaptiveFontSize(10);
+//     flex: 3;
+// }
 
-.table_box_content_item span:last-child {
-    text-align: right;
-    flex: 1; // 每个 span 占等宽
-}
+// .table_box_content_item span:last-child {
+//     text-align: right;
+//     flex: 1; // 每个 span 占等宽
+// }
 
-.table_box_column span {
-    text-align: center; // 文字居中
-}
+// .table_box_column span {
+//     text-align: center; // 文字居中
+// }
 
-.table_box_column span:nth-child(2) {
-    flex: 3;
-}
+// .table_box_column span:nth-child(2) {
+//     flex: 3;
+// }
 
-.table_box_column span:first-child {
-    flex: 1; // 每个 span 占等宽
-    text-align: left;
-}
+// .table_box_column span:first-child {
+//     flex: 1; // 每个 span 占等宽
+//     text-align: left;
+// }
 
-.table_box_column span:last-child {
-    flex: 1; // 每个 span 占等宽
-    text-align: right;
-}
-</style>
+// .table_box_column span:last-child {
+//     flex: 1; // 每个 span 占等宽
+//     text-align: right;
+// }</style>

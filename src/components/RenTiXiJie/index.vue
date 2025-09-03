@@ -38,7 +38,7 @@ const timer = useIntervalFn(async () => {
 }, 5000)
 
 onMounted(() => {
-   
+
 })
 
 </script>
@@ -51,18 +51,45 @@ onMounted(() => {
         </div>
     </div>
     <div class="table_box">
-        <div class="table_box_column">
+        <!-- <div class="table_box_column">
             <span>设备SN号</span>
             <span>操作员</span>
             <span>心率</span>
             <span>体温</span>
             <span>时间</span>
-        </div>
+        </div> -->
         <div class="table_box_content">
             <Vue3SeamlessScroll :key="key" :list="tableList" :step="1" :direction="'up'" hover>
                 <template v-slot="{ data }">
                     <div class="table_box_content_item">
-                        <span>
+                        <div class="personnel_info">
+                            <span>
+                                <el-tooltip :content="data.personnelName" placement="top">
+                                    <span>{{ data.personnelName }}</span>
+                                </el-tooltip>
+                            </span>
+                            <span>
+                                <el-tooltip :content="data.code" placement="top">
+                                    <span>{{ data.code }}</span>
+                                </el-tooltip>
+                            </span>
+                        </div>
+                        <div class="personnel_renti">
+                            <el-descriptions class="personnel_renti_descriptions" :column="2">
+                                <el-descriptions-item label="体温">
+                                    {{ data.temp }}°C
+                                </el-descriptions-item>
+                                <el-descriptions-item label="心率">
+                                    {{ data.xinlv }}/分
+                                </el-descriptions-item>
+                            </el-descriptions>
+                            <el-descriptions class="personnel_renti_descriptions">
+                                <el-descriptions-item label="时间">
+                                    {{ data.createTime }}
+                                </el-descriptions-item>
+                            </el-descriptions>
+                        </div>
+                        <!-- <span>
                             <el-tooltip :content="data.deviceSn" placement="top">
                                 <span>{{ data.deviceSn }}</span>
                             </el-tooltip>
@@ -86,7 +113,7 @@ onMounted(() => {
                             <el-tooltip :content="data.createTime" placement="top">
                                 <span>{{ data.createTime }}</span>
                             </el-tooltip>
-                        </span>
+                        </span> -->
                     </div>
                 </template>
             </Vue3SeamlessScroll>
@@ -152,7 +179,7 @@ $design-height: 1080;
 
 .table_box {
     width: 100%;
-    height: adaptiveHeight(251);
+    height: 100%;
     margin-top: adaptiveHeight(5);
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
@@ -161,18 +188,18 @@ $design-height: 1080;
     flex: 1;
 
 
-    .table_box_column {
-        width: 100%;
-        // 让下面的span均匀分布
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        box-sizing: border-box;
-        padding: adaptiveHeight(5) adaptiveWidth(20);
-        background: url("/public/img/equipment/tabletop.png") no-repeat;
-        background-size: 100% 100%;
+    // .table_box_column {
+    //     width: 100%;
+    //     // 让下面的span均匀分布
+    //     display: flex;
+    //     justify-content: space-between;
+    //     align-items: center;
+    //     box-sizing: border-box;
+    //     padding: adaptiveHeight(5) adaptiveWidth(20);
+    //     background: url("/public/img/equipment/tabletop.png") no-repeat;
+    //     background-size: 100% 100%;
 
-    }
+    // }
 
     .table_box_content {
         // height: calc(100% - adaptiveHeight(40));
@@ -180,6 +207,7 @@ $design-height: 1080;
         min-height: 0; // 允许内部 swiper 收缩
         overflow: hidden; // 或 auto
         width: 100%;
+        height: 100%;
         padding: adaptiveHeight(5) adaptiveWidth(20);
         box-sizing: border-box;
     }
@@ -191,44 +219,114 @@ $design-height: 1080;
     justify-content: space-between;
     align-items: center;
     box-sizing: border-box;
+    background: url("./img/特质指标.png") no-repeat;
+    height: adaptiveHeight(60);
+    background-size: 100% 100%;
+    width: 100%;
+    padding-left: adaptiveWidth(10);
 }
 
 
-.table_box_content_item span {
-    text-align: center; // 文字居中
-    white-space: nowrap; // 不换行
-    overflow: hidden; // 超出隐藏
-    text-overflow: ellipsis; // 超出显示省略号
+.personnel_info {
+    width: adaptiveWidth(70);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    font-size: adaptiveFontSize(12);
+    text-align: center;
+    // 下面的内容都向右对齐
+    // 文字超出省略号隐藏
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    gap: 2px;
+}
+
+.personnel_info>span:nth-child(1) {
+    box-sizing: border-box;
+    margin: 0 adaptiveWidth(5);
+    border: 0.85px solid transparent;
+    /* 背景渐变 */
+    background:#126760;
+    background-blend-mode: screen;
+    box-shadow: inset 0px 0px 5.09px 0px #126760;
+
+    /* 裁成五边形 */
+    clip-path: polygon(
+        0% 0%, 100% 0%, 100% 80%, 80% 100%, 0% 100%
+    );
+}
+
+.personnel_info>span:nth-child(1)::before {
+    content: "";
+    position: absolute;
+    inset: 0; /* 填满父元素 */
+    padding: 0.85px; /* 边框宽度 */
+    // background:#126760;
+    background-blend-mode: screen;
+
+    clip-path: polygon(
+        0% 0%, 100% 0%, 100% 80%, 80% 100%, 0% 100%
+    );
+
+    -webkit-mask: polygon(
+        0% 0%, 100% 0%, 100% 80%, 80% 100%, 0% 100%
+    );
+    -webkit-mask-composite: destination-out;
+    mask: polygon(
+        0% 0%, 100% 0%, 100% 80%, 80% 100%, 0% 100%
+    );
+    mask-composite: exclude;
+    pointer-events: none; /* 不挡住鼠标 */
+    z-index: -1;
+}
+
+.personnel_renti {
     flex: 1;
-
 }
 
-// 可选：如果最左最右 span 不需要占剩余空间
-.table_box_content_item span:first-child {
-    text-align: left;
-    flex: 1; // 每个 span 占等宽
-}
-
-
-
-.table_box_content_item span:last-child {
-    text-align: right;
-    flex: 1; // 每个 span 占等宽
-}
-
-.table_box_column span {
-    text-align: center; // 文字居中
-    flex: 1;
+.personnel_renti_descriptions {
+    --el-border-color-lighter: transparent;
+    --el-text-color-primary: white;
+    --el-fill-color-blank: transparent;
+    --el-text-color-regular: white;
 }
 
 
-.table_box_column span:first-child {
-    flex: 1; // 每个 span 占等宽
-    text-align: left;
-}
+// .table_box_content_item span {
+//     text-align: center; // 文字居中
+//     white-space: nowrap; // 不换行
+//     overflow: hidden; // 超出隐藏
+//     text-overflow: ellipsis; // 超出显示省略号
+//     flex: 1;
 
-.table_box_column span:last-child {
-    flex: 1; // 每个 span 占等宽
-    text-align: right;
-}
-</style>
+// }
+
+// // 可选：如果最左最右 span 不需要占剩余空间
+// .table_box_content_item span:first-child {
+//     text-align: left;
+//     flex: 1; // 每个 span 占等宽
+// }
+
+
+
+// .table_box_content_item span:last-child {
+//     text-align: right;
+//     flex: 1; // 每个 span 占等宽
+// }
+
+// .table_box_column span {
+//     text-align: center; // 文字居中
+//     flex: 1;
+// }
+
+
+// .table_box_column span:first-child {
+//     flex: 1; // 每个 span 占等宽
+//     text-align: left;
+// }
+
+// .table_box_column span:last-child {
+//     flex: 1; // 每个 span 占等宽
+//     text-align: right;
+// }</style>

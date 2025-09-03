@@ -18,7 +18,7 @@
     </div>
   </div>
   <div class="bigscreen_cb">
-    <div class="bigscreen_cb_nei"></div>
+    <div :class="diTuDiv"></div>
     <div class="bigscreen_cb_dialog" v-if="useDeviceStore().isShowDetail">
       <div class="bigscreen_cb_dialog_top"></div>
       <div class="bigscreen_cb_dialog_bottom" style="background-color: white;display: flex; justify-content: right; " >
@@ -69,6 +69,11 @@ import { useIntervalFn } from '@vueuse/core'
 
 const count1 = ref(0);
 const count2 = ref(0);
+
+const diTuDiv = computed(()=>{
+  return useRoute().path === "/center" ? "bigscreen_ditu_nei" : "bigscreen_cb_nei"
+})
+
 // const activeName = ref("一层");
 
 
@@ -230,6 +235,15 @@ $design-height: 1080;
     width: adaptiveWidth(840);
     height: adaptiveHeight(642);
     background: url("/public/img/主体图片.png") no-repeat;
+    background-size: 100% 100%;
+  }
+
+
+  .bigscreen_ditu_nei {
+    width: adaptiveWidth(840);
+    height: adaptiveHeight(642);
+    // background: url("/public/img/主体图片.png") no-repeat;
+    background: url("../assets/map.png") no-repeat;
     background-size: 100% 100%;
   }
 
