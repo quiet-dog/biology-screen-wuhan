@@ -1260,6 +1260,8 @@ $design-height: 1080;
           justify-content: space-between;
           align-items: center;
           margin-top: adaptiveHeight(5);
+          // 变小手
+          cursor: pointer;
 
           span {
             width: 25%;

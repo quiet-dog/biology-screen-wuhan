@@ -31,3 +31,8 @@ export function getAllEnvironmentAreaEchart() {
 }
 
 
+export function getGongYiJieDianAreaEchart() {
+  return http.get("/manage/event/getGongYiJieDianAreaEchart");
+}
+
+

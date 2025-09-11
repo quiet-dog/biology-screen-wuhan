@@ -4,7 +4,7 @@ import * as echarts from "echarts"
 
 export function useXunJianQushiHook() {
 
-    const ciEchart = ref()
+    let ciEchart = null
     const qushiRef = ref()
     const ciShuDig = ref(false)
 
@@ -93,22 +93,27 @@ export function useXunJianQushiHook() {
     }
 
     function dailyCishuInspectionListFunc() {
+
+
         dailyCishuInspectionList(ciShuTimer.value).then(res => {
-            console.log("reess", res)
+            if (ciEchart == null) {
+                ciEchart = echarts.init(qushiRef.value)
+            }
             options.xAxis.data = res.data.data.time
             options.series[0].data = res.data.data.data
-            ciEchart.value.setOption(options)
+            ciEchart.setOption(options, true)
         })
     }
 
+    function handleOpenXunJianQushi() {
+        ciShuDig.value = true
+        dailyCishuInspectionListFunc()
+    }
 
-
-
-    onMounted(() => {
-        nextTick(() => {
-            ciEchart.value = echarts.init(qushiRef.value)
-            dailyCishuInspectionListFunc()
-        })
+    window.addEventListener("resize", () => {
+        if (ciEchart != null && ciShuDig.value) {
+            ciEchart.resize()
+        }
     })
 
     return {
@@ -117,6 +122,7 @@ export function useXunJianQushiHook() {
         ciShuRightClick,
         dailyCishuInspectionListFunc,
         qushiRef,
-        ciShuDig
+        ciShuDig,
+        handleOpenXunJianQushi
     }
 }

@@ -1240,7 +1240,7 @@ $design-height: 1080;
         text-align: center;
         font-style: normal;
         text-transform: none;
-        min-width: adaptiveWidth(100);
+        min-width: adaptiveWidth(130);
         background: linear-gradient(to bottom,
             #c7e5fd 42%,
             #3582c7 100%);
@@ -1531,6 +1531,7 @@ $design-height: 1080;
         text-align: center;
         font-style: normal;
         text-transform: none;
+        width: adaptiveWidth(70);
         background: linear-gradient(to bottom,
             #c7e5fd 42%,
             #3582c7 100%);
@@ -1781,7 +1782,7 @@ $design-height: 1080;
 
   height: adaptiveHeight(24);
   margin-right: adaptiveWidth(11);
-  margin-left: adaptiveWidth(180);
+  margin-left: adaptiveWidth(140);
 }
 
 .my_descriptions {

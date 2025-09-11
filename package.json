@@ -30,6 +30,7 @@
     "crypto-js": "^4.2.0",
     "dayjs": "^1.11.13",
     "echarts": "^5.5.1",
+    "echarts-gl": "^2.0.9",
     "element-plus": "^2.8.4",
     "jsencrypt": "^3.5.4",
     "pinia": "^2.2.7",

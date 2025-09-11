@@ -33,6 +33,11 @@
         </div>
       </div>
     </div>
+
+<!-- 
+    <template v-for="item in address">
+      <img class="address_img" :src="item.img" :style="{ left: item.left, top: item.top }" alt="" srcset="">
+    </template> -->
   </div>
 </template>
 
@@ -40,6 +45,7 @@
 import dayjs from "dayjs";
 import { ref, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
+import JiaoBiao from "./img/Group 1321315001.png";
 
 const router = useRouter();
 
@@ -143,6 +149,38 @@ const bigscreenBtn = (val: string) => {
     path: val,
   });
 };
+
+
+const designWidth = 1920;
+const designHeight = 1080;
+
+function adaptiveWidth(px: number) {
+  return `${(px / designWidth) * 100}vw`;
+}
+
+function adaptiveHeight(px: number) {
+  return `${(px / designHeight) * 100}vh`;
+}
+
+function adaptiveFontSize(px: number) {
+  return `${(px / designWidth) * 100}vw`;
+}
+const address = [{
+  left: adaptiveWidth(1050),
+  top: adaptiveHeight(650),
+  img: JiaoBiao,
+  title: "武汉"
+},{
+  left: adaptiveWidth(1100),
+  top: adaptiveHeight(500),
+  img: JiaoBiao,
+  title: "北京"
+},{
+  left: adaptiveWidth(1230),
+  top: adaptiveHeight(440),
+  img: JiaoBiao,
+  title: "长春"
+}]
 
 onMounted(() => {
   timer = setInterval(() => {
@@ -300,5 +338,10 @@ $design-height: 1080;
       }
     }
   }
+}
+
+
+.address_img {
+  position: fixed;
 }
 </style>

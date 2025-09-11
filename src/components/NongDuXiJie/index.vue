@@ -4,6 +4,12 @@ import { useIntervalFn } from "@vueuse/core";
 import Vue3SeamlessScroll from "../../package/vue3-seamless-scroll/packages/Vue3SeamlessScroll.vue";
 import { ref } from "vue";
 
+import HongSe from "./img/红色标记-圆.png";
+import LvSe from "./img/绿色标记-圆.png";
+import HuangSe from "./img/蓝色标记-圆.png";
+import LanSe from "./img/蓝色标记-圆.png";
+import ZiSe from "./img/紫色标记-圆.png";
+
 const { type = "", address = "", url = "" } = defineProps<{
     type: string,
     address: string,
@@ -14,9 +20,7 @@ const tableList = ref([
 ])
 
 const key = ref(false)
-
-const timer = useIntervalFn(async () => {
-    timer.pause()
+async function getData (){
     const res = await axios.get(url + "/api/manage/nongDuData", {
         headers: {
             "Authorization": `Bearer MASTER_TOKEN_123456`
@@ -34,11 +38,15 @@ const timer = useIntervalFn(async () => {
             key.value = true
         }
     }
+}
+const timer = useIntervalFn(async () => {
+    timer.pause()
+    await getData()
     timer.resume()
 }, 5000)
 
 onMounted(() => {
-   
+    getData()
 })
 
 </script>
@@ -63,28 +71,29 @@ onMounted(() => {
                 <template v-slot="{ data }">
                     <div class="table_box_content_item">
                         <span>
-                            <el-tooltip :content="data.deviceSn" placement="top">
-                                <span>{{ data.deviceSn }}</span>
+                            <img style="margin-right: 2px;" :src="HongSe" alt="" srcset="">
+                            <el-tooltip :content="data?.deviceSn" placement="top">
+                                <span>{{ data?.deviceSn }}</span>
                             </el-tooltip>
                         </span>
                         <span>
-                            <el-tooltip :content="data.particleConcentration" placement="top">
-                                <span>{{ data.particleConcentration }}</span>
+                            <el-tooltip :content="data?.particleConcentration" placement="top">
+                                <span>{{ data?.particleConcentration }}</span>
                             </el-tooltip>
                         </span>
                         <span>
-                            <el-tooltip :content="data.biologicalConcentration" placement="top">
-                                <span>{{ data.biologicalConcentration }}</span>
+                            <el-tooltip :content="data?.biologicalConcentration" placement="top">
+                                <span>{{ data?.biologicalConcentration }}</span>
                             </el-tooltip>
                         </span>
                         <span>
-                            <el-tooltip :content="data.alarmStatus" placement="top">
-                                <span>{{ data.alarmStatus }}</span>
+                            <el-tooltip :content="data?.alarmStatus" placement="top">
+                                <span>{{ data?.alarmStatus }}</span>
                             </el-tooltip>
                         </span>
                         <span>
-                            <el-tooltip :content="data.createTime" placement="top">
-                                <span>{{ data.createTime }}</span>
+                            <el-tooltip :content="data?.createTime" placement="top">
+                                <span>{{ data?.createTime }}</span>
                             </el-tooltip>
                         </span>
                     </div>
@@ -171,6 +180,8 @@ $design-height: 1080;
         padding: adaptiveHeight(5) adaptiveWidth(20);
         background: url("/public/img/equipment/tabletop.png") no-repeat;
         background-size: 100% 100%;
+        font-size: adaptiveFontSize(12);
+
 
     }
 
@@ -200,6 +211,7 @@ $design-height: 1080;
     overflow: hidden; // 超出隐藏
     text-overflow: ellipsis; // 超出显示省略号
     flex: 1;
+    font-size: adaptiveFontSize(12);
 
 }
 

@@ -91,13 +91,14 @@
         <img src="/public/img/光标.png" alt="" />
         <span>设备运行状态</span>
       </div>
-      <el-cascader :options="equipmentlist2" v-model="equipmentIds" @change="cascaderChange" class="cascaderCss" :props="{
+      <el-cascader size="small" :options="equipmentlist2" v-model="equipmentIds" @change="cascaderChange" class="cascaderCss" :props="{
         value: 'id',
         label: 'name',
         children: 'thresholdList',
       }" />
     </div>
     <div class="bigscreen_lb_bottom">
+      <h1>运行时间:{{ runningTime }}</h1>
       <div @mouseenter="historicalStatisticsListTimer.pause()" @mouseleave="historicalStatisticsListTimer.resume()"
         class="bigscreen_lb_bottom_nei" ref="bigscreenLBRef"></div>
     </div>
@@ -166,6 +167,7 @@
       <div class="bigscreen_rb_top_l">
         <img src="/public/img/光标.png" alt="" />
         <span>巡检记录</span>
+        <ElButton link style="color: white;" @click="handleOpenXunJianQushi" class="bigscreen_rb_top_l_rg">巡检趋势分析</ElButton>
       </div>
     </div>
     <div class="bigscreen_rb_bottom">
@@ -214,6 +216,27 @@
             </div>
           </Vue3SeamlessScroll>
         </div>
+      </div>
+    </div>
+    <div class="rb_dialog" v-show="ciShuDig">
+      <div class="rb_dialog_top">
+        <span>巡检趋势</span>
+        <img @click="ciShuDig = false" class="rb_dialog_top_x" :src="img9" alt="" srcset="" />
+
+        <div class="pickerCss">
+          <img src="/public/img/zuo.svg" alt="" @click="ciShuLeftClick" style="margin-left: 5px" />
+          <span>{{
+            dayjs(ciShuTimer.startTime).format("MM月DD日")
+            }}</span>
+          <span>-</span>
+          <span>{{
+            dayjs(ciShuTimer.endTime).format("MM月DD日")
+            }}</span>
+          <img src="/public/img/you.svg" alt="" @click="ciShuRightClick" style="margin-right: 5px" />
+        </div>
+      </div>
+      <div class="rb_dialog_bottom">
+        <div class="rb_dialog_bottom_echart" ref="qushiRef"></div>
       </div>
     </div>
   </div>
@@ -334,6 +357,7 @@ import {
   equipmentList,
   historicalStatisticsList,
   repairStatistics,
+  getRunningTime,
 } from "../../api/equipment/index";
 import dayjs from "dayjs";
 import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
@@ -342,6 +366,7 @@ import { getChannelListApi, getStreamUrlApi } from "../../api/video";
 import Video from "../home/components/Video.vue";
 import { thresholdDataList } from "../../api/riskassessment";
 import { useIntervalFn } from '@vueuse/core'
+import { useXunJianQushiHook } from "./qushi";
 
 
 const rtStatus = ref(false);
@@ -597,6 +622,7 @@ const bigscreenLBoption = {
   ],
 };
 const thresholdId = ref(0);
+const runningTime = ref("0");
 const historicalStatisticsListFun = async () => {
   const { data } = await historicalStatisticsList({
     thresholdId: thresholdId.value,
@@ -606,7 +632,10 @@ const historicalStatisticsListFun = async () => {
   if (bigscreenLBRef.value && bigscreenLBChart == null) {
     bigscreenLBChart = echarts.init(bigscreenLBRef.value);
   }
-  bigscreenLBChart.setOption(bigscreenLBoption,true);
+  bigscreenLBChart.setOption(bigscreenLBoption, true);
+  getRunningTime(thresholdId.value).then(res => {
+    runningTime.value = res.data.data;
+  })
 
 };
 const historicalStatisticsListTimer = useIntervalFn(() => {
@@ -808,6 +837,14 @@ const jianceTimer = useIntervalFn(() => {
 window.onresize = function () {
   bigscreenLBChart.resize();
 };
+
+
+const { ciShuTimer,
+  ciShuLeftClick,
+  ciShuRightClick,
+  dailyCishuInspectionListFunc,
+  qushiRef,
+  ciShuDig,handleOpenXunJianQushi } = useXunJianQushiHook()
 
 onMounted(() => {
   equipmentRepairListFun();
@@ -1105,9 +1142,19 @@ $design-height: 1080;
     background: url("/public/img/背景下层.png") no-repeat;
     background-size: 100% 100%;
 
+    h1 {
+      width: 100%;
+      font-size: adaptiveFontSize(12);
+      height: adaptiveHeight(12);
+      color: white;
+      position: relative;
+      top: adaptiveHeight(12);
+      margin-left: adaptiveWidth(10);
+    }
+
     .bigscreen_lb_bottom_nei {
       width: 100%;
-      height: 100%;
+      height: calc(100% - adaptiveHeight(12));
     }
   }
 }
@@ -1349,6 +1396,7 @@ $design-height: 1080;
     .bigscreen_rb_top_l {
       display: flex;
       align-items: center;
+      width: 100%;
 
       img {
         margin-left: adaptiveWidth(11);
@@ -1357,7 +1405,7 @@ $design-height: 1080;
       span {
         font-weight: 600;
         font-size: adaptiveFontSize(16);
-        text-align: center;
+        // text-align: center;
         font-style: normal;
         text-transform: none;
         background: linear-gradient(to bottom,
@@ -1369,6 +1417,8 @@ $design-height: 1080;
         -webkit-text-fill-color: transparent;
         /* 使文本颜色透明 */
         padding-left: adaptiveWidth(10);
+        width: adaptiveWidth(100);
+        box-sizing: border-box;
       }
     }
 
@@ -1782,5 +1832,72 @@ $design-height: 1080;
   /* 溢出隐藏 */
   text-overflow: ellipsis;
   /* 超出部分显示省略号 */
+}
+
+
+.rb_dialog {
+  width: adaptiveWidth(440);
+  height: adaptiveHeight(270);
+  position: absolute;
+  top: 0;
+  left: - adaptiveWidth(450);
+  background: url("/public/img/弹窗背景.png") no-repeat;
+  background-size: 100% 100%;
+}
+
+.rb_dialog_top {
+  width: 100%;
+  height: adaptiveHeight(45);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .rb_dialog_top_x {
+    position: absolute;
+    right: adaptiveWidth(7);
+  }
+
+  span {
+    font-family: youshe;
+    font-size: adaptiveFontSize(20);
+    color: #ffffff;
+    padding-left: adaptiveWidth(15);
+  }
+}
+
+.rb_dialog_bottom {
+  height: adaptiveHeight(225);
+}
+
+.rb_dialog_bottom_echart {
+  width: adaptiveWidth(450);
+  height: adaptiveHeight(215);
+}
+
+.pickerCss {
+
+  width: adaptiveWidth(155);
+  height: adaptiveHeight(24);
+  border: 1px solid rgba(227, 233, 243, 0.2);
+  border-radius: 5px;
+  margin-right: adaptiveWidth(11);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  top: adaptiveWidth(6);
+  left: - adaptiveWidth(20);
+
+  span {
+    color: #ffffff;
+    font-size: adaptiveFontSize(10);
+    font-family: unset !important;
+    font-weight: 100 !important;
+  }
+}
+
+.bigscreen_rb_top_l_rg {
+  margin-left: auto;
+  margin-right: adaptiveWidth(12);
 }
 </style>

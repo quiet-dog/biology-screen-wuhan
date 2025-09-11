@@ -3,6 +3,11 @@ import { useIntervalFn } from "@vueuse/core";
 // @ts-expect-error
 import Vue3SeamlessScroll from "../../package/vue3-seamless-scroll/packages/Vue3SeamlessScroll.vue";
 import { ref } from "vue";
+import HongSe from "./img/红色标记-圆.png";
+import LvSe from "./img/绿色标记-圆.png";
+import HuangSe from "./img/蓝色标记-圆.png";
+import LanSe from "./img/蓝色标记-圆.png";
+import ZiSe from "./img/紫色标记-圆.png";
 
 const { type = "", address = "", url = "" } = defineProps<{
     type: string,
@@ -15,8 +20,7 @@ const tableList = ref([
 
 const key = ref(false)
 
-const timer = useIntervalFn(async () => {
-    timer.pause()
+async function getData (){
     const res = await axios.get(url + "/api/manage/nongDuData", {
         headers: {
             "Authorization": `Bearer MASTER_TOKEN_123456`
@@ -34,11 +38,15 @@ const timer = useIntervalFn(async () => {
             key.value = true
         }
     }
+}
+const timer = useIntervalFn(async () => {
+    timer.pause()
+    getData()
     timer.resume()
 }, 5000)
 
 onMounted(() => {
-   
+    getData()
 })
 
 </script>
@@ -62,23 +70,23 @@ onMounted(() => {
                 <template v-slot="{ data }">
                     <div class="table_box_content_item">
                         <span>
-                            <el-tooltip :content="data.deviceSn" placement="top">
-                                <span>{{ data.deviceSn }}</span>
+                            <el-tooltip :content="data?.deviceSn" placement="top">
+                                <span>{{ data?.deviceSn }}</span>
                             </el-tooltip>
                         </span>
                         <span>
-                            <el-tooltip :content="data.particleConcentration" placement="top">
-                                <span>{{ data.particleConcentration }}</span>
+                            <el-tooltip :content="data?.particleConcentration" placement="top">
+                                <span>{{ data?.particleConcentration }}</span>
                             </el-tooltip>
                         </span>
                         <span>
-                            <el-tooltip :content="data.biologicalConcentration" placement="top">
-                                <span>{{ data.biologicalConcentration }}</span>
+                            <el-tooltip :content="data?.biologicalConcentration" placement="top">
+                                <span>{{ data?.biologicalConcentration }}</span>
                             </el-tooltip>
                         </span>
                         <span>
-                            <el-tooltip :content="data.alarmStatus" placement="top">
-                                <span>{{ data.alarmStatus }}</span>
+                            <el-tooltip :content="data?.alarmStatus" placement="top">
+                                <span>{{ data?.alarmStatus }}</span>
                             </el-tooltip>
                         </span>
                     </div>

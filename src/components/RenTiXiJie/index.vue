@@ -64,28 +64,28 @@ onMounted(() => {
                     <div class="table_box_content_item">
                         <div class="personnel_info">
                             <span>
-                                <el-tooltip :content="data.personnelName" placement="top">
-                                    <span>{{ data.personnelName }}</span>
+                                <el-tooltip :content="data?.personnelName" placement="top">
+                                    <span>{{ data?.personnelName }}</span>
                                 </el-tooltip>
                             </span>
                             <span>
-                                <el-tooltip :content="data.code" placement="top">
-                                    <span>{{ data.code }}</span>
+                                <el-tooltip :content="data?.code" placement="top">
+                                    <span>{{ data?.code }}</span>
                                 </el-tooltip>
                             </span>
                         </div>
                         <div class="personnel_renti">
                             <el-descriptions class="personnel_renti_descriptions" :column="2">
                                 <el-descriptions-item label="体温">
-                                    {{ data.temp }}°C
+                                    {{ data?.temp }}°C
                                 </el-descriptions-item>
                                 <el-descriptions-item label="心率">
-                                    {{ data.xinlv }}/分
+                                    {{ data?.xinlv }}/分
                                 </el-descriptions-item>
                             </el-descriptions>
                             <el-descriptions class="personnel_renti_descriptions">
                                 <el-descriptions-item label="时间">
-                                    {{ data.createTime }}
+                                    {{ data?.createTime }}
                                 </el-descriptions-item>
                             </el-descriptions>
                         </div>

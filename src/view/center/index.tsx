@@ -40,13 +40,13 @@ export function useAllCity() {
         {
             type: "浓度数据",
             Url: "http://192.168.1.141:9200",
-            address: "中疾控",
+            address: "建研院",
             component: markRaw(defineAsyncComponent(() => import("../../components/NongDuXiJie/index.vue")))
         },
         {
             type: "阀门数据",
             Url: "http://192.168.1.141:9200",
-            address: "中疾控",
+            address: "建研院",
             component: markRaw(defineAsyncComponent(() => import("../../components/FaMenXiJie/index.vue")))
         },
     ])

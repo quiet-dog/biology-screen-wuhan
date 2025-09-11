@@ -55,6 +55,11 @@ export function historicalStatisticsList(params: historicalStatisticsRes) {
   return http.get("/manage/equipment-data/history", { params });
 }
 
+// 获取运行时长
+export function getRunningTime(id: number) {
+  return http.get("/manage/threshold/runTime/" + id);
+}
+
 export function getAllTime(id: number) {
   return http.get("/manage/equipment-data/totalTime", {
     params: {

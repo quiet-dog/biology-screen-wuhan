@@ -728,6 +728,8 @@ $design-height: 1080;
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        box-sizing: border-box;
+        padding: 0 adaptiveWidth(10);
 
         .bigscreen_rt_bottom_nei_t {
             width: 100%;
@@ -742,8 +744,8 @@ $design-height: 1080;
             span {
                 width: 25%;
                 color: #9eabb7;
-                font-size: adaptiveFontSize(14);
                 text-align: center;
+                font-size: adaptiveFontSize(12);
             }
         }
 

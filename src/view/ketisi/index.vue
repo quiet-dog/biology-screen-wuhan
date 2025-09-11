@@ -300,6 +300,8 @@ $design-height: 1080;
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        box-sizing: border-box;
+        padding: 0 adaptiveWidth(10);
 
         .bigscreen_lt_bottom_nei_t {
             width: 100%;
@@ -316,6 +318,8 @@ $design-height: 1080;
                 color: #9eabb7;
                 font-size: adaptiveFontSize(14);
                 text-align: center;
+                font-size: adaptiveFontSize(12);
+
             }
         }
 
@@ -434,6 +438,8 @@ $design-height: 1080;
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        box-sizing: border-box;
+        padding: 0 adaptiveWidth(10);
 
 
         .bigscreen_lc_bottom_nei_t {
@@ -451,6 +457,8 @@ $design-height: 1080;
                 color: #9eabb7;
                 font-size: adaptiveFontSize(14);
                 text-align: center;
+                font-size: adaptiveFontSize(12);
+
             }
         }
 
@@ -567,6 +575,8 @@ $design-height: 1080;
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        box-sizing: border-box;
+        padding: 0 adaptiveWidth(10);
 
         .bigscreen_lb_bottom_nei_t {
             width: 100%;
@@ -583,6 +593,7 @@ $design-height: 1080;
                 color: #9eabb7;
                 font-size: adaptiveFontSize(14);
                 text-align: center;
+                font-size: adaptiveFontSize(12);
             }
         }
 
