@@ -408,13 +408,16 @@ const rcClcik = (item: any) => {
     }
   });
   if (item.paths.length > 0) {
-    // sopPreviewVisibleUrl.value = "/upload/" + item.paths[0].path;
-    let u = item.paths[0].path
-    if (u[0] == "/") {
-      u = u.substring(1);
-    }
-    sopPreviewVisibleUrl.value = u;
+    sopPreviewVisibleUrl.value = item.paths[0].path;
   }
+  // if (item.paths.length > 0) {
+  //   // sopPreviewVisibleUrl.value = "/upload/" + item.paths[0].path;
+  //   let u = item.paths[0].path
+  //   if (u[0] == "/") {
+  //     u = u.substring(1);
+  //   }
+  //   sopPreviewVisibleUrl.value = u;
+  // }
 };
 const previewcanleClick2 = (item: any) => {
   item.status = false;

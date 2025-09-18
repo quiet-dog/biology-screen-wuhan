@@ -53,7 +53,7 @@
           <span>设备型号</span>
           <span>安装时间</span>
         </div>
-        <div @mouseenter="equipmentListTimer.pause()" @mouseleave="equipmentListTimer.resume()"
+        <div @mouseenter="jianceTimer.pause()" @mouseleave="jianceTimer.resume()"
           class="bigscreen_lc_bottom_neib">
           <Vue3SeamlessScroll :list="equipmentlist" :class-option="{
             step: 5,
@@ -375,9 +375,13 @@ const rtClick = (item) => {
   rtStatus.value = !rtStatus.value;
   getStreamUrlApi(item.channelid).then((res) => {
     console.log("res.data.data.wsflv", res.data.data.wsflv);
-    const url = new URL(res.data.data.wsflv);
-    url.host = location.host;
-    videoRef.value.play(url.toString());
+
+
+            const path = new URL(res.data.data.wsflv).pathname;
+            const scheme = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+            const u = scheme + location.host + path
+
+    videoRef.value.play(u);
     videoRef.value.setChannelId(res.data.data.channelId);
   });
   // nextTick(() => {
@@ -531,7 +535,7 @@ const equipmentListFun = async () => {
     return {
       ...item,
       id: item.equipmentId,
-      name: item.equipmentName,
+      name: item.equipmentName+(item.equipmentCode != null || item.equipmentCode != "" ? "("+item.equipmentCode+")" : ""),
       thresholdList: list,
     };
   });
@@ -590,6 +594,16 @@ const bigscreenLBoption = {
     trigger: 'axis', //坐标轴触发，主要在柱状图，折线图等会使用类目轴的图表中使用
     axisPointer: {// 坐标轴指示器，坐标轴触发有效
       type: 'line' // 默认为直线，可选为：'line' | 'shadow'
+    },
+    formatter: function (params) {
+      console.log(params)
+      return `
+      设备名称: ${params[0].data.equipmentName} <br/>
+      设备编号: ${params[0].data.equipmentCode} <br/>
+      传感器: ${params[0].data.sensorName} <br/>
+      单位: ${params[0].data.unitName} <br/>
+      值: ${params[0].value}
+    `;
     }
   },
   series: [
@@ -629,6 +643,17 @@ const historicalStatisticsListFun = async () => {
   });
   bigscreenLBoption.xAxis.data = data.time;
   bigscreenLBoption.series[0].data = data.data;
+  if(Array.isArray(data.data) && data.data.length > 0){
+    bigscreenLBoption.series[0].data = data.data.map((item) => {
+      return {
+        value: item,
+        equipmentName: data.equipmentName,
+        equipmentCode: data.equipmentCode,
+        unitName: data.unitName,
+        sensorName: data.sensorName,
+      }
+    })
+  }
   if (bigscreenLBRef.value && bigscreenLBChart == null) {
     bigscreenLBChart = echarts.init(bigscreenLBRef.value);
   }

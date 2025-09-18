@@ -2,6 +2,8 @@
 import { JSEncrypt } from "jsencrypt";
 import Bg from "../../assets/my.png"
 import * as CryptoJS from "crypto-js";
+import Motion from "./utils/motion";
+import TypeIt from "./ReTypeit";
 
 const router = useRouter();
 
@@ -35,27 +37,49 @@ const login = () => {
         username: form.value.username,
         password: rsaEncrypt(form.value.password)
     }).then(res => {
-        console.log("======",res)
-        if(res.status === 200 && res.data.code === 0){
+        console.log("======", res)
+        if (res.status === 200 && res.data.code === 0) {
             sessionStorage.setItem("token", res.data.data.token)
             router.push("/home")
+        } else {
+            ElMessage.error(res.data.msg)
         }
     })
 }
+
+function onkeypress({ code }: KeyboardEvent) {
+    if (code === "Enter") {
+        login();
+    }
+}
+onMounted(() => {
+    window.document.addEventListener("keypress", onkeypress);
+});
+
+onBeforeUnmount(() => {
+    window.document.removeEventListener("keypress", onkeypress);
+});
+
 </script>
 <template>
     <div class="main">
         <img :src="Bg" alt="bg" class="bg">
         <el-card class="card" title="登陆">
-            <template #header>
-                登陆
-            </template>
+
+
+            <h2>你好！</h2>
+
+            <Motion>
+                <h2 class="outline-none">
+                    <TypeIt :cursor="false" :speed="150" :values="['高风险安全风险车间<br/>生物安全关键技术研究数字孪生平台']" />
+                </h2>
+            </Motion>
             <el-form>
                 <el-form-item>
                     <el-input size="large" v-model="form.username" placeholder="请输入用户名" />
                 </el-form-item>
                 <el-form-item>
-                    <el-input size="large" v-model="form.password" placeholder="请输入密码" />
+                    <el-input @enter="" size="large" show-password v-model="form.password" placeholder="请输入密码" />
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="login">登录</el-button>
@@ -85,10 +109,11 @@ const login = () => {
     transform: translate(-50%, -50%);
     z-index: 2;
     width: 400px;
-    height: 300px;
+    height: 500px;
     background-color: #fff;
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
 }
 </style>
+

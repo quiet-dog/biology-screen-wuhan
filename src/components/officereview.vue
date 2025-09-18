@@ -120,7 +120,8 @@ export default {
         //if (newUrl) {
         // this.loadFile();
         //}
-        var encodedUrl = encodeURIComponent(`http://${location.hostname}:9004/biology` + newUrl);
+        // var encodedUrl = encodeURIComponent(`http://${location.hostname}:9004/biology` + newUrl);
+        var encodedUrl = encodeURIComponent(`${location.origin}/minioapi/biology` + newUrl);
         // var encodedUrl = encodeURIComponent("http://192.168.0.11:9000/biology/" + newUrl);
         // 然后使用 btoa 对编码后的 URL 进行 Base64 编码
         var base64Url = btoa(encodedUrl);

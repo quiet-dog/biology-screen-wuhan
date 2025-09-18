@@ -21,6 +21,10 @@ export function useXunJianQushiHook() {
             // axisPointer: {// 坐标轴指示器，坐标轴触发有效
             //     type: 'line' // 默认为直线，可选为：'line' | 'shadow'
             // }
+            formatter: function (params) {
+                console.log(params)
+                return `次数: ${params[0].value}`
+            }
         },
         legend: {
             data: ['Email', 'Union Ads', 'Video Ads', 'Direct', 'Search Engine']

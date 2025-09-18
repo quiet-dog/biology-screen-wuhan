@@ -349,7 +349,15 @@ export function useAlarmHook() {
         getAllEventEchart().then(res => {
             // yzOption = get3dOption(res.data.data)
             // 过滤掉物料报警和工艺节点报警
-            yzOption.series[0].data = res.data.data.filter(item => item.name !== "物料报警" && item.name !== "工艺节点报警")
+            yzOption.series[0].data = res.data.data.filter(item => item.name !== "物料报警" && item.name !== "工艺节点报警").map((item, idx) => ({
+                ...item,
+                // 让连线颜色跟调色板一致
+                labelLine: {
+                    lineStyle: {
+                        color: yzOption.color[idx % yzOption.color.length]   // 防止数据多于颜色数组
+                    }
+                }
+            }));
             if (et == null) {
                 et = echarts.init(yzRef.value)
             }
