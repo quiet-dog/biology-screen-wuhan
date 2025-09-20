@@ -584,6 +584,10 @@ const bigscreenRBoption = {
         "RGBA(255, 169, 19, 0.5)",
         "rgba(255, 169, 19, 0)"
       ),
+      // 图例的圆点颜色跟下面lineStyle的color一致
+      itemStyle: {
+        color: "RGBA(255, 169, 19, 1)",
+      },
     },
     {
       name: "环境报警",
@@ -598,6 +602,9 @@ const bigscreenRBoption = {
         "RGBA(225, 110, 122, 0.5)",
         "rgba(225, 110, 122, 0)"
       ),
+      itemStyle: {
+        color: "RGBA(225, 110, 122, 1)",
+      },
     },
     {
       name: "物料报警",
@@ -612,6 +619,9 @@ const bigscreenRBoption = {
         "RGBA(65, 195, 142, 0.5)",
         "rgba(65, 195, 142, 0)"
       ),
+      itemStyle: {
+        color: "RGBA(65, 195, 142, 1)",
+      },
     },
     {
       name: "工艺节点报警",
@@ -626,6 +636,9 @@ const bigscreenRBoption = {
         "RGBA(210, 114, 255, 0.5)",
         "rgba(210, 114, 255, 0)"
       ),
+      itemStyle: {
+        color: "RGBA(210, 114, 255, 1)",
+      },
     },
   ],
 };
