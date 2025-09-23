@@ -1421,6 +1421,8 @@ $design-height: 1080;
     height: adaptiveHeight(24);
     margin-right: adaptiveWidth(11);
     // margin-left: adaptiveWidth(200);
+    --el-text-color-placeholder:white;
+    --el-input-text-color:white;
 }
 
 // .inputcss :deep(.el-input__wrapper) {

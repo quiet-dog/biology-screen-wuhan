@@ -1638,6 +1638,7 @@ $design-height: 1080;
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: none;
   font-size: adaptiveFontSize(12);
+  
 }
 
 .scroll {

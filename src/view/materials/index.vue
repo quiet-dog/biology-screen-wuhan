@@ -176,7 +176,7 @@
       <img :src="img9" alt="" srcset="" @click="rbcanleClick" />
     </div>
     <div class="rbDialog_bottom">
-      <el-input class="inputcss" v-model="receiveFormData2.materialName" @change="receivelistFun2"
+      <el-input v-show="isShowInput" class="inputcss" v-model="receiveFormData2.materialName" @change="receivelistFun2"
         style="width: 148px; height: 24px" placeholder="请输入物料名称" :prefix-icon="Search" />
       <el-scrollbar class="bigscreen_rc_bottom_nei">
         <div class="bigscreen_rc_bottom_l">
@@ -316,13 +316,16 @@ const receiveFormData = ref({
 });
 const receivelist = ref<any[]>([]);
 const rbstatus = ref(false);
+const isShowInput = ref(false);
 const receivelistFun = async () => {
   const { data } = await receiveList(receiveFormData.value);
   receivelist.value = data.data.rows;
   console.log("receivelist", receivelist.value);
 };
 const rbClick = async () => {
+  isShowInput.value = true;
   rbstatus.value = !rbstatus.value;
+  receiveFormData2.value.materialName = "";
   await receivelistFun2();
 };
 const rbcanleClick = () => {
@@ -454,6 +457,7 @@ const materialsChange = async (val) => {
 
 const changeMaterials = (item) => {
   rbstatus.value = true
+  isShowInput.value = true;
   receiveFormData2.value.materialName = item.materialsInfo.name;
   receivelistFun2();
   // receiveFormData2.value.materialName = item;
@@ -1418,6 +1422,9 @@ $design-height: 1080;
   height: adaptiveHeight(24);
   right: 0;
   z-index: 2;
+
+  --el-text-color-placeholder:white;
+  --el-input-text-color:white;
 }
 
 .inputcss :deep(.el-input__wrapper) {
