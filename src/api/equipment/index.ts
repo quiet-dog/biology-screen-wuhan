@@ -35,6 +35,20 @@ export function dailyCishuInspectionList(params: CiShu) {
   });
 }
 
+export function equipmentDetailList(params: equipmentListRes) {
+  return http.get("/manage/equipment/detail", { params });
+}
+
+
+export function equipmentAlarmCount(params: string) {
+  return http.get("/manage/equipment/alarmCount", {
+    params: {
+      dayType: params
+    }
+  });
+}
+
+
 //获取设备档案列表
 export interface equipmentListRes {
   equipmentName: string;

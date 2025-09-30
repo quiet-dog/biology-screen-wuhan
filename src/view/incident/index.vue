@@ -20,7 +20,7 @@
       <div class="bigscreen_lt_bottom_r">
         <Vue3SeamlessScroll style="width: 100%;overflow: hidden;" :list="alarmInformationlistValue" hover
           class="scrool scroolMy">
-          <div class="bigscreen_lt_bottom_r_nei" v-for="(item, index) in alarmInformationlistValue">
+          <div @click="openLtDialogShow(item)" style="cursor: pointer;" class="bigscreen_lt_bottom_r_nei" v-for="(item, index) in alarmInformationlistValue">
             <div>
               {{ item?.eventName }}
             </div>
@@ -247,6 +247,27 @@
       </div>
     </div>
   </template>
+
+  <div v-show="ltDialogShow" class="ltTrendDialog">
+    <div class="ltTrendDialog_top">
+      <span>事件详情</span>
+      <img :src="img9" alt="" srcset="" @click="closeLtDialogShow" />
+    </div>
+    <div class="ltTrendDialog_bottom">
+      <el-scrollbar height="100%">
+        <el-descriptions :column="1" size="small" direction="horizontal" class="lt_descriptions">
+          <el-descriptions-item label="事件编号：">{{ ltCurrentItem?.emergencyEventId }}</el-descriptions-item>
+          <el-descriptions-item label="事件类型：">{{ ltCurrentItem?.type }}</el-descriptions-item>
+          <el-descriptions-item label="事件名称：">{{ ltCurrentItem?.eventName }}</el-descriptions-item>
+          <el-descriptions-item label="&nbsp;&nbsp;&nbsp;&nbsp;处理人：">{{ ltCurrentItem?.handlerNames
+            }}</el-descriptions-item>
+          <el-descriptions-item label="处理流程：">{{ ltCurrentItem?.processingFlow }}</el-descriptions-item>
+          <el-descriptions-item label="报警描述：">{{ltCurrentItem?.emergencyAlarmDTOs?.map(item =>
+            item.description)?.join(",") }}</el-descriptions-item>
+        </el-descriptions>
+      </el-scrollbar>
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -528,6 +549,16 @@ const alarmInformationlistFun = async () => {
   const { data } = await emergencyEventList(alarmInformationFormData.value);
   alarmInformationlistValue.value = data.data.rows;
 };
+
+const ltDialogShow = ref(false)
+const ltCurrentItem = ref({})
+function openLtDialogShow(item) {
+  ltCurrentItem.value = item
+  ltDialogShow.value = true
+}
+function closeLtDialogShow() {
+  ltDialogShow.value = false
+}
 
 const zxSelect = ref("环境报警类");
 const zxChangeSelect = () => {
@@ -1735,5 +1766,59 @@ $design-height: 1080;
   border-color: rgba(255, 255, 255, 0);
   font-size: adaptiveFontSize(12);
   border-radius: 2px;
+}
+
+
+.ltTrendDialog {
+  width: adaptiveWidth(440);
+  height: adaptiveHeight(280);
+  background: url("/public/img/弹窗背景.png") no-repeat;
+  background-size: 100% 100%;
+  position: absolute;
+  top: adaptiveHeight(100);
+  left: adaptiveWidth(480);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 0 0 10px 0;
+
+  .ltTrendDialog_top {
+    width: 100%;
+    height: adaptiveHeight(45);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    span {
+      font-size: adaptiveFontSize(20);
+      color: #ffffff;
+      padding-left: adaptiveWidth(15);
+      font-family: youshe;
+    }
+
+    img {
+      width: adaptiveWidth(8);
+      height: adaptiveHeight(8);
+      padding-right: adaptiveWidth(10);
+      cursor: pointer;
+    }
+  }
+
+  .ltTrendDialog_bottom {
+    width: 100%;
+    // height: 100%;
+    flex: 1;
+
+    box-sizing: border-box;
+    padding: 5px 10px;
+    overflow: auto;
+  }
+}
+
+.lt_descriptions {
+  --el-fill-color-blank: transparent;
+  --el-text-color-primary: white;
+  --el-text-color-regular: white;
 }
 </style>

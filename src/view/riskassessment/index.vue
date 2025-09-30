@@ -18,7 +18,7 @@
           <Vue3SeamlessScroll :list="equipmentlist" :class-option="{
             step: 5,
           }" hover class="scrool" @mouseenter="environmentFileTimer.pause" @mouseleave="environmentFileTimer.resume">
-            <div class="bigscreen_lt_bottom_nei_b" v-for="(item, index) in environmentFileList">
+            <div style="cursor: pointer;" class="bigscreen_lt_bottom_nei_b" v-for="(item, index) in environmentFileList">
               <span>{{ `${item?.environment?.description}-${item?.environment?.unitName}` }}</span>
               <span>{{ item?.environment?.tag }}</span>
               <span :class="getValueColorClass(item)">{{ item.value }}</span>

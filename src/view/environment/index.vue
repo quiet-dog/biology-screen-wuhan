@@ -26,6 +26,7 @@
       <div class="lt_container">
         <div :style="{
           backgroundImage: `url(${BeiJing})`,
+          cursor: 'pointer',
         }" @click="ltClick2(item)" v-for="(item, index) in envList" :key="index">
           <div>
             <img v-if="item.environment?.unitName === '温度'" :src="WenDu" alt="">
@@ -313,11 +314,17 @@ const powerByTypeStatisticsFun = async () => {
   console.log(data);
   bigscreenLBoption.xAxis.data = data.data.time;
   bigscreenLBoption.series[0].data = data.data.data;
-  if (bigscreenLBRef.value) {
+  if (bigscreenLBChart ==null) {
     bigscreenLBChart = echarts.init(bigscreenLBRef.value);
-    bigscreenLBChart.setOption(bigscreenLBoption);
   }
+  bigscreenLBChart.setOption(bigscreenLBoption,true);
 };
+const powerByTypeStatisticsFunTimer = useIntervalFn(() => {
+  powerByTypeStatisticsFunTimer.pause();
+  powerByTypeStatisticsFun().finally(() => {
+    powerByTypeStatisticsFunTimer.resume();
+  })
+}, 5000)
 
 //数据展示
 const environmentFileFormData = ref({
@@ -381,7 +388,63 @@ const environmentFileDialogRef = ref(null);
 const ltstatus = ref(false);
 let bigscreenLtdialogChart: any = null;
 const bigscreenLtdialogRef = ref();
+// const bigscreenLtdialogoption = {
+//   grid: {
+//     left: "6%",
+//     right: "6%",
+//     bottom: "6%",
+//     containLabel: true,
+//   },
+//   xAxis: {
+//     type: "category",
+//     data: [],
+//     axisLabel: {
+//       color: "#ffffff",
+//     },
+//   },
+//   yAxis: {
+//     type: "value",
+//     nameTextStyle: {
+//       color: "#ffffff",
+//       padding: [0, 30, 5, 0],
+//     },
+//     splitLine: {
+//       lineStyle: {
+//         type: "dashed",
+//         color: "rgba(255,255,255,0.14)",
+//       },
+//     },
+//     axisLabel: {
+//       color: "#ffffff",
+//     },
+//     minInterval: 1
+//   },
+//   series: [
+//     {
+//       data: [],
+//       type: "bar",
+//       itemStyle: {
+//         color: "#68B1A6", // 线条颜色
+//       },
+//     },
+//   ],
+//   legend: {
+//     // 白色文字
+//     textStyle: {
+//       color: '#ffffff',
+//       fontSize: 12
+//     },
+//   },
+//   tooltip: {
+//     trigger: 'item', // 或 'item'，看你是多个柱还是单个柱
+//     axisPointer: {
+//       type: 'shadow' // 鼠标移动时显示阴影效果
+//     },
+//     show:true
+//   }
+// };
 const bigscreenLtdialogoption = {
+  color: ['#68B1A6', '#FFAA00', '#6A5ACD', '#E062AE', '#FF7F50'],
   grid: {
     left: "6%",
     right: "6%",
@@ -419,6 +482,12 @@ const bigscreenLtdialogoption = {
       itemStyle: {
         color: "#68B1A6", // 线条颜色
       },
+      label: {
+        show: true,          // ★ 显示标签
+        position: 'top',     // ★ 在柱子顶部显示
+        color: '#ffffff',    // 字体颜色
+        fontSize: 12         // 字体大小
+      }
     },
   ],
   legend: {
@@ -430,8 +499,12 @@ const bigscreenLtdialogoption = {
   },
   tooltip: {
     trigger: 'axis', // 或 'item'，看你是多个柱还是单个柱
+    show: true,
     axisPointer: {
-      type: 'shadow' // 鼠标移动时显示阴影效果
+      type: 'shadow',
+      shadowStyle: {
+        color: 'rgba(255,255,255,0.08)' // ★ 阴影颜色，可调透明度
+      }
     }
   }
 };
@@ -444,31 +517,39 @@ const envrionmentStatisticsFun = async () => {
   // bigscreenLtdialogoption.xAxis.data = data.data.unitNames;
   // bigscreenLtdialogoption.series[0].data = data.data.datas;
   if (data.data == null || data.data == undefined || data.data.unitNames == null || data.data.unitNames == undefined || data.data.unitNames.length == 0) {
+    bigscreenLtdialogoption.series = [];
+    bigscreenLtdialogoption.xAxis.data = data.data.unitNames;
+    bigscreenLtdialogoption.yAxis.min = 1;
+    bigscreenLtdialogoption.yAxis.max = Math.max(...data.data.datas, 6);
     return;
   }
-  bigscreenLtdialogoption.series = data.data.unitNames.map((name, index) => ({
-    name: name,
-    type: 'bar',
-    data: [data.data.datas[index]],
-    itemStyle: {
-      // color: ['#68B1A6', '#FFAA00', '#6A5ACD'][index]  // 可设置不同颜色
-    },
-    // barGap: 0,
-    label: {
-      show: true,
-      position: 'top',
-      color: '#ffffff',
-      fontSize: 12,
-    }
-  }));
+  bigscreenLtdialogoption.xAxis.data = data.data.unitNames;
+  bigscreenLtdialogoption.yAxis.min = 1;
+  bigscreenLtdialogoption.yAxis.max = Math.max(...data.data.datas, 6);
+  // bigscreenLtdialogoption.series = data.data.unitNames.map((name, index) => ({
+  //   name: name,
+  //   type: 'bar',
+  //   data: [data.data.datas[index]],
+  //   itemStyle: {
+  //     // color: ['#68B1A6', '#FFAA00', '#6A5ACD'][index]  // 可设置不同颜色
+  //   },
+  //   // barGap: 0,
+  //   label: {
+  //     show: true,
+  //     position: 'top',
+  //     color: '#ffffff',
+  //     fontSize: 12,
+  //   }
+  // }));
+  bigscreenLtdialogoption.series[0].data = data.data.unitNames.map((name, index)=>data.data.datas[index])
 };
 const zsEchartData = async () => {
   await envrionmentStatisticsFun();
-  if (bigscreenLtdialogRef.value) {
+  if (bigscreenLtdialogChart == null) {
     console.log("bigscreenLtdialogoption", bigscreenLtdialogoption);
     bigscreenLtdialogChart = echarts.init(bigscreenLtdialogRef.value);
-    bigscreenLtdialogChart.setOption(bigscreenLtdialogoption,true);
   }
+  bigscreenLtdialogChart.setOption(bigscreenLtdialogoption, true);
 }
 const ltClick = async () => {
   ltstatus.value = !ltstatus.value;
@@ -785,11 +866,17 @@ const powerStaticFun = async () => {
   bigscreenRToption.xAxis.data = data.data.time;
   bigscreenRToption.series[0].data = data.data.data;
   bigscreenRToption.series[1].data = data.data.data;
-  if (bigscreenRTRef.value) {
+  if (bigscreenRTChart == null) {
     bigscreenRTChart = echarts.init(bigscreenRTRef.value);
-    bigscreenRTChart.setOption(bigscreenRToption);
   }
+  bigscreenRTChart.setOption(bigscreenRToption,true);
 };
+const powerStaticFunTimer = useIntervalFn(() => {
+  powerStaticFunTimer.pause();
+  powerStaticFun().finally(() => {
+    powerStaticFunTimer.resume();
+  })
+}, 5000)
 
 let bigscreenRBChart: any = null;
 const bigscreenRBRef = ref();
@@ -807,7 +894,7 @@ const bigscreenRBoption = {
     textStyle: {
       color: "#ffffff",
     },
-    show:false
+    show: false
   },
   xAxis: {
     type: "category",
@@ -875,13 +962,21 @@ const powerByAreaTotalStaticFun = async () => {
   bigscreenRBoption.xAxis.data = data.data.xdata;
   bigscreenRBoption.series = data.data.series
 
-  if (bigscreenRBRef.value) {
+  if (bigscreenRBChart == null) {
     bigscreenRBChart = echarts.init(bigscreenRBRef.value);
-    if (bigscreenRBoption.series.length == 0) {
-      bigscreenRBChart.setOption(initQuYuOption, true)
-    } else {
-      bigscreenRBChart.setOption(bigscreenRBoption, true);
-    }
+
+  }
+  if (bigscreenRBoption.series.length == 0) {
+    bigscreenRBChart.setOption(initQuYuOption, true)
+  } else {
+    // 加上单位
+    bigscreenRBoption.tooltip.formatter = function (params) {
+      // params有多个
+      return params.map(p => {
+        return `${p.marker}${p.seriesName}: ${p.value} ${data?.data?.unitName}`
+      }).join('<br/>');
+    };
+    bigscreenRBChart.setOption(bigscreenRBoption, true);
   }
 };
 
@@ -1012,6 +1107,7 @@ $design-height: 1080;
   width: adaptiveWidth(200);
   height: adaptiveHeight(24);
   margin-right: adaptiveWidth(11);
+  --el-text-color-regular: white;
 
   .el-select__wrapper {
     background: none;
@@ -1479,7 +1575,7 @@ $design-height: 1080;
   color: #00b42a;
 }
 
-.qushifont{
+.qushifont {
   color: white;
   font-size: adaptiveFontSize(20) !important;
   font-family: unset !important;

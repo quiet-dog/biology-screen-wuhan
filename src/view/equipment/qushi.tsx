@@ -105,6 +105,11 @@ export function useXunJianQushiHook() {
             }
             options.xAxis.data = res.data.data.time
             options.series[0].data = res.data.data.data
+
+            // @ts-expect-error
+            options.yAxis.min = 1;
+            // @ts-expect-error
+            options.yAxis.max = Math.max(...res.data.data.data, 6); // 至少6
             ciEchart.setOption(options, true)
         })
     }

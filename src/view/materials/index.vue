@@ -25,7 +25,7 @@
               <!-- <span style="padding-left: 25px">{{ item.materials?.name }}</span> -->
               <span>{{
                 dayjs(item.createTime).format("YYYY-MM-DD")
-              }}</span>
+                }}</span>
               <span>{{ item.level }}</span>
             </div>
           </div>
@@ -138,6 +138,7 @@
       <div class="bigscreen_rb_bottom_nei">
         <div class="bigscreen_rb_bottom_nei_t">
           <span>物料名称</span>
+          <span>物料编号</span>
           <span>领用时间</span>
           <span>领用人员</span>
           <span>领用数量</span>
@@ -153,6 +154,14 @@
                   <span>
                     <img src="/public/img/equipment/tableicon.png" alt="" v-if="item.status" />
                     {{ item.materialsInfo.name }}
+                  </span>
+                </template>
+              </el-popover>
+              <el-popover class="box-item" title="" :content="item.materialsInfo.code" placement="top-start">
+                <template #reference>
+                  <span>
+                    <img src="/public/img/equipment/tableicon.png" alt="" v-if="item.status" />
+                    {{ item.materialsInfo.code }}
                   </span>
                 </template>
               </el-popover>
@@ -176,7 +185,7 @@
       <img :src="img9" alt="" srcset="" @click="rbcanleClick" />
     </div>
     <div class="rbDialog_bottom">
-      <el-input v-show="isShowInput" class="inputcss" v-model="receiveFormData2.materialName" @change="receivelistFun2"
+      <el-input :readonly="!isShowInput" class="inputcss" v-model="receiveFormData2.materialName" @change="receivelistFun2"
         style="width: 148px; height: 24px" placeholder="请输入物料名称" :prefix-icon="Search" />
       <el-scrollbar class="bigscreen_rc_bottom_nei">
         <div class="bigscreen_rc_bottom_l">
@@ -186,7 +195,7 @@
           <div v-for="(item, index) in receivelist2" :key="index" class="bigscreen_rc_bottom_rnei">
             <span style="color: rgba(172, 223, 255, 1); font-size: 11px">{{
               dayjs(item.createTime).format("YYYY-MM-DD")
-            }}</span>
+              }}</span>
             <div :style="{
               background: `url(${item.background}) no-repeat`,
               'background-size': '100% 100%',
@@ -330,6 +339,7 @@ const rbClick = async () => {
 };
 const rbcanleClick = () => {
   rbstatus.value = false;
+  receiveFormData2.value.materialName = "";
 };
 
 const receiveFormData2 = ref({
@@ -732,12 +742,16 @@ const receivestatisticsFun = async () => {
 
   bigscreenRCoption.xAxis.data = data.time;
   bigscreenRCoption.series[0].data = data.data;
-  if (bigscreenRCRef.value) {
+  if (bigscreenRCChart == null) {
     bigscreenRCChart = echarts.init(bigscreenRCRef.value);
-    bigscreenRCChart.setOption(bigscreenRCoption);
   }
-  console.log("====================asd")
+  bigscreenRCChart.setOption(bigscreenRCoption, true);
 };
+const receivestatisticsFunTimer = useIntervalFn(() => {
+  receivestatisticsFun().finally(() => {
+    receivestatisticsFunTimer.resume();
+  })
+}, 5000)
 const timeLeftClick = () => {
 
   receivestatisticsData.value.startTime = dayjs(receivestatisticsData.value.startTime)
@@ -1245,7 +1259,7 @@ $design-height: 1080;
         align-items: center;
 
         span {
-          width: 25%;
+          width: 20%;
           font-size: adaptiveFontSize(14);
           color: #9eabb7;
           text-align: center;
@@ -1423,8 +1437,8 @@ $design-height: 1080;
   right: 0;
   z-index: 2;
 
-  --el-text-color-placeholder:white;
-  --el-input-text-color:white;
+  --el-text-color-placeholder: white;
+  --el-input-text-color: white;
 }
 
 .inputcss :deep(.el-input__wrapper) {

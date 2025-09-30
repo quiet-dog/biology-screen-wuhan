@@ -7,7 +7,7 @@
       </div>
     </div>
     <div class="bigscreen_lt_bottom">
-      <div @mouseenter="ltequipmentlistTimer.pause()" @mouseleave="ltequipmentlistTimer.resume()"
+      <!-- <div @mouseenter="ltequipmentlistTimer.pause()" @mouseleave="ltequipmentlistTimer.resume()"
         class="bigscreen_lt_bottomnei">
         <Vue3SeamlessScroll :list="ltequipmentlist" :step="1" :singleHeight="70" hover class="scrool">
           <div class="bigscreen_lt_bottom_nei" v-for="(item, index) in ltequipmentlist">
@@ -33,7 +33,8 @@
             </div>
           </div>
         </Vue3SeamlessScroll>
-      </div>
+      </div> -->
+      <Lt />
     </div>
   </div>
   <div class="bigscreen_lc">
@@ -53,8 +54,7 @@
           <span>设备型号</span>
           <span>安装时间</span>
         </div>
-        <div @mouseenter="jianceTimer.pause()" @mouseleave="jianceTimer.resume()"
-          class="bigscreen_lc_bottom_neib">
+        <div @mouseenter="jianceTimer.pause()" @mouseleave="jianceTimer.resume()" class="bigscreen_lc_bottom_neib">
           <Vue3SeamlessScroll :list="equipmentlist" :class-option="{
             step: 5,
           }" hover class="scrool">
@@ -91,11 +91,12 @@
         <img src="/public/img/光标.png" alt="" />
         <span>设备运行状态</span>
       </div>
-      <el-cascader size="small" :options="equipmentlist2" v-model="equipmentIds" @change="cascaderChange" class="cascaderCss" :props="{
-        value: 'id',
-        label: 'name',
-        children: 'thresholdList',
-      }" />
+      <el-cascader size="small" :options="equipmentlist2" v-model="equipmentIds" @change="cascaderChange"
+        class="cascaderCss" :props="{
+          value: 'id',
+          label: 'name',
+          children: 'thresholdList',
+        }" />
     </div>
     <div class="bigscreen_lb_bottom">
       <h1>运行时间:{{ runningTime }}</h1>
@@ -116,12 +117,14 @@
       <div class="bigscreen_rt_bottom_nei">
         <img src="/public/img/监控报告图标.png" alt="" />
         <div class="bigscreen_rt_bottom_r">
-          <div @click="rtClick(item)" v-for="item in videoList">
-            <span>{{ item.name }}</span>
-          </div>
-          <!-- <div @click="rtClick"><span>JK218 科学大道点位1</span></div>
-          <div><span>JK218 科学大道点位1</span></div>
-          <div><span>JK218 科学大道点位1</span></div> -->
+          <Vue3SeamlessScroll :list="videoList" :class-option="{
+            step: 5,
+          }" hover>
+            <div style="cursor: pointer;" @click="rtClick(item)" v-for="(item, index) in videoList" :key="index"
+              class="video_item">
+              <span>{{ item?.name }}</span>
+            </div>
+          </Vue3SeamlessScroll>
         </div>
       </div>
     </div>
@@ -167,7 +170,8 @@
       <div class="bigscreen_rb_top_l">
         <img src="/public/img/光标.png" alt="" />
         <span>巡检记录</span>
-        <ElButton link style="color: white;" @click="handleOpenXunJianQushi" class="bigscreen_rb_top_l_rg">巡检趋势分析</ElButton>
+        <ElButton link style="color: white;" @click="handleOpenXunJianQushi" class="bigscreen_rb_top_l_rg">巡检趋势分析
+        </ElButton>
       </div>
     </div>
     <div class="bigscreen_rb_bottom">
@@ -222,16 +226,15 @@
       <div class="rb_dialog_top">
         <span>巡检趋势</span>
         <img @click="ciShuDig = false" class="rb_dialog_top_x" :src="img9" alt="" srcset="" />
-
         <div class="pickerCss">
           <img src="/public/img/zuo.svg" alt="" @click="ciShuLeftClick" style="margin-left: 5px" />
           <span>{{
             dayjs(ciShuTimer.startTime).format("MM月DD日")
-            }}</span>
+          }}</span>
           <span>-</span>
           <span>{{
             dayjs(ciShuTimer.endTime).format("MM月DD日")
-            }}</span>
+          }}</span>
           <img src="/public/img/you.svg" alt="" @click="ciShuRightClick" style="margin-right: 5px" />
         </div>
       </div>
@@ -367,6 +370,7 @@ import Video from "../home/components/Video.vue";
 import { thresholdDataList } from "../../api/riskassessment";
 import { useIntervalFn } from '@vueuse/core'
 import { useXunJianQushiHook } from "./qushi";
+import Lt from "./lt/index.vue";
 
 
 const rtStatus = ref(false);
@@ -377,9 +381,9 @@ const rtClick = (item) => {
     console.log("res.data.data.wsflv", res.data.data.wsflv);
 
 
-            const path = new URL(res.data.data.wsflv).pathname;
-            const scheme = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
-            const u = scheme + location.host + path
+    const path = new URL(res.data.data.wsflv).pathname;
+    const scheme = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+    const u = scheme + location.host + path
 
     videoRef.value.play(u);
     videoRef.value.setChannelId(res.data.data.channelId);
@@ -500,12 +504,12 @@ const ltequipmentListFun = async () => {
     }
   })
 };
-const ltequipmentlistTimer = useIntervalFn(() => {
-  ltequipmentlistTimer.pause();
-  ltequipmentListFun().finally(() => {
-    ltequipmentlistTimer.resume();
-  })
-}, 100000)
+// const ltequipmentlistTimer = useIntervalFn(() => {
+//   ltequipmentlistTimer.pause();
+//   ltequipmentListFun().finally(() => {
+//     ltequipmentlistTimer.resume();
+//   })
+// }, 100000)
 
 //设备台账
 const equipmentFormData = ref({
@@ -535,7 +539,7 @@ const equipmentListFun = async () => {
     return {
       ...item,
       id: item.equipmentId,
-      name: item.equipmentName+(item.equipmentCode != null || item.equipmentCode != "" ? "("+item.equipmentCode+")" : ""),
+      name: item.equipmentName + (item.equipmentCode != null || item.equipmentCode != "" ? "(" + item.equipmentCode + ")" : ""),
       thresholdList: list,
     };
   });
@@ -643,7 +647,7 @@ const historicalStatisticsListFun = async () => {
   });
   bigscreenLBoption.xAxis.data = data.time;
   bigscreenLBoption.series[0].data = data.data;
-  if(Array.isArray(data.data) && data.data.length > 0){
+  if (Array.isArray(data.data) && data.data.length > 0) {
     bigscreenLBoption.series[0].data = data.data.map((item) => {
       return {
         value: item,
@@ -781,10 +785,16 @@ async function getYzData() {
   });
   bigscreenRCoption.xAxis.data = data.data.times;
   bigscreenRCoption.series[0].data = data.data.data;
-  if (bigscreenRCRef.value) {
-    bigscreenRCChart = echarts.init(bigscreenRCRef.value);
-    bigscreenRCChart.setOption(bigscreenRCoption);
+  if (Array.isArray(data.data.data) && data.data.data.length > 0) {
+      // @ts-ignore
+      bigscreenRCoption.yAxis.min = 1;
+      // @ts-ignore
+      bigscreenRCoption.yAxis.max = Math.max(...data.data.data, 6); // 至少6
   }
+  if (bigscreenRCChart == null) {
+    bigscreenRCChart = echarts.init(bigscreenRCRef.value);
+  }
+  bigscreenRCChart.setOption(bigscreenRCoption, true);
 }
 const rctClick = async () => {
   rcStatus.value = !rcStatus.value;
@@ -869,7 +879,7 @@ const { ciShuTimer,
   ciShuRightClick,
   dailyCishuInspectionListFunc,
   qushiRef,
-  ciShuDig,handleOpenXunJianQushi } = useXunJianQushiHook()
+  ciShuDig, handleOpenXunJianQushi } = useXunJianQushiHook()
 
 onMounted(() => {
   equipmentRepairListFun();
@@ -1248,25 +1258,26 @@ $design-height: 1080;
       .bigscreen_rt_bottom_r {
         width: adaptiveWidth(218);
         height: adaptiveHeight(167);
-        display: flex;
-        flex-direction: column;
+        // display: flex;
+        // flex-direction: column;
         justify-content: space-between;
+        overflow: hidden;
 
-        div {
-          width: 100%;
-          height: adaptiveHeight(41);
-          background: url("/public/img/半透明背景1.png") no-repeat;
-          background-size: 100% 100%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+        // div {
+        //   width: 100%;
+        //   height: adaptiveHeight(41);
+        //   background: url("/public/img/半透明背景1.png") no-repeat;
+        //   background-size: 100% 100%;
+        //   display: flex;
+        //   align-items: center;
+        //   justify-content: center;
 
-          span {
-            font-size: adaptiveFontSize(14);
-            color: rgba(255, 255, 255, 1);
-            margin-left: adaptiveWidth(10);
-          }
-        }
+        //   span {
+        //     font-size: adaptiveFontSize(14);
+        //     color: rgba(255, 255, 255, 1);
+        //     margin-left: adaptiveFontSize(10);
+        //   }
+        // }
       }
     }
   }
@@ -1815,8 +1826,8 @@ $design-height: 1080;
   height: adaptiveHeight(24);
   margin-right: adaptiveWidth(11);
 
-  --el-text-color-placeholder:white;
-  --el-input-text-color:white;
+  --el-text-color-placeholder: white;
+  --el-input-text-color: white;
 }
 
 .inputcss :deep(.el-input__wrapper) {
@@ -1927,5 +1938,23 @@ $design-height: 1080;
 .bigscreen_rb_top_l_rg {
   margin-left: auto;
   margin-right: adaptiveWidth(12);
+}
+
+.video_item {
+  width: adaptiveWidth(200);
+  height: adaptiveHeight(41);
+  background: url("/public/img/半透明背景1.png") no-repeat;
+  background-size: 100% 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  margin-bottom: adaptiveHeight(10);
+
+  span {
+    font-size: adaptiveFontSize(14);
+    color: rgba(255, 255, 255, 1);
+    margin-left: adaptiveFontSize(10);
+  }
 }
 </style>
