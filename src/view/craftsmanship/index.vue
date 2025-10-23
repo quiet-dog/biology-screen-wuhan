@@ -154,7 +154,7 @@
             <span style="font-size: 18px">工艺要素</span>
             <span style="font-size: 28px; padding-left: 25px">{{
               processTotal
-              }}</span>
+            }}</span>
           </div>
           <div>
             <span>
@@ -649,7 +649,7 @@ const processSelstClick = async (item, v, i) => {
   // processFormData.value.craftArchiveId = item.craftArchiveId;
   const { data } = await processList({
     ...processFormData.value,
-    craftArchiveId:item.craftArchiveId
+    craftArchiveId: item.craftArchiveId
   });
   processlist2.value = data.data.rows;
 };
@@ -745,14 +745,6 @@ const alarmEventsListFun = async () => {
     };
   });
 };
-
-const alarmEventsTimer = useIntervalFn(() => {
-  alarmEventsTimer.pause();
-  alarmEventsListFun().finally(() => {
-    alarmEventsTimer.resume();
-  })
-}, 100000)
-
 const jinRiGongYiJieDianAlarmCount = ref({
   "轻微": 0,
   "一般": 0,
@@ -771,6 +763,13 @@ const jinRiGongYiJieDianAlarmCountTimer = useIntervalFn(() => {
     jinRiGongYiJieDianAlarmCountTimer.resume();
   })
 }, 5000)
+
+const alarmEventsTimer = useIntervalFn(() => {
+  alarmEventsTimer.pause();
+  alarmEventsListFun().finally(() => {
+    alarmEventsTimer.resume();
+  })
+}, 100000)
 
 //工艺流程图
 const processFormData = ref({
@@ -828,6 +827,7 @@ onMounted(() => {
   nodelistFun();
   alarmEventsListFun();
   processlistFun();
+  getJinRiGongYiJieDianAlarmCount()
 });
 </script>
 
@@ -1659,12 +1659,26 @@ $design-height: 1080;
   }
 }
 
+.inputcss {
+  --el-input-bg-color: rgba(255, 255, 255, 0);
+
+  --el-text-color-placeholder: white;
+  --el-input-text-color: white;
+
+  :deep(.is-focus) {
+    // --el-input-focus-border-color: blue;
+  }
+
+  :deep(input) {
+    caret-color: white;
+  }
+}
+
 .inputcss :deep(.el-input__wrapper) {
-  background-color: rgba(255, 255, 255, 0);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: none;
+  // background-color: rgba(255, 255, 255, 0);
+  // border: 1px solid rgba(255, 255, 255, 0.2);
+  // box-shadow: none;
   font-size: adaptiveFontSize(12);
-  
 }
 
 .scroll {

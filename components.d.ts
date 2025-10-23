@@ -9,8 +9,6 @@ declare module 'vue' {
   export interface GlobalComponents {
     Center: typeof import('./src/components/center.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
-    ElCard: typeof import('element-plus/es')['ElCard']
-    ElCascader: typeof import('element-plus/es')['ElCascader']
     ElCol: typeof import('element-plus/es')['ElCol']
     ElDatePicker: typeof import('element-plus/es')['ElDatePicker']
     ElDescriptions: typeof import('element-plus/es')['ElDescriptions']
@@ -32,7 +30,6 @@ declare module 'vue' {
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ElTabPane: typeof import('element-plus/es')['ElTabPane']
-    ElTabs: typeof import('element-plus/es')['ElTabs']
     ElTag: typeof import('element-plus/es')['ElTag']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     FaMenXiJie: typeof import('./src/components/FaMenXiJie/index.vue')['default']
@@ -49,5 +46,8 @@ declare module 'vue' {
     XiJie: typeof import('./src/components/XiJie/index.vue')['default']
     XinDianEchart: typeof import('./src/components/XinDianEchart/index.vue')['default']
     ZhongXinCeShuJuHuiZong: typeof import('./src/components/ZhongXinCeShuJuHuiZong/index.vue')['default']
+  }
+  export interface ComponentCustomProperties {
+    vInfiniteScroll: typeof import('element-plus/es')['ElInfiniteScroll']
   }
 }

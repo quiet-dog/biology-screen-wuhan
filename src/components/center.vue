@@ -9,7 +9,8 @@
       </div>
     </div>
     <div class="bigscreen_ct_r">
-      <span @click=" useDeviceStore().isShowDetail = true;" >历史报警数量</span>
+      <!-- @click=" useDeviceStore().isShowDetail = true;" -->
+      <span>历史报警数量</span>
       <div class="bigscreen_ct_rb">
         <div v-for="item in count2.toString().split('')">
           <img :src="shuimg(item)" alt="" />

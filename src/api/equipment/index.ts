@@ -39,6 +39,9 @@ export function equipmentDetailList(params: equipmentListRes) {
   return http.get("/manage/equipment/detail", { params });
 }
 
+export function equipmentDetail(id: number) {
+  return http.get("/manage/equipment/" + id);
+}
 
 export function equipmentAlarmCount(params: string) {
   return http.get("/manage/equipment/alarmCount", {
@@ -72,6 +75,10 @@ export function historicalStatisticsList(params: historicalStatisticsRes) {
 // 获取运行时长
 export function getRunningTime(id: number) {
   return http.get("/manage/threshold/runTime/" + id);
+}
+
+export function getRunTime(id: number) {
+  return http.get("/manage/equipment/getRunTime/" + id)
 }
 
 export function getAllTime(id: number) {

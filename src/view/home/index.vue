@@ -20,13 +20,13 @@
 
                 <template v-if="jinRiSheBeiBaoJingInfo.total > 0">
                   <SwiperSlide class="lt_container_item_div_item" v-for="item in jinRiSheBeiBaoJingInfo.list"
-                    :key="item.eventId">
+                    :key="item?.eventId">
                     <div :style="{
                       'background': `url(/img/设备报警.png) no-repeat`,
                     }" class="swiper_container_item" @click="neiClick(item)">
-                      <span class="bigscreen_lt_nei_span">{{ item.type }}</span>
-                      <span class="bigscreen_lt_nei_span">{{ item.level }}</span>
-                      <span class="bigscreen_lt_nei_span">{{ item.createTime }}</span>
+                      <span class="bigscreen_lt_nei_span">{{ item?.type }}</span>
+                      <span class="bigscreen_lt_nei_span">{{ item?.level }}</span>
+                      <span class="bigscreen_lt_nei_span">{{ item?.createTime }}</span>
                     </div>
                   </SwiperSlide>
                 </template>
@@ -48,7 +48,8 @@
             </div>
           </div>
           <div class="lt_container_item">
-            <p @click="changeTargetType('环境报警')" style="cursor: pointer;">今日环境报警:{{ jinRiHuanJingBaoJingList.total }}</p>
+            <p @click="changeTargetType('环境报警')" style="cursor: pointer;">今日环境报警:{{ jinRiHuanJingBaoJingList.total }}
+            </p>
 
             <div class="lt_container_item_div">
 
@@ -126,7 +127,8 @@
 
           </div>
           <div class="lt_container_item">
-            <p @click="changeTargetType('工艺节点报警')" style="cursor: pointer;">今日工艺节点报警:{{ jinRiGongYiJieDianBaoJingList.total }}</p>
+            <p @click="changeTargetType('工艺节点报警')" style="cursor: pointer;">工艺节点报警:{{
+              jinRiGongYiJieDianBaoJingList.total }}</p>
             <div class="lt_container_item_div">
 
               <Swiper ref="jinRiGongYiJieDianBaoJingSwiper" class="swiper_container_item_div"
@@ -185,10 +187,10 @@
             step: 5,
           }" hover class="scrool">
             <div v-for="(item, index) in alarmEventslist" :key="index" class="bigscreen_lc_bottom_rnei">
-              <ElTooltip >
+              <ElTooltip>
                 <template #content>
                   <span>{{ item?.description }}</span>
-                  <br/>
+                  <br />
                   <span>{{ item?.createTime }}</span>
                 </template>
                 <span>{{ item?.description }}</span>
@@ -253,8 +255,9 @@
             </el-col>
             <el-col :span="8" v-if="lbRadio === 'year'">
               <el-form-item class="form_item_css date_picker_css" label="报警时间">
-                <el-date-picker :disabled-date="disableDate" v-model="eventCurrentTime" @change="getEmEventByTime"
-                  format="YYYY-MM-DD" class="select_css" size="small" placeholder="请选择报警时间" />
+                <el-date-picker :default-value="dataDefaultDate" :disabled-date="disableDate" v-model="eventCurrentTime"
+                  @change="getEmEventByTime" format="YYYY-MM-DD" class="select_css" size="small"
+                  placeholder="请选择报警时间" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -270,14 +273,14 @@
                 <span>{{ row.eventId }}</span>
               </template>
             </el-table-column>
-            <el-table-column fixed width="130" prop="level" label="报警级别">
+            <el-table-column fixed width="100" prop="level" label="报警级别">
               <template #default="{ row }">
                 <el-tag :style="getLevelStyle(row.level)" effect="plain" size="small">
                   {{ row.level ? row.level : "-" }}
                 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column width="130" prop="type" label="报警类型">
+            <el-table-column :width="hisList.some(u => u.type === '工艺节点报警') ? 100 : 80" prop="type" label="报警类型">
               <template #default="{ row }">
                 <span>{{ row.type }}</span>
               </template>
@@ -288,7 +291,7 @@
                   lbRadio == 'week' ? dayjs(row.createTime).format("HH:mm:ss") : row.createTime }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="description" label="报警描述">
+            <el-table-column show-overflow-tooltip prop="description" label="报警描述">
               <template #default="{ row }">
                 <span>{{ row.description }}</span>
               </template>
@@ -321,12 +324,16 @@
           <!-- <div @click="rtClick(item)" v-for="item in videoList">
             <span>{{ item.name }}</span>
           </div> -->
-
           <Vue3SeamlessScroll :list="videoList" :class-option="{
             step: 5,
           }" hover>
-            <div style="cursor: pointer;" @click="rtClick(item)" v-for="(item, index) in videoList" :key="index" class="video_item">
-              <span>{{ item.name }}</span>
+            <div style="cursor: pointer;" @click="rtClick(item)" v-for="(item, index) in videoList" :key="index"
+              class="video_item">
+              <span>
+                <el-tooltip :content="item?.name">
+                  {{ item?.name }}
+                </el-tooltip>
+              </span>
             </div>
           </Vue3SeamlessScroll>
         </div>
@@ -386,7 +393,7 @@
       <img :src="img9" alt="" srcset="" @click="canleClick(item)" />
     </div>
     <div class="ltDialog_bottom">
-      <img :src="geTargetItemImg(targetItem?.type)" alt="" />
+      <img :src="geTargetItemImg(targetItem?.level)" alt="" />
       <div class="ltDialog_bottomr">
         <div class="ltDialog_bottomr_nei">
           <span>报警编号：</span>
@@ -418,8 +425,8 @@
       <img @click="closeTargetTypeShow" :src="img9" alt="" srcset="" />
     </div>
     <div class="ltTrendDialog_bottom">
-      <ElTable height="100%" :header-cell-style="tableHeaderColor" :cell-style="handleChangeCellStyle" id="tableMy"
-        header-row-class-name="headerTr" style="width: 100%;background: #002547;" 
+      <ElTable :header-cell-style="tableHeaderColor" :cell-style="handleChangeCellStyle" id="tableMy"
+        header-row-class-name="headerTr" height="100%" style="width: 100%;background: #002547;" class="list_table"
         :data="getTargetTypeList()">
 
         <el-table-column width="60" fixed prop="eventId" label="编号">
@@ -441,7 +448,7 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="description" label="报警描述">
+        <el-table-column show-overflow-tooltip prop="description" label="报警描述">
           <template #default="{ row }">
             <span>{{ row.description }}</span>
           </template>
@@ -545,11 +552,9 @@ const rtClick = (item: { channelid: string }) => {
     nextTick(() => {
       getStreamUrlApi(item.channelid).then((res) => {
         console.log("res.data.data.wsflv", res.data.data.wsflv);
-        const path = new URL(res.data.data.wsflv).pathname;
-        const scheme = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
-        const u = scheme + location.host + path
-
-        videoRef.value.play(u);
+        const url = new URL(res.data.data.wsflv);
+        url.host = location.host;
+        videoRef.value.play(url.toString());
         videoRef.value.setChannelId(res.data.data.channelId);
       });
     });
@@ -784,25 +789,48 @@ const jinRiSheBeiBaoJingInfo = ref({
 })
 const targetItem = ref(null);
 const geTargetItemImg = (type: string) => {
+  // let imgList = [
+  //   {
+  //     type: "设备报警",
+  //     img: "/img/设备报警.png",
+  //   },
+  //   {
+  //     type: "环境报警",
+  //     img: "/img/环境数据.png",
+  //   },
+  //   {
+  //     type: "物料报警",
+  //     img: "/img/物料报警.png",
+  //   },
+  //   {
+  //     type: "工艺节点报警",
+  //     img: "/img/工艺节点.png",
+  //   },
+  // ]
+
   let imgList = [
     {
-      type: "设备报警",
-      img: "/img/设备报警.png",
+      level: "轻微",
+      img: "/img/wuji_ticon.png",
     },
     {
-      type: "环境报警",
-      img: "/img/环境数据.png",
+      level: "一般",
+      img: "/img/siji_ticon.png",
     },
     {
-      type: "物料报警",
-      img: "/img/物料报警.png",
+      level: "中度",
+      img: "/img/sanji_ticon.png",
     },
     {
-      type: "工艺节点报警",
-      img: "/img/工艺节点.png",
+      level: "重要",
+      img: "/img/erji_ticon.png",
     },
-  ]
-  return imgList.find((v) => v.type == type)?.img || "";
+    {
+      level: "紧急",
+      img: "/img/yiji_ticon.png",
+    },
+  ];
+  return imgList.find((v) => v.level == type)?.img || "";
 }
 const jinRiShebeiBaoJingListFun = async () => {
   const { data } = await alarmEventsList({
@@ -815,8 +843,12 @@ const jinRiShebeiBaoJingListFun = async () => {
     beginTime: dayjs().startOf("day").format("YYYY-MM-DD"),
     endTime: dayjs().endOf("day").format("YYYY-MM-DD"),
   });
-  jinRiSheBeiBaoJingInfo.value.list = data.data.rows;
-  jinRiSheBeiBaoJingInfo.value.total = data.data.total;
+  if (jinRiSheBeiBaoJingInfo.value.total != data.data.total) {
+    jinRiSheBeiBaoJingInfo.value.list = data.data.rows;
+    jinRiSheBeiBaoJingInfo.value.total = data.data.total;
+    jinRiSheBeiBaoJingSwiper.value?.$el.swiper?.update();
+  }
+
 };
 const jinRiShebeiTarget = (item) => {
   jinRiSheBeiBaoJingInfo.value.list.forEach((v) => {
@@ -841,8 +873,12 @@ const jinRiHuanJingBaoJingListFun = async () => {
     beginTime: dayjs().startOf("day").format("YYYY-MM-DD"),
     endTime: dayjs().endOf("day").format("YYYY-MM-DD"),
   });
-  jinRiHuanJingBaoJingList.value.list = data.data.rows;
-  jinRiHuanJingBaoJingList.value.total = data.data.total;
+  if (jinRiHuanJingBaoJingList.value.total != data.data.total) {
+    jinRiHuanJingBaoJingList.value.list = data.data.rows;
+    jinRiHuanJingBaoJingList.value.total = data.data.total;
+    jinRiHuanJingBaoJingSwiper.value?.$el.swiper?.update();
+  }
+
 };
 
 const jinRiWuLiaoBaoJingList = ref({
@@ -859,8 +895,12 @@ const jinRiWuLiaoBaoJingListFun = async () => {
     beginTime: dayjs().startOf("day").format("YYYY-MM-DD"),
     endTime: dayjs().endOf("day").format("YYYY-MM-DD"),
   });
-  jinRiWuLiaoBaoJingList.value.list = data.data.rows;
-  jinRiWuLiaoBaoJingList.value.total = data.data.total;
+  if (jinRiWuLiaoBaoJingList.value.total != data.data.total) {
+    jinRiWuLiaoBaoJingList.value.list = data.data.rows;
+    jinRiWuLiaoBaoJingList.value.total = data.data.total;
+    jinRiWuLiaoBaoJingSwiper.value?.$el.swiper?.update();
+  }
+
 };
 const jinRiGongYiJieDianBaoJingList = ref({
   total: 0,
@@ -876,8 +916,12 @@ const jinRiGongYiJieDianBaoJingListFun = async () => {
     beginTime: dayjs().startOf("day").format("YYYY-MM-DD"),
     endTime: dayjs().endOf("day").format("YYYY-MM-DD"),
   });
-  jinRiGongYiJieDianBaoJingList.value.list = data.data.rows;
-  jinRiGongYiJieDianBaoJingList.value.total = data.data.total;
+  if (jinRiGongYiJieDianBaoJingList.value.total != data.data.total) {
+    jinRiGongYiJieDianBaoJingList.value.list = data.data.rows;
+    jinRiGongYiJieDianBaoJingList.value.total = data.data.total;
+    jinRiGongYiJieDianBaoJingSwiper.value?.$el.swiper?.update();
+  }
+
 };
 
 const JinRiBaoJingTimer = useIntervalFn(async () => {
@@ -1058,7 +1102,7 @@ const rbRadioTimer = useIntervalFn(() => {
   getstatisticsList().finally(() => {
     rbRadioTimer.resume();
   });
-}, 50000);
+}, 10000);
 const rbRadioChange = (val: string) => {
   rbRadio.value = val;
   getstatisticsList();
@@ -1275,6 +1319,7 @@ const getEmEventByTime = (time: Date) => {
 
 
 }
+const dataDefaultDate = ref('')
 const geteventTotalFun = async () => {
   const { data } = await geteventTotal({ dayType: lbRadio.value });
 
@@ -1301,6 +1346,7 @@ const geteventTotalFun = async () => {
           } else {
             cuData = dayjs(params.name).startOf("month").format("YYYY-MM-DD")
             enData = dayjs(cuData).endOf("month").format("YYYY-MM-DD")
+            dataDefaultDate.value = dayjs(params.name).startOf("month").toDate()
           }
 
           hisPage.value = 1;
@@ -1379,6 +1425,10 @@ onMounted(() => {
   alarmEventslistFunLt();
   getstatisticsList();
   geteventTotalFun();
+  jinRiShebeiBaoJingListFun();
+  jinRiHuanJingBaoJingListFun();
+  jinRiWuLiaoBaoJingListFun();
+  jinRiGongYiJieDianBaoJingListFun();
 });
 window.onresize = function () {
   bigscreenLBChart.resize();
@@ -1485,7 +1535,7 @@ $design-height: 1080;
 
   .bigscreen_rc_dialog_top {
     width: 100%;
-    height: adaptiveHeight(45);
+    height: adaptiveHeight(52);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -2315,21 +2365,45 @@ $design-height: 1080;
 
 .inputcss {
   // width: adaptiveWidth(148);
+  width: adaptiveWidth(148);
   height: adaptiveHeight(24);
   margin-right: adaptiveWidth(10);
   --el-text-color-placeholder: white;
   --el-input-text-color: white;
+
+  --el-input-bg-color: rgba(255, 255, 255, 0);
+
+  --el-text-color-placeholder: white;
+  --el-input-text-color: white;
+
+  :deep(.is-focus) {
+    // --el-input-focus-border-color: blue;
+  }
+
+  :deep(input) {
+    caret-color: white;
+  }
 }
 
 .inputcss :deep(.el-input__wrapper) {
-  background-color: rgba(255, 255, 255, 0);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: none;
+  // background-color: rgba(255, 255, 255, 0);
+  // border: 1px solid rgba(255, 255, 255, 0.2);
+  // box-shadow: none;
 
   .el-input__inner {
     font-size: adaptiveFontSize(12);
   }
 }
+
+// .inputcss :deep(.el-input__wrapper) {
+//   background-color: rgba(255, 255, 255, 0);
+//   border: 1px solid rgba(255, 255, 255, 0.2);
+//   box-shadow: none;
+
+//   .el-input__inner {
+//     font-size: adaptiveFontSize(12);
+//   }
+// }
 
 .scroll {
   height: adaptiveHeight(195);

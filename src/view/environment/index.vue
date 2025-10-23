@@ -10,23 +10,44 @@
       </div>
     </div>
     <div class="bigscreen_lt_bottom">
-      <!-- <div class="bigscreen_lt_bottom_nei">
-        <div class="bigscreen_lt_bottom_nei_t">
-          <span>描述</span>
-          <span>位号</span>
-          <span>信号</span>
-        </div>
-        <div class="bigscreen_lt_bottom_nei_b" v-for="(item, index) in environmentFileList"
-          @click="ltClick2(item, index)">
-          <span>{{ `${item.description}-${item.unitName}` }}</span>
-          <span>{{ item.tag }}</span>
-          <span>{{ item.esignal }}</span>
-        </div>
-      </div> -->
       <div class="lt_container">
-        <div :style="{
+        <swiper ref="ltSwiperRef" :modules="[Autoplay]" :space-between="20" :loop="true" class="lt_swiper_container" :slides-per-view="4"
+          :slides-per-group="1" direction="horizontal" :autoplay="{ delay: 2000, disableOnInteraction: false }">
+          <SwiperSlide class="lt_swiper_slide" @click="ltClick2(item)" v-for="(item, index) in envList" :key="index">
+            <div class="lt_swiper_slide_container" :style="{
+              backgroundImage: `url(${BeiJing})`,
+              cursor: 'pointer',
+              height:'100%',
+            }">
+              <div>
+                <img v-if="item.environment?.unitName === '温度'" :src="WenDu" alt="">
+                <img v-if="item.environment?.unitName === '湿度'" :src="ShiDu" alt="">
+                <img v-if="item.environment?.unitName === '压差'" :src="YaCha" alt="">
+              </div>
+              <div>{{
+                item.environment?.unitName }}
+                <br />
+                <span :class="getValueColorClass(item)">
+                  {{ item.value }}
+                </span>
+                <br />
+                {{ item.environment?.unitName == "温度" ? '℃' : item.environment?.unitName == "湿度" ? '%' :
+                  item.environment?.unitName == "压差" ? "Pa" : "" }}
+              </div>
+              <div class="lt_b">
+                <div>
+                  {{ item.environment?.description }}
+                </div>
+                <img :src="DiZuo" alt="" srcset="">
+              </div>
+            </div>
+
+
+          </SwiperSlide>
+        </swiper>
+        <!-- <div :style="{
           backgroundImage: `url(${BeiJing})`,
-          cursor: 'pointer',
+          cursor: 'pointer'
         }" @click="ltClick2(item)" v-for="(item, index) in envList" :key="index">
           <div>
             <img v-if="item.environment?.unitName === '温度'" :src="WenDu" alt="">
@@ -49,7 +70,7 @@
             </div>
             <img :src="DiZuo" alt="" srcset="">
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -104,22 +125,11 @@
         <el-radio-button label="年" value="year" />
       </el-radio-group> -->
 
-      <div class="left-se">
-        <!-- <el-select
-        v-model="powerByAreaTotalStaticData.area"
-          filterable
-          placeholder="请选择区域"
-          style="width: 100%"
-           class="cascaderCss"
-           @change="powerByAreaTotalStaticFun"
-        >
-          <el-option v-for="area in allAreas" :key="area" :label="area" :value="area" />
-        </el-select> -->
-
-        <!-- <el-form-item label="日期：" class="form-item">
-          <el-date-picker v-model="powerByAreaTotalStaticData.timeRange" type="date" placeholder="选择日期" value-format="YYYY-MM-DD"
-            @change="handleTimeChange" />
-        </el-form-item> -->
+      <div class="left-se1">
+        <el-select :max-collapse-tags="0" collapse-tags style="width: 100%;" size="small" multiple
+          @change="powerByAreaTotalStaticFun" v-model="powerByAreaTotalStaticData.areas" class="cascaderCss">
+          <el-option v-for="item in allAreas" :key="item" :label="item" :value="item" />
+        </el-select>
       </div>
       <div class="left-se">
         <el-select size="small" v-model="powerByAreaTotalStaticData.unitName" filterable placeholder="请选择指标"
@@ -133,7 +143,7 @@
     </div>
   </div>
 
-  <div v-if="ltstatus" class="ltDialog">
+  <div v-show="ltstatus" class="ltDialog">
     <div class="ltDialog_top">
       <span>报警历史分析</span>
       <el-radio-group v-model="envrionmentStatisticsData.dayType" class="group yzRadio" @change="zsRadioChange">
@@ -146,7 +156,6 @@
     </div>
     <div class="ltDialog_bottom" ref="bigscreenLtdialogRef"></div>
   </div>
-  <!-- <template v-for="(item, index) in environmentFileList"> -->
   <div v-show="environmentFileDialog" class="ltTrendDialog">
     <div class="ltTrendDialog_top">
       <span>趋势分析 <em class="qushifont">{{ dayjs(historyStatisticsFormData.startTime).format("YYYY-MM-DD") }}</em></span>
@@ -154,7 +163,6 @@
     </div>
     <div class="ltTrendDialog_bottom" ref="environmentFileDialogRef"></div>
   </div>
-  <!-- </template> -->
 </template>
 
 <script lang="ts" setup>
@@ -183,6 +191,11 @@ import BeiJing from "../../assets/env/背景.jpg";
 import { useIntervalFn } from "@vueuse/core";
 import dayjs from "dayjs";
 import { initQuYuOption } from ".";
+import { Swiper, SwiperSlide } from "swiper/vue";
+import 'swiper/css';
+import 'swiper/css/autoplay';
+import { Autoplay } from "swiper/modules";
+
 
 const zsRadio = ref("week");
 const zsRadioChange = async () => {
@@ -303,6 +316,9 @@ const bigscreenLBoption = {
       },
     },
   ],
+  tooltip: {
+    trigger: 'axis' // 可选值: 'item' | 'axis' | 'none'
+  },
 };
 const powerByTypeStatisticsData = ref({
   des: "",
@@ -314,10 +330,10 @@ const powerByTypeStatisticsFun = async () => {
   console.log(data);
   bigscreenLBoption.xAxis.data = data.data.time;
   bigscreenLBoption.series[0].data = data.data.data;
-  if (bigscreenLBChart ==null) {
+  if (bigscreenLBChart == null) {
     bigscreenLBChart = echarts.init(bigscreenLBRef.value);
   }
-  bigscreenLBChart.setOption(bigscreenLBoption,true);
+  bigscreenLBChart.setOption(bigscreenLBoption, true);
 };
 const powerByTypeStatisticsFunTimer = useIntervalFn(() => {
   powerByTypeStatisticsFunTimer.pause();
@@ -345,15 +361,21 @@ const environmentFileFun = async () => {
   });
 };
 const envList = ref([]);
+const envListTotal = ref(0)
+const ltSwiperRef = ref()
 const getEnvList = () => {
   environmentalDetectionList({
     pageNum: 1,
-    pageSize: 4,
+    pageSize: 10,
     orderColumn: "createTime",
     orderDirection: "descending",
     isIgnore: true,
   }).then(res => {
-    envList.value = res.data.data.rows;
+    if (envListTotal.value != res.data.data.total) {
+      envListTotal.value = res.data.data.total;
+      envList.value = res.data.data.rows;
+      ltSwiperRef.value?.$el.swiper?.update();
+    }
   }).catch(err => {
 
   })
@@ -368,7 +390,12 @@ const getEnvListTimer = useIntervalFn(() => {
     orderDirection: "descending",
     isIgnore: true,
   }).then(res => {
-    envList.value = res.data.data.rows;
+    if(envListTotal.value != res.data.data.total){
+      envListTotal.value = res.data.data.total;
+      envList.value = res.data.data.rows;
+      ltSwiperRef.value?.$el.swiper?.update();
+
+    }
   }).catch(err => {
 
   }).finally(() => {
@@ -388,61 +415,6 @@ const environmentFileDialogRef = ref(null);
 const ltstatus = ref(false);
 let bigscreenLtdialogChart: any = null;
 const bigscreenLtdialogRef = ref();
-// const bigscreenLtdialogoption = {
-//   grid: {
-//     left: "6%",
-//     right: "6%",
-//     bottom: "6%",
-//     containLabel: true,
-//   },
-//   xAxis: {
-//     type: "category",
-//     data: [],
-//     axisLabel: {
-//       color: "#ffffff",
-//     },
-//   },
-//   yAxis: {
-//     type: "value",
-//     nameTextStyle: {
-//       color: "#ffffff",
-//       padding: [0, 30, 5, 0],
-//     },
-//     splitLine: {
-//       lineStyle: {
-//         type: "dashed",
-//         color: "rgba(255,255,255,0.14)",
-//       },
-//     },
-//     axisLabel: {
-//       color: "#ffffff",
-//     },
-//     minInterval: 1
-//   },
-//   series: [
-//     {
-//       data: [],
-//       type: "bar",
-//       itemStyle: {
-//         color: "#68B1A6", // 线条颜色
-//       },
-//     },
-//   ],
-//   legend: {
-//     // 白色文字
-//     textStyle: {
-//       color: '#ffffff',
-//       fontSize: 12
-//     },
-//   },
-//   tooltip: {
-//     trigger: 'item', // 或 'item'，看你是多个柱还是单个柱
-//     axisPointer: {
-//       type: 'shadow' // 鼠标移动时显示阴影效果
-//     },
-//     show:true
-//   }
-// };
 const bigscreenLtdialogoption = {
   color: ['#68B1A6', '#FFAA00', '#6A5ACD', '#E062AE', '#FF7F50'],
   grid: {
@@ -519,13 +491,16 @@ const envrionmentStatisticsFun = async () => {
   if (data.data == null || data.data == undefined || data.data.unitNames == null || data.data.unitNames == undefined || data.data.unitNames.length == 0) {
     bigscreenLtdialogoption.series = [];
     bigscreenLtdialogoption.xAxis.data = data.data.unitNames;
-    bigscreenLtdialogoption.yAxis.min = 1;
+    bigscreenLtdialogoption.yAxis.min = 0;
     bigscreenLtdialogoption.yAxis.max = Math.max(...data.data.datas, 6);
     return;
   }
   bigscreenLtdialogoption.xAxis.data = data.data.unitNames;
-  bigscreenLtdialogoption.yAxis.min = 1;
+  bigscreenLtdialogoption.yAxis.min = 0;
   bigscreenLtdialogoption.yAxis.max = Math.max(...data.data.datas, 6);
+  if (bigscreenLtdialogoption.yAxis.max > 6) {
+    bigscreenLtdialogoption.yAxis.max = bigscreenLtdialogoption.yAxis.max + 10
+  }
   // bigscreenLtdialogoption.series = data.data.unitNames.map((name, index) => ({
   //   name: name,
   //   type: 'bar',
@@ -541,14 +516,14 @@ const envrionmentStatisticsFun = async () => {
   //     fontSize: 12,
   //   }
   // }));
-  bigscreenLtdialogoption.series[0].data = data.data.unitNames.map((name, index)=>data.data.datas[index])
+  bigscreenLtdialogoption.series[0].data = data.data.unitNames.map((name, index) => data.data.datas[index])
 };
 const zsEchartData = async () => {
   await envrionmentStatisticsFun();
   if (bigscreenLtdialogChart == null) {
-    console.log("bigscreenLtdialogoption", bigscreenLtdialogoption);
     bigscreenLtdialogChart = echarts.init(bigscreenLtdialogRef.value);
   }
+  console.log("bigscreenLtdialogoption", bigscreenLtdialogoption);
   bigscreenLtdialogChart.setOption(bigscreenLtdialogoption, true);
 }
 const ltClick = async () => {
@@ -869,7 +844,7 @@ const powerStaticFun = async () => {
   if (bigscreenRTChart == null) {
     bigscreenRTChart = echarts.init(bigscreenRTRef.value);
   }
-  bigscreenRTChart.setOption(bigscreenRToption,true);
+  bigscreenRTChart.setOption(bigscreenRToption, true);
 };
 const powerStaticFunTimer = useIntervalFn(() => {
   powerStaticFunTimer.pause();
@@ -895,6 +870,7 @@ const bigscreenRBoption = {
       color: "#ffffff",
     },
     show: false
+
   },
   xAxis: {
     type: "category",
@@ -923,9 +899,6 @@ const bigscreenRBoption = {
     {
       data: [],
       type: "bar",
-      itemStyle: {
-        color: "#68B1A6", // 线条颜色
-      },
     },
   ],
   tooltip: {
@@ -936,6 +909,7 @@ const bigscreenRBoption = {
   },
 };
 const powerByAreaTotalStaticData = ref({
+  areas: [],
   // area:"控制区",
   unitName: "温度",
   beginTime: dayjs().startOf('day').format('YYYY-MM-DD'),
@@ -944,28 +918,20 @@ const powerByAreaTotalStaticData = ref({
 });
 
 const powerByAreaTotalStaticFun = async () => {
-  // const { data } = await getZuiXinShuJuApi(
-  //   powerByAreaTotalStaticData.value
-  // );
-  // bigscreenRBoption.xAxis.data = data.data.time;
-  // bigscreenRBoption.series[0].data = data.data.data;
-  // if (bigscreenRBRef.value) {
-  //   bigscreenRBChart = echarts.init(bigscreenRBRef.value);
-  //   bigscreenRBChart.setOption(bigscreenRBoption);
-  // }
   const { data } = await getBuTongApi({
     unitName: powerByAreaTotalStaticData.value.unitName,
     beginTime: dayjs().startOf('day').format('YYYY-MM-DD'),
     endTime: dayjs().add(1, 'day').startOf('day').format('YYYY-MM-DD'),
+    areas: powerByAreaTotalStaticData.value.areas,
   });
-  bigscreenRBoption.legend.data = data.data.series.map(item => item.name);
+  bigscreenRBoption.legend.data = data.data.series?.map(item => item.name);
   bigscreenRBoption.xAxis.data = data.data.xdata;
   bigscreenRBoption.series = data.data.series
 
   if (bigscreenRBChart == null) {
     bigscreenRBChart = echarts.init(bigscreenRBRef.value);
-
   }
+
   if (bigscreenRBoption.series.length == 0) {
     bigscreenRBChart.setOption(initQuYuOption, true)
   } else {
@@ -973,7 +939,7 @@ const powerByAreaTotalStaticFun = async () => {
     bigscreenRBoption.tooltip.formatter = function (params) {
       // params有多个
       return params.map(p => {
-        return `${p.marker}${p.seriesName}: ${p.value} ${data?.data?.unitName}`
+        return `${p.marker}${p.seriesName}: ${p.value == undefined || p.value == null ? '暂无数据' : p.value + ' ' + data?.data?.unitName}`
       }).join('<br/>');
     };
     bigscreenRBChart.setOption(bigscreenRBoption, true);
@@ -986,7 +952,14 @@ async function getAllAreasFunc() {
   getAreas().then(res => {
     allAreas.value = res.data.data;
     if (allAreas.value.length > 0) {
-      powerByAreaTotalStaticData.value.area = allAreas.value[0];
+      if (Array.isArray(allAreas.value)) {
+        if (allAreas.value.length > 5) {
+          powerByAreaTotalStaticData.value.areas = allAreas.value.slice(0, 5)
+        } else {
+          powerByAreaTotalStaticData.value.areas = allAreas.value.slice(0, allAreas.value.length - 1)
+        }
+      }
+
       // powerByAreaTotalStaticFun();
     }
   }).catch(err => {
@@ -1093,14 +1066,29 @@ $design-height: 1080;
   padding: 0 adaptiveWidth(10);
   // margin: 0 adaptiveWidth(10);
 
-  >div {
-    width: adaptiveWidth(90);
-    height: adaptiveHeight(350);
-    border-radius: adaptiveWidth(10);
-    // background-color: gray;
-    display: grid;
-    grid-template-rows: 1fr 2fr 1fr;
-  }
+
+}
+
+.lt_swiper_container {
+  width: 100%;
+  height: 100%;
+}
+
+.lt_swiper_slide {
+  width: adaptiveWidth(90);
+  height: adaptiveHeight(350);
+  // background-color: gray;
+
+}
+
+.lt_swiper_slide_container{
+  border-radius: adaptiveWidth(10);
+  display: grid;
+  grid-template-rows: 1fr 2fr 1fr;
+}
+
+.lt_swiper_container:deep(div.swiper-wrapper) {
+  align-items: center;
 }
 
 :deep(.cascaderCss) {
@@ -1116,6 +1104,16 @@ $design-height: 1080;
     padding: 0 4px !important;
     font-size: adaptiveFontSize(12);
   }
+}
+
+.left-se1 {
+  width: adaptiveWidth(100);
+  position: relative;
+  left: - adaptiveWidth(50);
+}
+
+.left-se1 :deep(.el-tag) {
+  background: none !important;
 }
 
 .left-se {
@@ -1384,6 +1382,7 @@ $design-height: 1080;
     .bigscreen_rb_top_l {
       display: flex;
       align-items: center;
+      width: adaptiveWidth(300);
 
       img {
         margin-left: 11px;
@@ -1541,7 +1540,7 @@ $design-height: 1080;
 }
 
 .group :deep(.el-radio-button.is-active .el-radio-button__original-radio:not(:disabled) + .el-radio-button__inner) {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 1);
   color: rgba(7, 36, 57, 1);
   border-color: rgba(255, 255, 255, 0);
   font-size: adaptiveFontSize(12);
