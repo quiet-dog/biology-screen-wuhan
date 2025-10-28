@@ -1468,10 +1468,7 @@ $design-height: 1080;
         }
     }
 
-    .rbDialog_bottom {
-        width: adaptiveWidth(440);
-        height: adaptiveHeight(230);
-    }
+
 }
 
 :deep(.selectcss) {
