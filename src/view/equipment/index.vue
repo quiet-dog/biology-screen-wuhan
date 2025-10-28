@@ -79,7 +79,7 @@
               </el-popover>
               <!-- <span>{{ item.equipmentName }}</span> -->
               <span>{{ item.equipmentType }}</span>
-              <span>{{ item.purchaseDate ? dayjs(item.purchaseDate).format("YYYY-MM-DD"):"--" }}</span>
+              <span>{{ item.purchaseDate ? dayjs(item.purchaseDate).format("YYYY-MM-DD") : "--" }}</span>
             </div>
           </Vue3SeamlessScroll>
         </div>
@@ -100,7 +100,8 @@
       <el-select @change="getThresholdInfo" v-model="lbEquipmentId" size="small" class="selectcss">
         <!-- @vue-expect-error -->
         <el-option v-infinite-scroll="loadMoreEquipment" v-for="item in lbEquipmentList" :key="item?.equipmentId"
-          :label="`${item?.equipmentName} (${item?.equipmentCode} - ${item?.installationLocation})`" :value="item?.equipmentId" />
+          :label="`${item?.equipmentName} (${item?.equipmentCode} - ${item?.installationLocation})`"
+          :value="item?.equipmentId" />
 
       </el-select>
     </div>
@@ -397,6 +398,7 @@ const rtClick = (item) => {
   getStreamUrlApi(item.channelid).then((res) => {
     console.log("res.data.data.wsflv", res.data.data.wsflv);
     const url = new URL(res.data.data.wsflv);
+    url.protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
     url.host = location.host;
     videoRef.value.play(url.toString());
     videoRef.value.setChannelId(res.data.data.channelId);
@@ -791,13 +793,13 @@ async function getYzData() {
   bigscreenRCoption.xAxis.data = data.data.times;
   bigscreenRCoption.series[0].data = data.data.data;
   if (Array.isArray(data.data.data) && data.data.data.length > 0) {
-      // @ts-ignore
-      bigscreenRCoption.yAxis.min = 1;
-      // @ts-ignore
-      bigscreenRCoption.yAxis.max = Math.max(...data.data.data, 6); // 至少6
-      if(bigscreenRCoption.yAxis.max >6){
-        bigscreenRCoption.yAxis.max +=10
-      }
+    // @ts-ignore
+    bigscreenRCoption.yAxis.min = 1;
+    // @ts-ignore
+    bigscreenRCoption.yAxis.max = Math.max(...data.data.data, 6); // 至少6
+    if (bigscreenRCoption.yAxis.max > 6) {
+      bigscreenRCoption.yAxis.max += 10
+    }
   }
 
   if (bigscreenRCChart == null) {
@@ -2018,7 +2020,7 @@ $design-height: 1080;
     font-size: adaptiveFontSize(14);
     color: rgba(255, 255, 255, 1);
     margin-left: adaptiveFontSize(10);
-      /* 不换行 */
+    /* 不换行 */
     overflow: hidden;
     /* 超出隐藏 */
     text-overflow: ellipsis;
