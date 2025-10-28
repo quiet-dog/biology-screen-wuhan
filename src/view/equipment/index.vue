@@ -247,11 +247,11 @@
           <img src="/public/img/zuo.svg" alt="" @click="ciShuLeftClick" style="margin-left: 5px" />
           <span>{{
             dayjs(ciShuTimer.startTime).format("MM月DD日")
-            }}</span>
+          }}</span>
           <span>-</span>
           <span>{{
             dayjs(ciShuTimer.endTime).format("MM月DD日")
-            }}</span>
+          }}</span>
           <img src="/public/img/you.svg" alt="" @click="ciShuRightClick" style="margin-right: 5px" />
         </div>
       </div>
@@ -397,11 +397,13 @@ const rtClick = (item) => {
   rtStatus.value = !rtStatus.value;
   getStreamUrlApi(item.channelid).then((res) => {
     console.log("res.data.data.wsflv", res.data.data.wsflv);
-    const url = new URL(res.data.data.wsflv);
-    url.protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-    url.host = location.host;
-    videoRef.value.play(url.toString());
-    videoRef.value.setChannelId(res.data.data.channelId);
+    try {
+      const url = new URL(res.data.data.wsflv);
+      url.protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+      url.host = location.host;
+      videoRef.value.play(url.toString());
+      videoRef.value.setChannelId(res.data.data.channelId);
+    } catch (e) { }
   });
 };
 const rtcanleClick = () => {
