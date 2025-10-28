@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <Swiper @active-index-change="activeIndexChange" :modules="[Autoplay]" class="swiper_container"
-            :slides-per-view="1" :slides-per-group="1" :autoplay="{ delay: 10000, disableOnInteraction: false }">
+            :slides-per-view="1" :slides-per-group="1" :autoplay="{ delay: 60000, disableOnInteraction: false }">
             <SwiperSlide v-for="(item, index) in videoList" :key="index">
                 <VideoItem :active-index="activeIndex" :current-index="index" :title="item?.name"
                     :channel-id="item?.channelid" />
