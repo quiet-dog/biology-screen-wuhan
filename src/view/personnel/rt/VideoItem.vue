@@ -35,10 +35,12 @@ watch(() => activeIndex, (newVal) => {
         }
         getStreamUrlApi(currentId.value).then((ress) => {
             // 判断ress.data.data.wsflv是不是正确的地址
-            const url = new URL(ress.data.data.wsflv);
-            url.host = location.host;
-            currentUrl.value = url.toString();
-            play(currentUrl.value);
+            try {
+                const url = new URL(ress.data.data.wsflv);
+                url.host = location.host;
+                currentUrl.value = url.toString();
+                play(currentUrl.value);
+            } catch (e) { }
 
         })
     } else {
@@ -53,9 +55,11 @@ watch(() => channelId, (newVal) => {
         currentId.value = newVal;
         getStreamUrlApi(newVal).then((ress) => {
             // 判断ress.data.data.wsflv是不是正确的地址
-            const url = new URL(ress.data.data.wsflv);
-            url.host = location.host;
-            currentUrl.value = url.toString();
+            try {
+                const url = new URL(ress.data.data.wsflv);
+                url.host = location.host;
+                currentUrl.value = url.toString();
+            } catch (e) { }
         })
     }
 }, {
