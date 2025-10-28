@@ -95,7 +95,7 @@
         <div class="bigscreen_rt_bottom">
             <div class="rtDialog_bottom">
                 <!-- <Video style="width:100%" class="rtDialog_bottom_video" ref="videoRef" /> -->
-                <Rt />
+                <Rt :page="1" />
             </div>
         </div>
     </div>
@@ -157,9 +157,9 @@
             </div>
         </div>
         <div class="bigscreen_rb_bottom">
-            <div class="rbDialog_bottom">
+            <div class="rtDialog_bottom">
                 <!-- <Video style="width:100%" class="rtDialog_bottom_video" ref="videoRef" /> -->
-                <Rt />
+                <Rt :page="2" />
             </div>
         </div>
     </div>
@@ -1279,43 +1279,43 @@ $design-height: 1080;
         background: url("/public/img/bigback.png") no-repeat;
         background-size: 100% 100%;
 
-        .bigscreen_rb_bottom_nei {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            height: 100%;
+        // .bigscreen_rb_bottom_nei {
+        //     display: flex;
+        //     justify-content: center;
+        //     align-items: center;
+        //     width: 100%;
+        //     height: 100%;
 
-            img {
-                width: adaptiveWidth(126);
-                height: adaptiveHeight(176);
-                margin-right: adaptiveWidth(28);
-            }
+        //     img {
+        //         width: adaptiveWidth(126);
+        //         height: adaptiveHeight(176);
+        //         margin-right: adaptiveWidth(28);
+        //     }
 
-            .bigscreen_rb_bottom_r {
-                width: adaptiveWidth(218);
-                height: adaptiveHeight(167);
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
+        //     .bigscreen_rb_bottom_r {
+        //         width: adaptiveWidth(218);
+        //         height: adaptiveHeight(167);
+        //         display: flex;
+        //         flex-direction: column;
+        //         justify-content: space-between;
 
-                div {
-                    width: 100%;
-                    height: adaptiveHeight(41);
-                    background: url("/public/img/半透明背景1.png") no-repeat;
-                    background-size: 100% 100%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
+        //         div {
+        //             width: 100%;
+        //             height: adaptiveHeight(41);
+        //             background: url("/public/img/半透明背景1.png") no-repeat;
+        //             background-size: 100% 100%;
+        //             display: flex;
+        //             align-items: center;
+        //             justify-content: center;
 
-                    span {
-                        font-size: adaptiveFontSize(14);
-                        color: rgba(255, 255, 255, 1);
-                        margin-left: adaptiveWidth(10);
-                    }
-                }
-            }
-        }
+        //             span {
+        //                 font-size: adaptiveFontSize(14);
+        //                 color: rgba(255, 255, 255, 1);
+        //                 margin-left: adaptiveWidth(10);
+        //             }
+        //         }
+        //     }
+        // }
     }
 }
 

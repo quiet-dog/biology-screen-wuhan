@@ -26,8 +26,11 @@ const videoList = ref([]);
 const channelQuery = ref({
     name: "",
     pageNum: 1,
-    pageSize: 100,
+    pageSize: 30,
 });
+const { page = 1 } = defineProps<{
+    page?: number
+}>()
 
 const activeIndex = ref(0);
 
@@ -35,6 +38,7 @@ function activeIndexChange(index: { activeIndex: number }) {
     activeIndex.value = index.activeIndex;
 }
 onMounted(() => {
+    channelQuery.value.pageNum = page
     getChannelListApi(channelQuery.value).then((res) => {
 
         videoList.value = res.data.data.List;
