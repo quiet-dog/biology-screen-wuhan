@@ -135,7 +135,7 @@
               class="video_item">
               <span>
                 <el-tooltip :content="item?.name">
-                  {{ item?.name }}12313123131312312312312313132
+                  {{ item?.name }}
                 </el-tooltip>
               </span>
             </div>
@@ -247,11 +247,11 @@
           <img src="/public/img/zuo.svg" alt="" @click="ciShuLeftClick" style="margin-left: 5px" />
           <span>{{
             dayjs(ciShuTimer.startTime).format("MM月DD日")
-          }}</span>
+            }}</span>
           <span>-</span>
           <span>{{
             dayjs(ciShuTimer.endTime).format("MM月DD日")
-          }}</span>
+            }}</span>
           <img src="/public/img/you.svg" alt="" @click="ciShuRightClick" style="margin-right: 5px" />
         </div>
       </div>
