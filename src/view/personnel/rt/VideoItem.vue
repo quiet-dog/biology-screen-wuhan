@@ -48,6 +48,8 @@ watch(() => activeIndex, (newVal) => {
             jessibuca.destroy();
         }
     }
+}, {
+    immediate: true
 })
 
 watch(() => channelId, (newVal) => {
