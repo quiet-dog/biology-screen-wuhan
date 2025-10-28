@@ -3,7 +3,8 @@
         <Swiper @active-index-change="activeIndexChange" :modules="[Autoplay]" class="swiper_container"
             :slides-per-view="1" :slides-per-group="1" :autoplay="{ delay: 5000, disableOnInteraction: false }">
             <SwiperSlide v-for="(item, index) in videoList" :key="index">
-                <VideoItem :active-index="activeIndex" :current-index="index" :title="item?.name" :channel-id="item?.channelid" />
+                <VideoItem :active-index="activeIndex" :current-index="index" :title="item?.name"
+                    :channel-id="item?.channelid" />
             </SwiperSlide>
 
         </Swiper>
