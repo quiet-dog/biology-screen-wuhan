@@ -1830,4 +1830,25 @@ $design-height: 1080;
 .lt1Dialog_bottom_nei_tabs_tab {
     height: adaptiveHeight(170);
 }
+
+.rtDialog_bottom {
+    width: adaptiveWidth(420);
+    height: adaptiveHeight(415);
+    margin-left: adaptiveWidth(10);
+    display: flex;
+    flex-direction: column;
+    // align-items: center;
+    justify-content: center;
+    overflow: hidden;
+
+    // .rtDialog_bottom_video {
+    //   :deep(#container) {
+    //     width: adaptiveWidth(420);
+    //     height: adaptiveHeight(215);
+    //     object-fit: cover;
+    //   }
+
+    //   object-fit: cover;
+    // }
+}
 </style>
