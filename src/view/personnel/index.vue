@@ -717,6 +717,8 @@ const getVideoList = () => {
                         console.log("res.data.data.wsflv", ress.data.data.wsflv);
                         if (index % 2 == 0) {
                             const url = new URL(ress.data.data.wsflv);
+                            url.protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+
                             url.host = location.host;
                             videoRef.value.play(url.toString());
                             videoRef.value.setChannelId(ress.data.data.channelId);
@@ -724,6 +726,8 @@ const getVideoList = () => {
                             // videoRef.value.setChannelId(ress.data.data.channelId);
                         } else {
                             const url = new URL(ress.data.data.wsflv);
+                            url.protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+
                             url.host = location.host;
                             video2Ref.value.play(url.toString());
                             video2Ref.value.setChannelId(ress.data.data.channelId);

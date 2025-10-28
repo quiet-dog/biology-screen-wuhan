@@ -197,16 +197,25 @@
           <ElTabPane label="数据信息" style="height: 100%;">
             <!-- 每行只展示一个 -->
             <ElScrollbar height="100%">
-              <ElDescriptions  class="my_descriptions" :column="1">
-                <ElDescriptionsItem :width="'100px'" :min-width="'100px'" :label-align="'right'" label="序号:">{{ tiZhengJianDetail.smDataId }}</ElDescriptionsItem>
-                <ElDescriptionsItem :width="'100px'" :min-width="'100px'" :label-align="'right'" label="设备SN号:">{{ tiZhengJianDetail.deviceSn }}</ElDescriptionsItem>
-                <ElDescriptionsItem :width="'100px'" :min-width="'100px'" :label-align="'right'" label="操作员:">{{ tiZhengJianDetail.personnelName }}</ElDescriptionsItem>
-                <ElDescriptionsItem :width="'100px'" :min-width="'100px'" :label-align="'right'" label="心率:">{{ tiZhengJianDetail.xinlv }}</ElDescriptionsItem>
-                <ElDescriptionsItem :width="'100px'" :min-width="'100px'" :label-align="'right'" label="血氧:">{{ tiZhengJianDetail.xueYang }}</ElDescriptionsItem>
-                <ElDescriptionsItem :width="'100px'" :min-width="'100px'" :label-align="'right'" label="体温:">{{ tiZhengJianDetail.temp }}</ElDescriptionsItem>
-                <ElDescriptionsItem :width="'100px'" :min-width="'100px'" :label-align="'right'" label="二氧化碳浓度:">{{ tiZhengJianDetail.co2 }}</ElDescriptionsItem>
-                <ElDescriptionsItem :width="'100px'" :min-width="'100px'" :label-align="'right'" label="体态:">{{ tiZhengJianDetail.tiTai }}</ElDescriptionsItem>
-                <ElDescriptionsItem :width="'100px'" :min-width="'100px'" :label-align="'right'" label="时间:">{{ tiZhengJianDetail.createTime }}</ElDescriptionsItem>
+              <ElDescriptions class="my_descriptions" :column="1">
+                <ElDescriptionsItem :width="'100px'" :min-width="'100px'" :label-align="'right'" label="序号:">{{
+                  tiZhengJianDetail.smDataId }}</ElDescriptionsItem>
+                <ElDescriptionsItem :width="'100px'" :min-width="'100px'" :label-align="'right'" label="设备SN号:">{{
+                  tiZhengJianDetail.deviceSn }}</ElDescriptionsItem>
+                <ElDescriptionsItem :width="'100px'" :min-width="'100px'" :label-align="'right'" label="操作员:">{{
+                  tiZhengJianDetail.personnelName }}</ElDescriptionsItem>
+                <ElDescriptionsItem :width="'100px'" :min-width="'100px'" :label-align="'right'" label="心率:">{{
+                  tiZhengJianDetail.xinlv }}</ElDescriptionsItem>
+                <ElDescriptionsItem :width="'100px'" :min-width="'100px'" :label-align="'right'" label="血氧:">{{
+                  tiZhengJianDetail.xueYang }}</ElDescriptionsItem>
+                <ElDescriptionsItem :width="'100px'" :min-width="'100px'" :label-align="'right'" label="体温:">{{
+                  tiZhengJianDetail.temp }}</ElDescriptionsItem>
+                <ElDescriptionsItem :width="'100px'" :min-width="'100px'" :label-align="'right'" label="二氧化碳浓度:">{{
+                  tiZhengJianDetail.co2 }}</ElDescriptionsItem>
+                <ElDescriptionsItem :width="'100px'" :min-width="'100px'" :label-align="'right'" label="体态:">{{
+                  tiZhengJianDetail.tiTai }}</ElDescriptionsItem>
+                <ElDescriptionsItem :width="'100px'" :min-width="'100px'" :label-align="'right'" label="时间:">{{
+                  tiZhengJianDetail.createTime }}</ElDescriptionsItem>
               </ElDescriptions>
             </ElScrollbar>
           </ElTabPane>
@@ -701,6 +710,8 @@ const getVideoList = () => {
             console.log("res.data.data.wsflv", ress.data.data.wsflv);
             if (index % 2 == 0) {
               const url = new URL(ress.data.data.wsflv);
+              url.protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+
               url.host = location.host;
               videoRef.value.play(url.toString());
               videoRef.value.setChannelId(ress.data.data.channelId);
@@ -708,6 +719,8 @@ const getVideoList = () => {
               // videoRef.value.setChannelId(ress.data.data.channelId);
             } else {
               const url = new URL(ress.data.data.wsflv);
+              url.protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+
               url.host = location.host;
               video2Ref.value.play(url.toString());
               video2Ref.value.setChannelId(ress.data.data.channelId);
@@ -1468,8 +1481,8 @@ $design-height: 1080;
   height: adaptiveHeight(24);
   margin-right: adaptiveWidth(11);
 
-  --el-text-color-placeholder:white;
-  --el-input-text-color:white;
+  --el-text-color-placeholder: white;
+  --el-input-text-color: white;
 }
 
 .inputcss :deep(.el-input__wrapper) {
@@ -1792,10 +1805,10 @@ $design-height: 1080;
   --el-text-color-primary: #687f92 !important;
   --el-text-color-regular: white !important;
 
- 
+
 }
 
-.lt1Dialog_bottom_nei_tabs_tab{
+.lt1Dialog_bottom_nei_tabs_tab {
   height: adaptiveHeight(170);
 }
 </style>

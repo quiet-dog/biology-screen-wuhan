@@ -11,8 +11,8 @@
             </div>
         </div>
         <div class="container_bottom">
-            <el-scrollbar @scroll="scrollEvent"  @mouseleave="mouseLeave"
-                @mouseenter="heightTimer.pause" ref="scrollbarRef" height="100%">
+            <el-scrollbar @scroll="scrollEvent" @mouseleave="mouseLeave" @mouseenter="heightTimer.pause"
+                ref="scrollbarRef" height="100%">
                 <!-- @vue-expect-error -->
                 <div v-for="item in data.list" :key="item.id" :class="{
                     'device_item': true,

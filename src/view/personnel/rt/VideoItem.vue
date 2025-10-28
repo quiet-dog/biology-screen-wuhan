@@ -37,6 +37,8 @@ watch(() => activeIndex, (newVal) => {
             // 判断ress.data.data.wsflv是不是正确的地址
             try {
                 const url = new URL(ress.data.data.wsflv);
+                url.protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+
                 url.host = location.host;
                 currentUrl.value = url.toString();
                 play(currentUrl.value);
@@ -59,6 +61,8 @@ watch(() => channelId, (newVal) => {
             // 判断ress.data.data.wsflv是不是正确的地址
             try {
                 const url = new URL(ress.data.data.wsflv);
+                url.protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+
                 url.host = location.host;
                 currentUrl.value = url.toString();
             } catch (e) { }
@@ -77,6 +81,7 @@ onMounted(() => {
             // 判断ress.data.data.wsflv是不是正确的地址
             try {
                 const url = new URL(ress.data.data.wsflv);
+                url.protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
                 url.host = location.host;
                 currentUrl.value = url.toString();
                 play(currentUrl.value);
