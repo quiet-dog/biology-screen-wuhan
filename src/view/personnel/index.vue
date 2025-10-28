@@ -781,7 +781,7 @@ const showPersonnelDialogRef = ref(null);
 
 onMounted(() => {
     //   lbDialogBottomChart = echarts.init(showPersonnelDialogRef.value);
-    getVideoList();
+    // getVideoList();
     initChart();
     indicatorStatisticsList();
     healthylistFun();
