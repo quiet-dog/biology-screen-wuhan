@@ -69,7 +69,25 @@ watch(() => channelId, (newVal) => {
 })
 
 onMounted(() => {
+    if (currentIndex == 0 && channelId !== null && channelId !== "") {
+        if (jessibuca == null) {
+            create();
+        }
+        getStreamUrlApi(currentId.value).then((ress) => {
+            // 判断ress.data.data.wsflv是不是正确的地址
+            try {
+                const url = new URL(ress.data.data.wsflv);
+                url.host = location.host;
+                currentUrl.value = url.toString();
+                play(currentUrl.value);
+            } catch (e) { }
 
+        })
+    } else {
+        if (jessibuca != null) {
+            jessibuca.destroy();
+        }
+    }
 })
 
 </script>
