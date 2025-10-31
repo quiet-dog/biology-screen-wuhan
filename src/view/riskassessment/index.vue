@@ -18,7 +18,8 @@
           <Vue3SeamlessScroll :list="equipmentlist" :class-option="{
             step: 5,
           }" hover class="scrool" @mouseenter="environmentFileTimer.pause" @mouseleave="environmentFileTimer.resume">
-            <div style="cursor: pointer;" class="bigscreen_lt_bottom_nei_b" v-for="(item, index) in environmentFileList">
+            <div style="cursor: pointer;" class="bigscreen_lt_bottom_nei_b"
+              v-for="(item, index) in environmentFileList">
               <span>{{ `${item?.environment?.description}-${item?.environment?.unitName}` }}</span>
               <span>{{ item?.environment?.tag }}</span>
               <span :class="getValueColorClass(item)">{{ item.value }}</span>
@@ -175,17 +176,19 @@
           <span>时间</span>
         </div>
         <div class="bigscreen_rb_bottom_neib">
-          <Vue3SeamlessScroll :list="equipmentlist" :class-option="{
+          <Vue3SeamlessScroll :key="equipmentlist.length" :list="equipmentlist" :class-option="{
             step: 5,
           }" hover class="scrool">
-            <div class="bigscreen_rb_bottom_nei_b" v-for="item in equipmentlist">
-              <span>
-                {{ item.thresholdId }}
-              </span>
-              <span>{{ item?.threshold.sensorName }}</span>
-              <span :style="{ color: getEquipmentDataColor(item) }">{{ item?.equipmentData }}</span>
-              <span>{{ dayjs(item?.createTime).format("YYYY-MM-DD hh:mm:ss") }}</span>
-            </div>
+            <template v-slot="{ data }">
+              <div class="bigscreen_rb_bottom_nei_b">
+                <span>
+                  {{ data?.thresholdId }}
+                </span>
+                <span>{{ data?.threshold?.sensorName }}</span>
+                <span :style="{ color: getEquipmentDataColor(data) }">{{ data?.equipmentData }}</span>
+                <span>{{ dayjs(data?.createTime).format("YYYY-MM-DD hh:mm:ss") }}</span>
+              </div>
+            </template>
           </Vue3SeamlessScroll>
         </div>
       </div>
@@ -285,7 +288,7 @@ const environmentFileFormData = ref({
   pageSize: 10,
   orderColumn: "createTime",
   orderDirection: "descending",
-  environmentalDetectionList:true,
+  environmentalDetectionList: true,
   // startTime:dayjs().format("YYYY-MM-DD"),
   // endTime:dayjs().add(1,"day").format("YYYY-MM-DD")
 });

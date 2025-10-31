@@ -183,26 +183,28 @@
       <div class="bigscreen_lc_bottom_nei">
         <img src="/public/img/事件报告图标.png" alt="" />
         <div class="bigscreen_lc_bottom_r">
-          <Vue3SeamlessScroll :list="alarmEventslist" :class-option="{
+          <Vue3SeamlessScroll :key="alarmEventslistTotal" :list="alarmEventslist" :class-option="{
             step: 5,
           }" hover class="scrool">
-            <div v-for="(item, index) in alarmEventslist" :key="index" class="bigscreen_lc_bottom_rnei">
-              <ElTooltip>
-                <template #content>
-                  <span>{{ item?.description }}</span>
-                  <br />
-                  <span>{{ item?.createTime }}</span>
-                </template>
-                <span>{{ item?.description }}</span>
-              </ElTooltip>
-              <div :style="{
-                background: ` url(${item.img}) no-repeat`,
-                'background-size': '100% 100%',
-              }">
-                <span v-if="item.type == '工艺节点报警'">工艺节点</span>
-                <span v-else>{{ item.type }}</span>
+            <template v-slot="{ data }">
+              <div class="bigscreen_lc_bottom_rnei">
+                <ElTooltip>
+                  <template #content>
+                    <span>{{ data?.description }}</span>
+                    <br />
+                    <span>{{ data?.createTime }}</span>
+                  </template>
+                  <span>{{ data?.description }}</span>
+                </ElTooltip>
+                <div :style="{
+                  background: ` url(${data?.img}) no-repeat`,
+                  'background-size': '100% 100%',
+                }">
+                  <span v-if="data?.type == '工艺节点报警'">工艺节点</span>
+                  <span v-else>{{ data?.type }}</span>
+                </div>
               </div>
-            </div>
+            </template>
           </Vue3SeamlessScroll>
         </div>
       </div>
@@ -324,17 +326,19 @@
           <!-- <div @click="rtClick(item)" v-for="item in videoList">
             <span>{{ item.name }}</span>
           </div> -->
-          <Vue3SeamlessScroll :list="videoList" :class-option="{
+          <Vue3SeamlessScroll :total="videoList.length" :list="videoList" :class-option="{
             step: 5,
           }" hover>
-            <div style="cursor: pointer;" @click="rtClick(item)" v-for="(item, index) in videoList" :key="index"
+            <template v-slot="{data}">
+              <div style="cursor: pointer;" @click="rtClick(data)" 
               class="video_item">
               <span>
-                <el-tooltip :content="item?.name">
-                  {{ item?.name }}
+                <el-tooltip :content="data?.name">
+                  {{ data?.name }}
                 </el-tooltip>
               </span>
             </div>
+            </template>
           </Vue3SeamlessScroll>
         </div>
       </div>
@@ -578,13 +582,18 @@ const policiesFormData = ref({
   orderDirection: "descending",
 });
 const policieslist = ref<any[]>([]);
+const policieslistTotal = ref(0)
 const previewVisibleUrl = ref("");
 const policieslistFun = async () => {
   const { data } = await getPoliciesListApi(policiesFormData.value);
   let imgList = [img5, img6, img7];
-  policieslist.value = data.data.rows.map((item: any, index: number) => {
-    return { ...item, img: imgList[index % imgList.length], status: false };
-  });
+  if (policieslistTotal.value != data.data.total) {
+    policieslistTotal.value = data.data.total;
+    policieslist.value = data.data.rows.map((item: any, index: number) => {
+      return { ...item, img: imgList[index % imgList.length], status: false };
+    });
+  }
+
 };
 const policiesTimer = useIntervalFn(() => {
   policiesTimer.pause();
@@ -625,61 +634,66 @@ const ltalarmEventsFormData = ref({
   orderDirection: "descending",
 });
 const alarmEvnetListLt = ref<any[]>([]);
+const alarmEvnetListLtTotal = ref(0)
 // 获取报警信息
 const alarmEventslistFunLt = async () => {
   const { data } = await alarmEventsList(ltalarmEventsFormData.value);
   let list = data.data.rows.slice(0, 4);
-  let evnetimglist = [
-    {
-      type: "设备报警",
-      img: "/img/设备报警.png",
-    },
-    {
-      type: "环境报警",
-      img: "/img/环境数据.png",
-    },
-    {
-      type: "物料报警",
-      img: "/img/物料报警.png",
-    },
-    {
-      type: "工艺节点报警",
-      img: "/img/工艺节点.png",
-    },
-  ];
-  let levelList = [
-    {
-      level: "轻微",
-      img: "/img/wuji_ticon.png",
-    },
-    {
-      level: "一般",
-      img: "/img/siji_ticon.png",
-    },
-    {
-      level: "中度",
-      img: "/img/sanji_ticon.png",
-    },
-    {
-      level: "重要",
-      img: "/img/erji_ticon.png",
-    },
-    {
-      level: "紧急",
-      img: "/img/yiji_ticon.png",
-    },
-  ];
-  alarmEvnetListLt.value = list.map((item: { type: string; level: string }) => {
-    const matchedEvent = evnetimglist.find((v) => v.type === item.type);
-    const matchedLevel = levelList.find((v) => v.level === item.level);
+  if (alarmEvnetListLtTotal.value != data.data.total) {
+    alarmEvnetListLtTotal.value = data.data.total
+    let evnetimglist = [
+      {
+        type: "设备报警",
+        img: "/img/设备报警.png",
+      },
+      {
+        type: "环境报警",
+        img: "/img/环境数据.png",
+      },
+      {
+        type: "物料报警",
+        img: "/img/物料报警.png",
+      },
+      {
+        type: "工艺节点报警",
+        img: "/img/工艺节点.png",
+      },
+    ];
+    let levelList = [
+      {
+        level: "轻微",
+        img: "/img/wuji_ticon.png",
+      },
+      {
+        level: "一般",
+        img: "/img/siji_ticon.png",
+      },
+      {
+        level: "中度",
+        img: "/img/sanji_ticon.png",
+      },
+      {
+        level: "重要",
+        img: "/img/erji_ticon.png",
+      },
+      {
+        level: "紧急",
+        img: "/img/yiji_ticon.png",
+      },
+    ];
+    alarmEvnetListLt.value = list.map((item: { type: string; level: string }) => {
+      const matchedEvent = evnetimglist.find((v) => v.type === item.type);
+      const matchedLevel = levelList.find((v) => v.level === item.level);
 
-    return {
-      ...item,
-      back: matchedEvent ? matchedEvent.img : "",
-      status: false,
-      img: matchedLevel ? matchedLevel.img : "",
-    };
-  });
+      return {
+        ...item,
+        back: matchedEvent ? matchedEvent.img : "",
+        status: false,
+        img: matchedLevel ? matchedLevel.img : "",
+      };
+    });
+  }
+
 };
 
 const jinRiSheBeiBaoJingSwiper = ref<InstanceType<typeof Swiper>>();
@@ -752,40 +766,45 @@ const alarmEventsFormData = ref({
   orderDirection: "descending",
 });
 const alarmEventslist = ref<any[]>([]);
+const alarmEventslistTotal = ref(0);
 const alarmEventslistFun = async () => {
   const { data } = await alarmEventsList(alarmEventsFormData.value);
-  let imgList = [
-    {
-      level: "轻微",
-      img: "/img/wuji_back.png",
-    },
-    {
-      level: "一般",
-      img: "/img/siji_back.png",
-    },
-    {
-      level: "中度",
-      img: "/img/sanji_back.png",
-    },
-    {
-      level: "重要",
-      img: "/img/erji_back.png",
-    },
-    {
-      level: "紧急",
-      img: "/img/yiji_back.png",
-    },
-  ];
-  alarmEventslist.value = data.data.rows.map(
-    (item: { level: string }, _index: any) => {
-      const matchedLevel = imgList.find((v) => v.level === item.level);
-      return {
-        ...item,
-        img: matchedLevel ? matchedLevel.img : "",
-        status: false,
-      };
-    }
-  );
+  if (alarmEventslistTotal.value != data.data.total) {
+    alarmEventslistTotal.value = data.data.total
+    let imgList = [
+      {
+        level: "轻微",
+        img: "/img/wuji_back.png",
+      },
+      {
+        level: "一般",
+        img: "/img/siji_back.png",
+      },
+      {
+        level: "中度",
+        img: "/img/sanji_back.png",
+      },
+      {
+        level: "重要",
+        img: "/img/erji_back.png",
+      },
+      {
+        level: "紧急",
+        img: "/img/yiji_back.png",
+      },
+    ];
+    alarmEventslist.value = data.data.rows.map(
+      (item: { level: string }, _index: any) => {
+        const matchedLevel = imgList.find((v) => v.level === item.level);
+        return {
+          ...item,
+          img: matchedLevel ? matchedLevel.img : "",
+          status: false,
+        };
+      }
+    );
+  }
+
 };
 const jinRiShebeiTargetStatus = ref(false);
 const jinRiSheBeiBaoJingInfo = ref({
@@ -1098,7 +1117,9 @@ const getstatisticsList = async () => {
   bigscreenRBoption.series[2].data = data.data[1].data;
   bigscreenRBoption.series[3].data = data.data[3].data;
   if (bigscreenRBRef.value) {
-    bigscreenRBChart = echarts.init(bigscreenRBRef.value);
+    if (bigscreenRBChart == null) {
+      bigscreenRBChart = echarts.init(bigscreenRBRef.value);
+    }
     bigscreenRBChart.setOption(bigscreenRBoption);
   }
 };
@@ -1334,7 +1355,9 @@ const geteventTotalFun = async () => {
   if (bigscreenLBRef.value) {
     if (!bigScreenInit.value) {
       bigScreenInit.value = true;
-      bigscreenLBChart = echarts.init(bigscreenLBRef.value);
+      if (bigscreenLBChart == null) {
+        bigscreenLBChart = echarts.init(bigscreenLBRef.value);
+      }
       bigscreenLBChart.setOption(bigscreenLBoption);
       bigscreenLBChart.off().on("click", params => {
         let cuData = "";

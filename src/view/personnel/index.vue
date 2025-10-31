@@ -8,29 +8,31 @@
         </div>
         <div class="bigscreen_lt_bottom">
             <div class="bigscreen_lt_bottom_neis">
-                <Vue3SeamlessScroll :list="accesscontrollist" :class-option="{
+                <Vue3SeamlessScroll :key="accesscontrollistTotal" :list="accesscontrollist" :class-option="{
                     step: 5,
                 }" hover class="scrool">
-                    <div class="bigscreen_lt_bottom_nei" v-for="item in accesscontrollist" @click="ltClick(item)">
-                        <img src="/public/img/personnel/人物图标.png" alt="" />
-                        <div class="bigscreen_lt_bottom_nei_r" :style="{
-                            background: `url(${item.img}) no-repeat`,
-                            'background-size': '100% 100%',
-                        }">
-                            <div>
-                                <span>{{ item.name }}</span>
-                                <!-- <span>进入</span> -->
-                                <span>性别: {{ item.sex }}</span>
-                            </div>
-                            <div>
-                                <span>员工编号：{{ item.code }}</span>
-                                <span>部门：{{ item.department }}</span>
-                            </div>
-                            <div>
-                                <span>入职时间：{{ item.createTime }}</span>
+                    <template v-slot="{ data }">
+                        <div class="bigscreen_lt_bottom_nei" @click="ltClick(data)">
+                            <img src="/public/img/personnel/人物图标.png" alt="" />
+                            <div class="bigscreen_lt_bottom_nei_r" :style="{
+                                background: `url(${data?.img}) no-repeat`,
+                                'background-size': '100% 100%',
+                            }">
+                                <div>
+                                    <span>{{ data?.name }}</span>
+                                    <!-- <span>进入</span> -->
+                                    <span>性别: {{ data?.sex }}</span>
+                                </div>
+                                <div>
+                                    <span>员工编号：{{ data?.code }}</span>
+                                    <span>部门：{{ data?.department }}</span>
+                                </div>
+                                <div>
+                                    <span>入职时间：{{ data?.createTime }}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </template>
                 </Vue3SeamlessScroll>
             </div>
         </div>
@@ -544,6 +546,7 @@ const accesscontrolData = ref<accesscontrolRes>({
     orderDirection: "descending",
 });
 const accesscontrollist = ref<any[]>([]);
+const accesscontrollistTotal = ref(0)
 const accesscontrolFun = async () => {
     const { data } = await getPersonnelListAllApi();
     let img = [
@@ -551,10 +554,13 @@ const accesscontrolFun = async () => {
         "/img/personnel/绿色背景.png",
         "/img/personnel/黄色背景.png",
     ];
-    let list = data.data.rows;
-    accesscontrollist.value = list.map((item, index) => {
-        return { ...item, img: img[index % img.length], status: false };
-    });
+    if (accesscontrollistTotal.value != data.data.total) {
+        accesscontrollistTotal.value = data.data.total
+        accesscontrollist.value = data.data.rows.map((item, index) => {
+            return { ...item, img: img[index % img.length], status: false };
+        });
+    }
+
 };
 const accessontrolTimer = useIntervalFn(() => {
     accessontrolTimer.pause();

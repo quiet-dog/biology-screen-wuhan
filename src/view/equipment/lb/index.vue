@@ -4,13 +4,14 @@
             <span>
                 <!-- &nbsp;&nbsp;&nbsp;&nbsp;设备名称：{{ equipmentInfo.equipmentName }}&nbsp;&nbsp;({{ equipmentInfo.equipmentCode }}&nbsp;&nbsp;{{
                     equipmentInfo.installationLocation }}) -->
-                    &nbsp;&nbsp;&nbsp;&nbsp;运行时长：{{ runTime }}
+                &nbsp;&nbsp;&nbsp;&nbsp;运行时长：{{ runTime }}
             </span>
         </div>
         <div class="echarts_container" @mouseenter="mouseEnter" @mouseleave="mouseLeave">
             <!-- 纵向 -->
-            <Swiper ref="swiperRef" @slide-change="slideChange" :modules="[Autoplay]" :loop="true" class="swiper_container" :slides-per-view="1"
-                :slides-per-group="1" direction="horizontal" :autoplay="{ delay: 2000, disableOnInteraction: false }">
+            <Swiper ref="swiperRef" @slide-change="slideChange" :modules="[Autoplay]" :loop="true"
+                class="swiper_container" :slides-per-view="1" :slides-per-group="1" direction="horizontal"
+                :autoplay="{ delay: 2000, disableOnInteraction: false }">
                 <SwiperSlide v-for="(item, index) in thresholdDataList" class="swiper_container_item" :key="index">
                     <div class="swiper_container_item_div">
                         <!-- @vue-expect-error -->
@@ -39,6 +40,7 @@ const equipmentInfo = ref({
 })
 
 const thresholdDataList = ref([{}, {}]);
+const thresholdDataListTotal = ref(0)
 function getThresholdInfo() {
     thresholdList({
         pageNum: 1,
@@ -46,7 +48,11 @@ function getThresholdInfo() {
         // @ts-expect-error
         equipmentId: equipmentInfo.value.equipmentId,
     }).then((res) => {
-        thresholdDataList.value = res.data.data.rows;
+        if (thresholdDataListTotal.value != res.data.data.total) {
+            thresholdDataListTotal.value = res.data.data.total;
+            thresholdDataList.value = res.data.data.rows;
+
+        }
     })
 }
 
@@ -57,21 +63,21 @@ function getEquipmentInfo(id: number) {
         equipmentInfo.value = res.data.data;
         getThresholdInfo();
     })
-    getRunTime(id).then(res=>{
+    getRunTime(id).then(res => {
         runTime.value = res.data?.data
     })
 }
 
-function slideChange(val){
-    console.log("=================slideChange",val);
+function slideChange(val) {
+    console.log("=================slideChange", val);
 }
 
-function mouseEnter(){
-    console.log("swiperRef.value",swiperRef.value?.$el.swiper);
+function mouseEnter() {
+    console.log("swiperRef.value", swiperRef.value?.$el.swiper);
     swiperRef.value?.$el?.swiper?.autoplay?.pause();
 }
 
-function mouseLeave(){
+function mouseLeave() {
     swiperRef.value?.$el?.swiper?.autoplay?.resume();
 }
 

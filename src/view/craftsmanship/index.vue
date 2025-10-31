@@ -68,22 +68,24 @@
       </div>
       <div class="bigscreen_lt_bottom_b">
         <div class="bigscreen_lt_bottom_b_neis">
-          <Vue3SeamlessScroll :list="alarmEventslist" :step="1" :singleHeight="72" hover class="scrool">
-            <div class="bigscreen_lt_bottom_b_nei" v-for="item in alarmEventslist">
-              <img :src="item.img" alt="" />
+          <Vue3SeamlessScroll :key="alarmEventslistTotal" :list="alarmEventslist" :step="1" :singleHeight="72" hover class="scrool">
+            <template v-slot="{data}">
+              <div class="bigscreen_lt_bottom_b_nei" >
+              <img :src="data?.img" alt="" />
               <div>
-                <span style="margin-left: 25px">{{ item.level }}</span>
+                <span style="margin-left: 25px">{{ data?.level }}</span>
                 <el-tooltip placement="top-start">
                   <template #content>
-                    <span>{{ item.craftNode?.nodeName }}</span>
-                    <br/>
-                    <span>{{ item?.createTime }}</span>
+                    <span>{{ data?.craftNode?.nodeName }}</span>
+                    <br />
+                    <span>{{ data?.createTime }}</span>
                   </template>
-                  <span>{{ item.craftNode?.nodeName }}</span>
+                  <span>{{ data?.craftNode?.nodeName }}</span>
                 </el-tooltip>
                 <span>节点故障</span>
               </div>
             </div>
+            </template>
           </Vue3SeamlessScroll>
         </div>
       </div>
@@ -109,24 +111,26 @@
           </div>
         </div>
         <div class="bigscreen_lb_bottom_nei">
-          <Vue3SeamlessScroll :list="nodelist" :class-option="{
+          <Vue3SeamlessScroll :key="nodelistTotal" :list="nodelist" :class-option="{
             step: 5,
           }" hover class="scrool">
-            <div class="bigscreen_lb_bottom_neis" v-for="item in nodelist" @click="lbClick(item)">
+            <template v-slot="{data}">
+               <div class="bigscreen_lb_bottom_neis"  @click="lbClick(data)">
               <div class="bigscreen_lb_bottom_nei_t_l" :style="{
-                background: `url(${item.img}) no-repeat`,
+                background: `url(${data?.img}) no-repeat`,
                 'background-size': '100% 100%',
               }">
-                {{ item.nodeOrder }}
+                {{ data?.nodeOrder }}
               </div>
               <div class="bigscreen_lb_bottom_neis_r">
                 <span :style="{
-                  color: item.isHighRisk ? 'red' : '#ffffff',
-                }">{{ item.nodeName }}</span>
-                <span>{{ item.craftArchive.craftArchiveName }}</span>
-                <span>{{ item.isHighRisk ? "是" : "否" }}</span>
+                  color: data?.isHighRisk ? 'red' : '#ffffff',
+                }">{{ data?.nodeName }}</span>
+                <span>{{ data?.craftArchive.craftArchiveName }}</span>
+                <span>{{ data?.isHighRisk ? "是" : "否" }}</span>
               </div>
             </div>
+            </template>
           </Vue3SeamlessScroll>
         </div>
       </div>
@@ -154,7 +158,7 @@
             <span style="font-size: 18px">工艺要素</span>
             <span style="font-size: 28px; padding-left: 25px">{{
               processTotal
-            }}</span>
+              }}</span>
           </div>
           <div>
             <span>
@@ -173,15 +177,17 @@
         </div>
       </div>
       <div class="bigscreen_rt_bottom_neis">
-        <Vue3SeamlessScroll :list="processlist" :class-option="{
+        <Vue3SeamlessScroll :key="processTotal" :list="processlist" :class-option="{
           step: 5,
         }" hover class="scrool">
-          <div class="bigscreen_rt_bottom_nei" v-for="item in processlist" @click="rtClcik(item)">
-            <span>{{ item.craftArchiveName }}</span>
-            <span>{{ item.personnelFactors }}</span>
-            <span>{{ item.materialFactors }}</span>
-            <span>{{ item.environmentFactors }}</span>
+          <template v-slot="{data}">
+            <div class="bigscreen_rt_bottom_nei" @click="rtClcik(data)">
+            <span>{{ data?.craftArchiveName }}</span>
+            <span>{{ data?.personnelFactors }}</span>
+            <span>{{ data?.materialFactors }}</span>
+            <span>{{ data?.environmentFactors }}</span>
           </div>
+          </template>
         </Vue3SeamlessScroll>
       </div>
     </div>
@@ -201,30 +207,26 @@
           <span>工艺制定人员</span>
         </div>
         <div class="bigscreen_rb_bottom_nei_items">
-          <Vue3SeamlessScroll :list="archivelist" :class-option="{
+          <Vue3SeamlessScroll :key="archivelistTotal" :list="archivelist" :class-option="{
             step: 5,
           }" hover class="scrool">
-            <div class="bigscreen_rb_bottom_nei_item" v-for="(item, index) in archivelist" @click="rbClick(item)">
-              <div class="bigscreen_rb_bottom_nei_item1">
-                <div class="bigscreen_rb_bottom_nei_item1_div" :style="{
-                  border: `1px solid ${index % 2 === 0 ? '#01D1E7' : '#DF9819'
-                    }`,
+            <template v-slot="{ data }">
+              <div class="bigscreen_lb_bottom_neis" @click="lbClick(data)">
+                <div class="bigscreen_lb_bottom_nei_t_l" :style="{
+                  background: `url(${data?.img}) no-repeat`,
+                  'background-size': '100% 100%',
                 }">
-                  <div :style="{
-                    background: index % 2 === 0 ? '#01D1E7' : '#DF9819',
-                  }"></div>
+                  {{ data?.nodeOrder }}
                 </div>
-                <ElTooltip :content="item.craftArchiveName">
-                  <span>{{ item.craftArchiveName }}</span>
-                </ElTooltip>
+                <div class="bigscreen_lb_bottom_neis_r">
+                  <span :style="{
+                    color: data?.isHighRisk ? 'red' : '#ffffff',
+                  }">{{ data?.nodeName }}</span>
+                  <span>{{ data?.craftArchive?.craftArchiveName }}</span>
+                  <span>{{ data?.isHighRisk ? "是" : "否" }}</span>
+                </div>
               </div>
-              <div>{{ item.version }}</div>
-              <div :style="{
-                color: index % 2 === 0 ? '#01D1E7' : '#DF9819',
-              }">
-                {{ item.creator }}
-              </div>
-            </div>
+            </template>
           </Vue3SeamlessScroll>
         </div>
       </div>
@@ -591,12 +593,16 @@ const archiveFormData = ref({
   orderDirection: "descending",
 });
 const archivelist = ref<any[]>([]);
+const archivelistTotal = ref(0)
 const archivelistFun = async () => {
   const { data } = await archiveList(archiveFormData.value);
-  let list = data.data.rows;
-  archivelist.value = list.map((item: any) => {
-    return { ...item, status: false };
-  });
+  if (archivelistTotal.value != data.data.total) {
+    archivelistTotal.value = data.data.total
+    archivelist.value = data.data.rows.map((item: any) => {
+      return { ...item, status: false };
+    });
+  }
+
 };
 const archiveTimer = useIntervalFn(() => {
   archiveTimer.pause();
@@ -663,18 +669,22 @@ const nodeFormData = ref({
   orderDirection: "descending",
 });
 const nodelist = ref<any[]>([]);
+const nodelistTotal = ref(0)
 const nodelistFun = async () => {
   const { data } = await nodeList(nodeFormData.value);
-  let list = data.data.rows;
-  let imgList = [
-    "/img/craftsmanship/1.png",
-    "/img/craftsmanship/2.png",
-    "/img/craftsmanship/3.png",
-    "/img/craftsmanship/4.png",
-  ];
-  nodelist.value = list.map((item, index) => {
-    return { ...item, img: imgList[index % imgList.length], status: false };
-  });
+  if (nodelistTotal.value != data.data.total) {
+    nodelistTotal.value = data.data.total;
+    let imgList = [
+      "/img/craftsmanship/1.png",
+      "/img/craftsmanship/2.png",
+      "/img/craftsmanship/3.png",
+      "/img/craftsmanship/4.png",
+    ];
+    nodelist.value = data.data.rows.map((item, index) => {
+      return { ...item, img: imgList[index % imgList.length], status: false };
+    });
+  }
+
 };
 
 const nodelistFunTimer = useIntervalFn(() => {
@@ -711,39 +721,44 @@ const alarmEventsFormData = ref({
   orderDirection: "descending",
 });
 const alarmEventslist = ref<any[]>([]);
+const alarmEventslistTotal = ref(0)
 const alarmEventsListFun = async () => {
   const { data } = await alarmEventsList(alarmEventsFormData.value);
+  if (alarmEventslistTotal.value != data.data.total) {
+    alarmEventslistTotal.value = data.data.total
+    let imgList = [
+      {
+        level: "轻微",
+        img: "/img/lvse_icon.png",
+      },
+      {
+        level: "一般",
+        img: "/img/siji_icon.png",
+      },
+      {
+        level: "中度",
+        img: "/img/sanji_icon.png",
+      },
+      {
+        level: "重要",
+        img: "/img/erji_icon.png",
+      },
+      {
+        level: "紧急",
+        img: "/img/yiji_icon.png",
+      },
+    ];
+    alarmEventslist.value = data.data.rows.map((item, index) => {
+      const matchedLevel = imgList.find((v) => v.level === item.level);
+      return {
+        ...item,
+        img: matchedLevel ? matchedLevel.img : "",
+        status: false,
+      };
+    });
+  }
   // let list = data.data.rows.slice(0, 4);
-  let imgList = [
-    {
-      level: "轻微",
-      img: "/img/lvse_icon.png",
-    },
-    {
-      level: "一般",
-      img: "/img/siji_icon.png",
-    },
-    {
-      level: "中度",
-      img: "/img/sanji_icon.png",
-    },
-    {
-      level: "重要",
-      img: "/img/erji_icon.png",
-    },
-    {
-      level: "紧急",
-      img: "/img/yiji_icon.png",
-    },
-  ];
-  alarmEventslist.value = data.data.rows.map((item, index) => {
-    const matchedLevel = imgList.find((v) => v.level === item.level);
-    return {
-      ...item,
-      img: matchedLevel ? matchedLevel.img : "",
-      status: false,
-    };
-  });
+
 };
 const jinRiGongYiJieDianAlarmCount = ref({
   "轻微": 0,
@@ -784,8 +799,11 @@ const processlist2 = ref<any[]>([]);
 const processTotal = ref<number>(0);
 const processlistFun = async () => {
   const { data } = await processList(processFormData.value);
-  processTotal.value = data.data.total;
-  processlist.value = data.data.rows;
+  if (processTotal.value != data.data.total) {
+    processTotal.value = data.data.total;
+    processlist.value = data.data.rows;
+  }
+
 };
 
 const processlistTimer = useIntervalFn(() => {

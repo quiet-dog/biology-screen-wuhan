@@ -14,25 +14,28 @@
     <div class="bigscreen_lt_bottom">
       <div @mouseenter="alarmInfomationTimer.pause()" @mouseleave="alarmInfomationTimer.resume()"
         class="bigscreen_lt_bottom_neis">
-        <Vue3SeamlessScroll :list="alarmInformationlist" :step="1" :singleHeight="70" hover class="scrool">
-          <div class="bigscreen_lt_bottom_nei" v-for="item in alarmInformationlist">
-            <img :src="item.img" alt="" />
-            <div class="bigscreen_lt_bottom_nei_r">
-              <!-- <el-popover class="box-item" title="" effect="dark" :content="`${item.materials?.name}-${item.materials?.code}`" placement="top-start">
+        <Vue3SeamlessScroll :key="alarmInformationlistTotal" :list="alarmInformationlist" :step="1" :singleHeight="70"
+          hover class="scrool">
+          <template v-slot="{ data }">
+            <div class="bigscreen_lt_bottom_nei">
+              <img :src="data?.img" alt="" />
+              <div class="bigscreen_lt_bottom_nei_r">
+                <!-- <el-popover class="box-item" title="" effect="dark" :content="`${item.materials?.name}-${item.materials?.code}`" placement="top-start">
                 <template #reference>
                   <span style="padding-left: 25px">{{ item.materials?.name }}</span>
                 </template>
 </el-popover> -->
-              <el-tooltip placement="top-start" :content="`${item.materials?.name}-${item.materials?.code}`">
-                <span style="padding-left: 25px">{{ item.materials?.name }}</span>
-              </el-tooltip>
-              <!-- <span style="padding-left: 25px">{{ item.materials?.name }}</span> -->
-              <span>{{
-                dayjs(item.createTime).format("YYYY-MM-DD")
+                <el-tooltip placement="top-start" :content="`${data?.materials?.name}-${data?.materials?.code}`">
+                  <span style="padding-left: 25px">{{ data?.materials?.name }}</span>
+                </el-tooltip>
+                <!-- <span style="padding-left: 25px">{{ item.materials?.name }}</span> -->
+                <span>{{
+                  dayjs(data?.createTime).format("YYYY-MM-DD")
                 }}</span>
-              <span>{{ item.level }}</span>
+                <span>{{ data?.level }}</span>
+              </div>
             </div>
-          </div>
+          </template>
         </Vue3SeamlessScroll>
       </div>
     </div>
@@ -148,35 +151,37 @@
           <span>领用数量</span>
         </div>
         <div class="bigscreen_rb_bottom_neib">
-          <Vue3SeamlessScroll :list="receivelist" :class-option="{
+          <Vue3SeamlessScroll :key="receivelistTotal" :list="receivelist" :class-option="{
             step: 5,
           }" hover class="scrool">
-            <!-- @click="changeMaterials" -->
-            <div @click="changeMaterials(item)" class="bigscreen_rb_bottom_nei_b" v-for="(item, index) in receivelist">
-              <el-popover class="box-item" title="" :content="item.materialsInfo.name" placement="top-start">
-                <template #reference>
-                  <span>
-                    <img src="/public/img/equipment/tableicon.png" alt="" v-if="item.status" />
-                    {{ item.materialsInfo.name }}
-                  </span>
-                </template>
-              </el-popover>
-              <el-popover class="box-item" title="" :content="item.materialsInfo.code" placement="top-start">
-                <template #reference>
-                  <span>
-                    <img src="/public/img/equipment/tableicon.png" alt="" v-if="item.status" />
-                    {{ item.materialsInfo.code }}
-                  </span>
-                </template>
-              </el-popover>
-              <!-- <span>
+            <template v-slot="{ data }">
+              <!-- @click="changeMaterials" -->
+              <div @click="changeMaterials(data)" class="bigscreen_rb_bottom_nei_b">
+                <el-popover class="box-item" title="" :content="data?.materialsInfo.name" placement="top-start">
+                  <template #reference>
+                    <span>
+                      <img src="/public/img/equipment/tableicon.png" alt="" v-if="data?.status" />
+                      {{ data?.materialsInfo.name }}
+                    </span>
+                  </template>
+                </el-popover>
+                <el-popover class="box-item" title="" :content="data?.materialsInfo.code" placement="top-start">
+                  <template #reference>
+                    <span>
+                      <img src="/public/img/equipment/tableicon.png" alt="" v-if="data?.status" />
+                      {{ data?.materialsInfo.code }}
+                    </span>
+                  </template>
+                </el-popover>
+                <!-- <span>
                 <img src="/public/img/equipment/tableicon.png" alt="" v-if="item.status" />
                 {{ item.materialsInfo.name }}
               </span> -->
-              <span>{{ dayjs(item.createTime).format("YYYY-MM-DD") }} </span>
-              <span>{{ item.receiverInfo.name }}</span>
-              <span>{{ item.receiveNum }}</span>
-            </div>
+                <span>{{ dayjs(item.createTime).format("YYYY-MM-DD") }} </span>
+                <span>{{ item.receiverInfo.name }}</span>
+                <span>{{ item.receiveNum }}</span>
+              </div>
+            </template>
           </Vue3SeamlessScroll>
         </div>
       </div>
@@ -248,6 +253,7 @@ const alarmInformationData = ref({
 
 const alarmTypes = ref(0)
 const alarmInformationlist = ref<any[]>([]);
+const alarmInformationlistTotal = ref(0)
 const alarmInformationlistCountJinRi = ref(0);
 const changeAlarmTypes = (value) => {
   alarmTypes.value = value
@@ -263,47 +269,50 @@ const alarmInformationlistFun = async () => {
   }
 
   const { data } = await alarmMateEventsList(alarmInformationData.value);
-  let list = data.data.rows;
-  let imgList = [
-    {
-      level: "轻微",
-      img: "/img/lvse_icon.png",
-    },
-    {
-      level: "一般",
-      img: "/img/siji_icon.png",
-    },
-    {
-      level: "中度",
-      img: "/img/sanji_icon.png",
-    },
-    {
-      level: "重要",
-      img: "/img/erji_icon.png",
-    },
-    {
-      level: "紧急",
-      img: "/img/yiji_icon.png",
-    },
-  ];
-  alarmInformationlist.value = list.map((item) => {
-    const matchedLevel = imgList.find((v) => v.level === item.level);
-    return {
-      ...item,
-      img: matchedLevel ? matchedLevel.img : "",
-      status: "库存异常",
-    };
-  });
-  // alarmInformationlistCountJinRi
-  alarmMateEventsList({
-    type: "物料报警",
-    pageNum: 1,
-    pageSize: 1,
-    beginTime: dayjs().startOf("day").format("YYYY-MM-DD"),
-    endTime: dayjs().endOf("day").format("YYYY-MM-DD"),
-  }).then(res => {
-    alarmInformationlistCountJinRi.value = res.data.data.total;
-  })
+  if (alarmInformationlistTotal.value != data.data.total) {
+    alarmInformationlistTotal.value = data.data.total
+    let imgList = [
+      {
+        level: "轻微",
+        img: "/img/lvse_icon.png",
+      },
+      {
+        level: "一般",
+        img: "/img/siji_icon.png",
+      },
+      {
+        level: "中度",
+        img: "/img/sanji_icon.png",
+      },
+      {
+        level: "重要",
+        img: "/img/erji_icon.png",
+      },
+      {
+        level: "紧急",
+        img: "/img/yiji_icon.png",
+      },
+    ];
+    alarmInformationlist.value = data.data.rows.map((item) => {
+      const matchedLevel = imgList.find((v) => v.level === item.level);
+      return {
+        ...item,
+        img: matchedLevel ? matchedLevel.img : "",
+        status: "库存异常",
+      };
+    });
+    // alarmInformationlistCountJinRi
+    alarmMateEventsList({
+      type: "物料报警",
+      pageNum: 1,
+      pageSize: 1,
+      beginTime: dayjs().startOf("day").format("YYYY-MM-DD"),
+      endTime: dayjs().endOf("day").format("YYYY-MM-DD"),
+    }).then(res => {
+      alarmInformationlistCountJinRi.value = res.data.data.total;
+    })
+  }
+
 };
 
 const alarmInfomationTimer = useIntervalFn(() => {
@@ -322,11 +331,15 @@ const receiveFormData = ref({
   orderDirection: "descending",
 });
 const receivelist = ref<any[]>([]);
+const receivelistTotal = ref(0)
 const rbstatus = ref(false);
 const isShowInput = ref(false);
 const receivelistFun = async () => {
   const { data } = await receiveList(receiveFormData.value);
-  receivelist.value = data.data.rows;
+  if (receivelistTotal.value != data.data.total) {
+    receivelistTotal.value = data.data.total;
+    receivelist.value = data.data.rows;
+  }
   console.log("receivelist", receivelist.value);
 };
 const rbClick = async () => {
@@ -361,8 +374,8 @@ const receivelistFun2 = async () => {
 let bigscreenLCChart: any = null;
 const bigscreenLCRef = ref();
 let bigscreenLCoption = {
-  title:{
-    text:"",
+  title: {
+    text: "",
     left: "center",   // 水平居中
     top: 5,            // 顶部
     textStyle: {
@@ -759,7 +772,6 @@ const receivestatisticsFun = async () => {
     bigscreenRCChart = echarts.init(bigscreenRCRef.value);
   }
   bigscreenRCChart.setOption(bigscreenRCoption);
-  console.log("====================asd")
 };
 const receivestatisticsFunTimer = useIntervalFn(() => {
   receivestatisticsFun().finally(() => {

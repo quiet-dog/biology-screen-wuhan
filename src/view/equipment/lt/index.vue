@@ -106,8 +106,11 @@ function changeRadio(value) {
 const getList = async () => {
     // @ts-expect-error
     equipmentDetailList(query.value).then(res => {
-        data.value.list = res.data.data.rows;
-        data.value.total = res.data.data.total;
+        if (data.value.total != res.data.data.total) {
+            data.value.list = res.data.data.rows;
+            data.value.total = res.data.data.total;
+        }
+
     })
 
 }
