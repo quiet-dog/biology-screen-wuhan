@@ -390,6 +390,7 @@ function generatePsychChartOption(responseData) {
 }
 
 export function useRenYuanXingWeiShiBieShuJu() {
+    const xwAlarmlistTotal = ref(0)
     const xwAlarmFormData = ref({
         pageNum: 1,
         pageSize: 100,
@@ -401,6 +402,7 @@ export function useRenYuanXingWeiShiBieShuJu() {
         // @ts-expect-error
         const { data } = await xwAlarmList(xwAlarmFormData.value);
         xwAlarmlist.value = data.data.rows
+        xwAlarmlistTotal.value = data.data.total;
         console.log("xwAlarmlist.value", xwAlarmlist.value)
     };
     const xwAlarmlistTimer = useIntervalFn(() => {
@@ -413,7 +415,8 @@ export function useRenYuanXingWeiShiBieShuJu() {
         xwAlarmListFun()
     })
     return {
-        xwAlarmlist
+        xwAlarmlist,
+        xwAlarmlistTotal
     }
 }
 
@@ -427,7 +430,7 @@ export function useJianCeShuJuTongJi() {
             formatter: function (params) {
                 // params 是一个数组，柱状图通常只有一个系列，所以取 params[0]
                 let item = params[0];
-                return item.axisValue + '月: ' + item.data;
+                return item.axisValue + ': ' + item.data;
             }
         },
         grid: {

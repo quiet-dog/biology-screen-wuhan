@@ -1,150 +1,61 @@
 <template>
-    <div class="bigscreen_lt">
-        <div class="bigscreen_lt_top">
-            <div class="bigscreen_lt_top_l">
-                <img src="/public/img/光标.png" alt="" />
-                <span>监测设备状态</span>
-            </div>
-        </div>
-        <div class="bigscreen_lt_bottom">
-            <div class="bigscreen_lt_bottom_nei_t">
-                <span>设备编号</span>
-                <span>所属区域</span>
-                <span>状态</span>
-            </div>
-            <div class="bigscreen_lt_bottomnei">
-                <Vue3SeamlessScroll :list="jianCeList" :step="1" :singleHeight="70" hover class="scrool">
-                    <div class="bigscreen_lt_bottom_nei" v-for="(item, index) in jianCeList">
-                        <div>
-                            <ElTooltip :content="item?.name">
-                                <span>{{ item?.name }}</span>
-                            </ElTooltip>
-                            <ElTooltip :content="item?.area">
-                                <span>{{ item.area }}</span>
-                            </ElTooltip>
-                            <ElTooltip :content="item?.isOnlineStr">
-                                <span>{{ item.isOnlineStr }}</span>
-                            </ElTooltip>
-                        </div>
-                    </div>
-                </Vue3SeamlessScroll>
-            </div>
-        </div>
+
+    <div class="left_main_box">
+        <swiper ref="leftMainSwiperRef" @mouseenter="mouseEnterLeft" @mouseleave="mouseLeaveLeft" :modules="[Autoplay]" class="left_main_swiper" direction="vertical" :slides-per-view="3" :slides-per-group="1"
+            :space-between="40" :loop="true" :autoplay="{ delay: 2000, disableOnInteraction: false }">
+            <swiper-slide class="left_main_swiper_item" v-for="item in leftConfig">
+                <component :is="item.component" :url="item.Url" :address="item.address" :link="item.link" :type="item.type" :deviceSn="item.deviceSn" />
+            </swiper-slide>
+        </swiper>
     </div>
-    <div class="bigscreen_lc">
-        <div class="bigscreen_lc_top">
-            <div class="bigscreen_lc_top_l">
-                <img src="/public/img/光标.png" alt="" />
-                <span>采集设备状态</span>
-            </div>
-        </div>
-        <div class="bigscreen_lc_bottom">
-            <div class="bigscreen_lc_bottom_nei_t">
-                <span>设备编号</span>
-                <span>所属区域</span>
-                <span>状态</span>
-            </div>
-            <div class="bigscreen_lc_bottomnei">
-                <Vue3SeamlessScroll :list="caiYangList" :step="1" :singleHeight="70" hover class="scrool">
-                    <div class="bigscreen_lc_bottom_nei" v-for="(item, index) in caiYangList">
-                        <div>
-                            <ElTooltip :content="item?.name">
-                                <span>{{ item?.name }}</span>
-                            </ElTooltip>
-                            <ElTooltip :content="item?.area">
-                                <span>{{ item.area }}</span>
-                            </ElTooltip>
-                            <ElTooltip :content="item?.isOnlineStr">
-                                <span>{{ item.isOnlineStr }}</span>
-                            </ElTooltip>
-                        </div>
-                    </div>
-                </Vue3SeamlessScroll>
-            </div>
-        </div>
-    </div>
-    <div class="bigscreen_lb">
-        <div class="bigscreen_lb_top">
-            <div class="bigscreen_lb_top_l">
-                <img src="/public/img/光标.png" alt="" />
-                <span>消杀设备状态</span>
-            </div>
-        </div>
-        <div class="bigscreen_lb_bottom">
-            <div class="bigscreen_lb_bottom_nei_t">
-                <span>设备编号</span>
-                <span>所属区域</span>
-                <span>状态</span>
-            </div>
-            <div class="bigscreen_lb_bottomnei">
-                <Vue3SeamlessScroll :list="xsList" :step="1" :singleHeight="70" hover class="scrool">
-                    <div class="bigscreen_lb_bottom_nei" v-for="(item, index) in xsList">
-                        <div>
-                            <ElTooltip :content="item?.name">
-                                <span>{{ item?.name }}</span>
-                            </ElTooltip>
-                            <ElTooltip :content="item?.area">
-                                <span>{{ item.area }}</span>
-                            </ElTooltip>
-                            <ElTooltip :content="item?.isOnlineStr">
-                                <span>{{ item.isOnlineStr }}</span>
-                            </ElTooltip>
-                        </div>
-                    </div>
-                </Vue3SeamlessScroll>
-            </div>
-        </div>
-    </div>
+
     <center></center>
-    <div class="bigscreen_rt">
-        <div class="bigscreen_rt_top">
-            <div class="bigscreen_rt_top_l">
-                <img src="/public/img/光标.png" alt="" />
-                <span>监测设备统计</span>
-            </div>
-        </div>
-        <div class="bigscreen_rt_bottom" ref="jianCeRef">
-        </div>
+    <div class="right_main_box">
+        <!--  鼠标移入移出事件 暂停轮播 -->
+        <swiper ref="rightMainSwiperRef" @mouseenter="mouseEnterRight" @mouseleave="mouseLeaveRight" class="right_main_swiper" :modules="[Autoplay]" direction="vertical" :slides-per-view="3"
+            :slides-per-group="1" :space-between="40" :loop="true"
+            :autoplay="{ delay: 2000, disableOnInteraction: false }">
+            <swiper-slide class="right_main_swiper_item" v-for="item in rightConfig">
+                <component :is="item.component" :url="item.Url" :address="item.address" :type="item.type" :link="item.link" :deviceSn="item.deviceSn" />
+            </swiper-slide>
+        </swiper>
     </div>
-    <div class="bigscreen_rc">
-        <div class="bigscreen_rc_top">
-            <div class="bigscreen_rc_top_l">
-                <img src="/public/img/光标.png" alt="" />
-                <span>采集设备统计</span>
-            </div>
-            <div class="bigscreen_rc_top_r">
-            </div>
-        </div>
-        <div class="bigscreen_rc_bottom">
-            <div class="bigscreen_rc_bottom_nei" ref="caiYangRef">
-            </div>
-        </div>
-    </div>
-    <div class="bigscreen_rb">
-        <div class="bigscreen_rb_top">
-            <div class="bigscreen_rb_top_l">
-                <img src="/public/img/光标.png" alt="" />
-                <span>消杀设备统计</span>
-            </div>
-        </div>
-        <div class="bigscreen_rb_bottom" ref="xsDeviceRef">
-
-        </div>
-    </div>
-
-
-
-
 </template>
 
 <script lang="ts" setup>
 import center from "../../components/center.vue";
 import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
-import { useCaiYangDeviceStatus, useJianCeDeviceStatus, useXsDeviceStatus } from "./other.tsx";
+// import { useCaiYangDeviceStatus, useJianCeDeviceStatus, useXsDeviceStatus } from "./other.tsx";
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Autoplay, FreeMode } from "swiper/modules"
+import 'swiper/css';
+import 'swiper/css/autoplay';
+import { useAllCity } from "./index.tsx";
 
-const { caiYangList, caiYangRef } = useCaiYangDeviceStatus()
-const { xsList, xsDeviceRef } = useXsDeviceStatus()
-const { jianCeList, jianCeRef } = useJianCeDeviceStatus()
+
+const { leftConfig, rightConfig } = useAllCity()
+
+const rightMainSwiperRef = ref(null)
+function mouseEnterRight() {
+    // @ts-ignore
+    rightMainSwiperRef.value?.$el?.swiper?.autoplay?.pause();
+}
+
+function mouseLeaveRight() {
+    // @ts-ignore
+    rightMainSwiperRef.value?.$el?.swiper?.autoplay?.resume();
+}
+
+const leftMainSwiperRef = ref(null)
+function mouseEnterLeft() {
+    // @ts-ignore
+    leftMainSwiperRef.value?.$el?.swiper?.autoplay?.pause();
+}
+
+function mouseLeaveLeft() {
+    // @ts-ignore
+    leftMainSwiperRef.value?.$el?.swiper?.autoplay?.resume();
+}
 
 
 
@@ -166,79 +77,62 @@ $design-height: 1080;
     @return #{$px / $design-width * 100}vw;
 }
 
-.rb_dialog {
-    width: adaptiveWidth(350);
-    height: adaptiveHeight(270);
+.left_main_box {
     position: absolute;
-    top: 0;
-    left: - adaptiveWidth(350);
-    background: url("/public/img/弹窗背景.png") no-repeat;
-    background-size: 100% 100%;
+    top: adaptiveHeight(91);
+    left: adaptiveWidth(26);
+    width: adaptiveWidth(450);
+    height: adaptiveHeight(960);
+    // background-color: red;
 }
 
-.rb_dialog_top {
+.left_main_swiper {
+    height: 100%;
     width: 100%;
-    height: adaptiveHeight(45);
+}
+
+.left_main_swiper_item {
+    // height: calc(100% / 3);
+    // background-color: blue;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    .rb_dialog_top_x {
-        position: absolute;
-        right: adaptiveWidth(7);
-    }
-
-    span {
-        font-family: youshe;
-        font-size: adaptiveFontSize(20);
-        color: #ffffff;
-        padding-left: adaptiveWidth(15);
-    }
+    flex-direction: column;
+    // align-items: center;
+    // justify-content: center;
+    font-size: adaptiveFontSize(16);
+    color: white;
+    width: 100%;
 }
 
-.rb_dialog_bottom {
-    height: adaptiveHeight(225);
+.right_main_box {
+    position: absolute;
+    top: adaptiveHeight(91);
+    right: adaptiveWidth(26);
+    width: adaptiveWidth(450);
+    height: adaptiveHeight(960);
 }
 
-.rb_dialog_bottom_echart {
-    width: adaptiveWidth(350);
-    ;
-    height: adaptiveHeight(225);
+.right_main_swiper {
+    height: 100%;
+    width: 100%;
 }
+
+.right_main_swiper_item {
+    display: flex;
+    flex-direction: column;
+    font-size: adaptiveFontSize(16);
+    color: white;
+    width: 100%;
+}
+
+
+
+
 
 .yzInput {
     position: relative;
     left: adaptiveWidth(20);
     top: adaptiveHeight(5);
 }
-
-.bigscreen_rb_top_l_rg {
-    margin-left: adaptiveWidth(260);
-}
-
-.pickerCss {
-
-    width: adaptiveWidth(155);
-    height: adaptiveHeight(24);
-    border: 1px solid rgba(227, 233, 243, 0.2);
-    border-radius: 5px;
-    margin-right: adaptiveWidth(11);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
-    top: adaptiveWidth(6);
-    left: - adaptiveWidth(20);
-
-    span {
-        color: #ffffff;
-        font-size: adaptiveFontSize(10);
-        font-family: unset !important;
-        font-weight: 100 !important;
-    }
-}
-
-
 
 .bigscreen_lt,
 .bigscreen_lc,
@@ -1049,343 +943,6 @@ $design-height: 1080;
     }
 }
 
-.rcDialog {
-    width: adaptiveWidth(440);
-    height: adaptiveHeight(280);
-    background: url("/public/img/弹窗背景.png") no-repeat;
-    background-size: 100% 100%;
-    position: absolute;
-    top: adaptiveHeight(400);
-    right: adaptiveWidth(480);
-    z-index: 10;
-
-    .rcDialog_top {
-        width: 100%;
-        height: adaptiveHeight(45);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        span {
-            font-family: youshe;
-            font-size: adaptiveFontSize(20);
-            color: #ffffff;
-            padding-left: adaptiveWidth(15);
-        }
-
-        img {
-            width: adaptiveWidth(8);
-            height: adaptiveHeight(8);
-            padding-right: adaptiveWidth(10);
-            cursor: pointer;
-        }
-    }
-
-    .rcDialog_bottom {
-        width: adaptiveWidth(420);
-        height: adaptiveHeight(200);
-        margin: adaptiveHeight(10) auto;
-
-        img {
-            width: adaptiveWidth(99);
-            height: adaptiveHeight(99);
-        }
-
-        .rcDialog_bottoml {
-            height: adaptiveHeight(200);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-
-            div {
-                margin-left: adaptiveWidth(20);
-
-                &:nth-child(1) {
-                    margin-top: 0;
-                }
-
-                span {
-                    font-size: adaptiveFontSize(14);
-
-                    &:nth-child(1) {
-                        color: #687f92;
-                    }
-
-                    &:nth-child(2) {
-                        color: #ffffff;
-                    }
-                }
-            }
-        }
-    }
-}
-
-.rtDialog {
-    width: adaptiveWidth(440);
-    height: adaptiveHeight(280);
-    background: url("/public/img/弹窗背景.png") no-repeat;
-    background-size: 100% 100%;
-    position: absolute;
-    top: adaptiveHeight(100);
-    right: adaptiveWidth(480);
-    z-index: 10;
-
-    .rtDialog_top {
-        width: 100%;
-        height: adaptiveHeight(45);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        span {
-            font-size: adaptiveFontSize(20);
-            color: #ffffff;
-            padding-left: adaptiveWidth(15);
-            font-family: youshe;
-        }
-
-        img {
-            width: adaptiveWidth(8);
-            height: adaptiveHeight(8);
-            padding-right: adaptiveWidth(10);
-            cursor: pointer;
-        }
-    }
-
-    .rtDialog_bottom {
-        width: adaptiveWidth(420);
-        height: adaptiveHeight(215);
-        margin-left: adaptiveWidth(10);
-        display: flex;
-        flex-direction: column;
-        // align-items: center;
-        justify-content: center;
-
-        .rtDialog_bottom_video {
-            :deep(#container) {
-                width: adaptiveWidth(420);
-                height: adaptiveHeight(215);
-                object-fit: cover;
-            }
-
-            object-fit: cover;
-        }
-
-        // :deep(.rtDialog_bottom_video) {
-        //   #container[data-v-39551662] {
-        //     width: adaptiveWidth(420);
-        //     height: adaptiveHeight(215);
-        //     object-fit: cover;
-        //   }
-        //   object-fit: cover;
-        // }
-        img {
-            width: 100%;
-            height: adaptiveHeight(195);
-        }
-
-        div {
-            font-size: adaptiveFontSize(14);
-            color: #ffffff;
-        }
-    }
-}
-
-.rbDialog {
-    width: adaptiveWidth(440);
-    height: adaptiveHeight(280);
-    background: url("/public/img/弹窗背景.png") no-repeat;
-    background-size: 100% 100%;
-    position: absolute;
-    bottom: adaptiveHeight(90);
-    right: adaptiveWidth(480);
-    z-index: 10;
-
-    .rbDialog_top {
-        width: 100%;
-        height: adaptiveHeight(45);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        span {
-            font-family: youshe;
-            font-size: adaptiveFontSize(20);
-            color: #ffffff;
-            padding-left: adaptiveWidth(15);
-        }
-
-        img {
-            width: adaptiveWidth(8);
-            height: adaptiveHeight(8);
-            padding-right: adaptiveWidth(10);
-            cursor: pointer;
-        }
-    }
-
-    .rbDialog_bottom {
-        width: adaptiveWidth(420);
-        height: adaptiveHeight(200);
-        margin: adaptiveHeight(10) auto;
-
-        img {
-            width: adaptiveWidth(99);
-            height: adaptiveHeight(99);
-        }
-
-        .rbDialog_bottoml {
-            height: adaptiveHeight(200);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-
-            div {
-                margin-left: adaptiveWidth(20);
-
-                &:nth-child(1) {
-                    margin-top: 0;
-                }
-
-                span {
-                    font-size: adaptiveFontSize(14);
-
-                    &:nth-child(1) {
-                        color: #687f92;
-                    }
-
-                    &:nth-child(2) {
-                        color: #ffffff;
-                    }
-                }
-            }
-        }
-    }
-}
-
-.rctDialog {
-    width: adaptiveWidth(440);
-    height: adaptiveHeight(280);
-    background: url("/public/img/弹窗背景.png") no-repeat;
-    background-size: 100% 100%;
-    position: absolute;
-    top: adaptiveHeight(400);
-    right: adaptiveWidth(480);
-    z-index: 10;
-
-    .rctDialog_top {
-        width: 100%;
-        height: adaptiveHeight(45);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        span {
-            font-family: youshe;
-            font-size: adaptiveFontSize(20);
-            color: #ffffff;
-            padding-left: adaptiveWidth(15);
-        }
-
-        img {
-            width: adaptiveWidth(8);
-            height: adaptiveHeight(8);
-            padding-right: adaptiveWidth(10);
-            cursor: pointer;
-        }
-    }
-
-    .rctDialog_bottom {
-        width: adaptiveWidth(420);
-        height: adaptiveHeight(150);
-        margin: adaptiveHeight(10) auto;
-    }
-
-    .rctDialog_content {}
-}
-
-
-
-
-.ltDialog {
-    width: adaptiveWidth(440);
-    height: adaptiveHeight(280);
-    background: url("/public/img/弹窗背景.png") no-repeat;
-    background-size: 100% 100%;
-    position: absolute;
-    top: adaptiveHeight(100);
-    left: adaptiveWidth(480);
-    z-index: 10;
-
-    .rctDialog_top {
-        width: 100%;
-        height: adaptiveHeight(45);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        span {
-            font-family: youshe;
-            font-size: adaptiveFontSize(20);
-            color: #ffffff;
-            padding-left: adaptiveWidth(15);
-        }
-
-        img {
-            width: adaptiveWidth(8);
-            height: adaptiveHeight(8);
-            padding-right: adaptiveWidth(10);
-            cursor: pointer;
-        }
-    }
-
-    .rctDialog_bottom {
-        width: adaptiveWidth(420);
-        height: adaptiveHeight(200);
-        margin: adaptiveHeight(10) auto;
-    }
-}
-
-
-
-.rzDialog {
-    width: adaptiveWidth(440);
-    height: adaptiveHeight(280);
-    background: url("/public/img/弹窗背景.png") no-repeat;
-    background-size: 100% 100%;
-    position: absolute;
-    top: adaptiveHeight(100);
-    right: adaptiveWidth(480);
-    z-index: 10;
-
-    .rctDialog_top {
-        width: 100%;
-        height: adaptiveHeight(45);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        span {
-            font-family: youshe;
-            font-size: adaptiveFontSize(20);
-            color: #ffffff;
-            padding-left: adaptiveWidth(15);
-        }
-
-        img {
-            width: adaptiveWidth(8);
-            height: adaptiveHeight(8);
-            padding-right: adaptiveWidth(10);
-            cursor: pointer;
-        }
-    }
-
-    .rctDialog_bottom {
-        width: adaptiveWidth(420);
-        height: adaptiveHeight(200);
-        margin: adaptiveHeight(10) auto;
-    }
-}
-
 
 :deep(.cascaderCss) {
     width: adaptiveWidth(200);
@@ -1421,16 +978,7 @@ $design-height: 1080;
     height: adaptiveHeight(24);
     margin-right: adaptiveWidth(11);
     // margin-left: adaptiveWidth(200);
-    --el-text-color-placeholder:white;
-    --el-input-text-color:white;
 }
-
-// .inputcss :deep(.el-input__wrapper) {
-//     background-color: rgba(255, 255, 255, 0);
-//     border: 1px solid rgba(255, 255, 255, 0.2);
-//     box-shadow: none;
-//     font-size: adaptiveFontSize(12);
-// }
 
 .scroll {
     height: adaptiveHeight(195);
@@ -1438,19 +986,6 @@ $design-height: 1080;
     overflow: hidden;
 }
 
-.yzRadio {
-    position: relative;
-    top: adaptiveHeight(5);
-}
-
-
-.cssRadio {
-    float: right;
-    margin-right: adaptiveWidth(10);
-    margin-top: adaptiveHeight(6);
-    // position: relative;
-    // top: adaptiveHeight(5);
-}
 
 .group :deep(.el-radio-button.is-active .el-radio-button__original-radio:not(:disabled) + .el-radio-button__inner) {
     background: rgba(255, 255, 255, 0.8);
@@ -1465,35 +1000,5 @@ $design-height: 1080;
     border-color: rgba(255, 255, 255, 0);
     font-size: adaptiveFontSize(12);
     border-radius: 2px;
-}
-
-
-.single-line-ellipsis {
-    white-space: nowrap;
-    /* 不换行 */
-    overflow: hidden;
-    /* 溢出隐藏 */
-    text-overflow: ellipsis;
-    /* 超出部分显示省略号 */
-}
-
-.labelClassName {}
-
-.resultDetailCss {
-    --el-fill-color-blank: transparent !important;
-    --el-text-color-primary: white !important;
-}
-
-.inputcssright {
-    --el-fill-color-blank: transparent !important;
-
-    height: adaptiveHeight(24);
-    margin-right: adaptiveWidth(11);
-    margin-left: adaptiveWidth(180);
-}
-
-.rctDialog_content_inputcss {
-    margin-left: adaptiveWidth(20);
-    margin-top: adaptiveHeight(5);
 }
 </style>

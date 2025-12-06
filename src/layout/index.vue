@@ -122,21 +122,21 @@ const btnfun = [
     name: "environment",
     path: "/environment",
   },
-  // {
-  //   title: "课题三",
-  //   name: "ketisan",
-  //   path: "/ketisan",
-  // },
-  // {
-  //   title: "课题四",
-  //   name: "ketisi",
-  //   path: "/ketisi",
-  // },
-  // {
-  //   title: "课题五",
-  //   name: "keitiwu",
-  //   path: "/ketiwu",
-  // },
+  {
+    title: "课题三",
+    name: "ketisan",
+    path: "/ketisan",
+  },
+  {
+    title: "课题四",
+    name: "ketisi",
+    path: "/ketisi",
+  },
+  {
+    title: "课题五",
+    name: "keitiwu",
+    path: "/ketiwu",
+  },
   // {
   //   title: "中心侧平",
   //   name: "center",

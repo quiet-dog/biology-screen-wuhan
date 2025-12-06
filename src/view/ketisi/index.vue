@@ -13,20 +13,25 @@
                 <span>状态</span>
             </div>
             <div class="bigscreen_lt_bottomnei">
-                <Vue3SeamlessScroll :list="jianCeList" :step="1" :singleHeight="70" hover class="scrool">
-                    <div class="bigscreen_lt_bottom_nei" v-for="(item, index) in jianCeList">
-                        <div>
-                            <ElTooltip :content="item?.name">
-                                <span>{{ item?.name }}</span>
-                            </ElTooltip>
-                            <ElTooltip :content="item?.area">
-                                <span>{{ item.area }}</span>
-                            </ElTooltip>
-                            <ElTooltip :content="item?.isOnlineStr">
-                                <span>{{ item.isOnlineStr }}</span>
-                            </ElTooltip>
+                <Vue3SeamlessScroll :key="jianCeListTotal" :list="jianCeList" :singleHeight="70" 
+                    class="scrool">
+
+                    <template v-slot="{ data }">
+                        <div class="bigscreen_lt_bottom_nei">
+                            <div>
+                                <ElTooltip :content="data?.name">
+                                    <span>{{ data?.name }}</span>
+                                </ElTooltip>
+                                <ElTooltip :content="data?.area">
+                                    <span>{{ data?.area }}</span>
+                                </ElTooltip>
+                                <ElTooltip :content="data?.isOnlineStr">
+                                    <span>{{ data?.isOnlineStr }}</span>
+                                </ElTooltip>
+                            </div>
                         </div>
-                    </div>
+                    </template>
+
                 </Vue3SeamlessScroll>
             </div>
         </div>
@@ -45,20 +50,23 @@
                 <span>状态</span>
             </div>
             <div class="bigscreen_lc_bottomnei">
-                <Vue3SeamlessScroll :list="caiYangList" :step="1" :singleHeight="70" hover class="scrool">
-                    <div class="bigscreen_lc_bottom_nei" v-for="(item, index) in caiYangList">
-                        <div>
-                            <ElTooltip :content="item?.name">
-                                <span>{{ item?.name }}</span>
-                            </ElTooltip>
-                            <ElTooltip :content="item?.area">
-                                <span>{{ item.area }}</span>
-                            </ElTooltip>
-                            <ElTooltip :content="item?.isOnlineStr">
-                                <span>{{ item.isOnlineStr }}</span>
-                            </ElTooltip>
+                <Vue3SeamlessScroll :key="caiYangListTotal" :list="caiYangList" :step="1" :singleHeight="70" hover
+                    class="scrool">
+                    <template v-slot="{ data }">
+                        <div class="bigscreen_lc_bottom_nei">
+                            <div>
+                                <ElTooltip :content="data?.name">
+                                    <span>{{ data?.name }}</span>
+                                </ElTooltip>
+                                <ElTooltip :content="data?.area">
+                                    <span>{{ data?.area }}</span>
+                                </ElTooltip>
+                                <ElTooltip :content="data?.isOnlineStr">
+                                    <span>{{ data?.isOnlineStr }}</span>
+                                </ElTooltip>
+                            </div>
                         </div>
-                    </div>
+                    </template>
                 </Vue3SeamlessScroll>
             </div>
         </div>
@@ -77,20 +85,22 @@
                 <span>状态</span>
             </div>
             <div class="bigscreen_lb_bottomnei">
-                <Vue3SeamlessScroll :list="xsList" :step="1" :singleHeight="70" hover class="scrool">
-                    <div class="bigscreen_lb_bottom_nei" v-for="(item, index) in xsList">
-                        <div>
-                            <ElTooltip :content="item?.name">
-                                <span>{{ item?.name }}</span>
-                            </ElTooltip>
-                            <ElTooltip :content="item?.area">
-                                <span>{{ item.area }}</span>
-                            </ElTooltip>
-                            <ElTooltip :content="item?.isOnlineStr">
-                                <span>{{ item.isOnlineStr }}</span>
-                            </ElTooltip>
+                <Vue3SeamlessScroll :key="xsListTotal" :list="xsList" :step="1" :singleHeight="70" hover class="scrool">
+                    <template v-slot="{ data }">
+                        <div class="bigscreen_lb_bottom_nei">
+                            <div>
+                                <ElTooltip :content="data?.name">
+                                    <span>{{ data?.name }}</span>
+                                </ElTooltip>
+                                <ElTooltip :content="data?.area">
+                                    <span>{{ data?.area }}</span>
+                                </ElTooltip>
+                                <ElTooltip :content="data?.isOnlineStr">
+                                    <span>{{ data?.isOnlineStr }}</span>
+                                </ElTooltip>
+                            </div>
                         </div>
-                    </div>
+                    </template>
                 </Vue3SeamlessScroll>
             </div>
         </div>
@@ -142,9 +152,9 @@ import center from "../../components/center.vue";
 import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
 import { useCaiYangDeviceStatus, useJianCeDeviceStatus, useXsDeviceStatus } from "./other.tsx";
 
-const { caiYangList, caiYangRef } = useCaiYangDeviceStatus()
-const { xsList, xsDeviceRef } = useXsDeviceStatus()
-const { jianCeList, jianCeRef } = useJianCeDeviceStatus()
+const { caiYangList, caiYangRef, caiYangListTotal } = useCaiYangDeviceStatus()
+const { xsList, xsDeviceRef,xsListTotal } = useXsDeviceStatus()
+const { jianCeList, jianCeRef, jianCeListTotal } = useJianCeDeviceStatus()
 
 
 
@@ -1432,8 +1442,8 @@ $design-height: 1080;
     height: adaptiveHeight(24);
     margin-right: adaptiveWidth(11);
     // margin-left: adaptiveWidth(200);
-    --el-text-color-placeholder:white;
-    --el-input-text-color:white;
+    --el-text-color-placeholder: white;
+    --el-input-text-color: white;
 }
 
 // .inputcss :deep(.el-input__wrapper) {

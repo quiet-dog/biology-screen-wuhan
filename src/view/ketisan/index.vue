@@ -14,21 +14,23 @@
             </div>
             <div @mouseenter="xlFangAnlistTimer.pause()" @mouseleave="xlFangAnlistTimer.resume()"
                 class="bigscreen_lt_bottomnei">
-                <Vue3SeamlessScroll :list="xlFangAnlist" :step="1" :singleHeight="70" hover class="scrool">
-                    <div class="bigscreen_lt_bottom_nei" v-for="(item, index) in xlFangAnlist">
-                        <div @click="handleResultDetailVis(item)">
-                            <ElTooltip :content="item?.name">
-                                <span>{{ item?.name }}</span>
+                <Vue3SeamlessScroll :key="xlFangAnlistTotal" :list="xlFangAnlist" :step="1" :singleHeight="70" hover class="scrool">
+                    <template v-slot="{ data }">
+                    <div class="bigscreen_lt_bottom_nei" >
+                        <div @click="handleResultDetailVis(data)">
+                            <ElTooltip :content="data?.name">
+                                <span>{{ data?.name }}</span>
                             </ElTooltip>
 
-                            <ElTooltip :content="item?.shiJuanTypesStr">
-                                <span>{{ item.shiJuanTypesStr }}</span>
+                            <ElTooltip :content="data?.shiJuanTypesStr">
+                                <span>{{ data?.shiJuanTypesStr }}</span>
                             </ElTooltip>
-                            <ElTooltip :content="item?.pingGuTimeStr">
-                                <span>{{ item.pingGuTimeStr }}</span>
+                            <ElTooltip :content="data?.pingGuTimeStr">
+                                <span>{{ data?.pingGuTimeStr }}</span>
                             </ElTooltip>
+                            </div>
                         </div>
-                    </div>
+                    </template>
                 </Vue3SeamlessScroll>
             </div>
         </div>
@@ -97,34 +99,36 @@
                 <span>报警时间</span>
             </div>
             <div class="bigscreen_rt_bottomnei">
-                <Vue3SeamlessScroll :list="xwAlarmlist" :step="1" :singleHeight="70" hover class="scrool">
-                    <div class="bigscreen_rt_bottom_nei" v-for="(item, index) in xwAlarmlist">
+                <Vue3SeamlessScroll :key="xwAlarmlistTotal" :list="xwAlarmlist" :step="1" :singleHeight="70" hover class="scrool">
+                    <template v-slot="{ data }">
+                    <div class="bigscreen_rt_bottom_nei" >
                         <div>
                             <span>
-                                <ElTooltip class="myTooltip" :content="item?.seatNumber">
-                                    <span>{{ item?.seatNumber }}</span>
+                                <ElTooltip class="myTooltip" :content="data?.seatNumber">
+                                    <span>{{ data?.seatNumber }}</span>
                                 </ElTooltip>
                             </span>
 
                             <span>
-                                <ElTooltip class="myTooltip" :content="item?.cameraId">
-                                    <span>{{ item.cameraId }}</span>
+                                <ElTooltip class="myTooltip" :content="data?.cameraId">
+                                    <span>{{ data?.cameraId }}</span>
                                 </ElTooltip>
                             </span>
                             <span>
-                                <ElTooltip class="myTooltip" :content="item?.area">
-                                    <span>{{ item.area }}</span>
+                                <ElTooltip class="myTooltip" :content="data?.area">
+                                    <span>{{ data?.area }}</span>
                                 </ElTooltip>
                             </span>
                             <span>
                                 <ElTooltip class="myTooltip"
-                                    :content="item?.createTime">
-                                    <span>{{ item?.createTime }}</span>
+                                    :content="data?.createTime">
+                                    <span>{{ data?.createTime }}</span>
                                 </ElTooltip>
                             </span>
 
                         </div>
                     </div>
+                    </template>
                 </Vue3SeamlessScroll>
             </div>
         </div>
@@ -219,7 +223,7 @@ import { useCePingJieGuoFenXi, useCePingJieGuoTongJi, useJianCeShuJuTongJi, useJ
 const { resultDetail, resultDetailVis, handleResultDetailVis, resultFangAn } = userOther()
 const { selectValue, changeSelectValue, cePingJieGuoFenXiRef, cePingJieGuoFenXiChart } = useCePingJieGuoFenXi()
 const { handleSelectCePingJieGuoTongJi, cePingJieGuoTongJiRef, cePingJieGuoTongJiSelect, loadMoreCePingJieGuoTongJiSelect, selectXlFangAnList, cePingJieGuoTongJiSelectName } = useCePingJieGuoTongJi()
-const { xwAlarmlist } = useRenYuanXingWeiShiBieShuJu()
+const { xwAlarmlist,xwAlarmlistTotal } = useRenYuanXingWeiShiBieShuJu()
 const { jiWeiBaoJingZhanBiRef, rbRadio, changeRbRadio, jiWeiBaoJingZhanBiChart } = useJiWeiBaoJingZhanBi()
 const { jianCeShuJuTongJiRef, jiWeiQuShiBianHuaOpen,
     jiWeiQuShiBianHuaVis, jiWeiQuShiBianHuaInput, jiWeiQuShiBianHuaRef, jiWeiQuShiBianHuaClose,
@@ -234,10 +238,12 @@ const xlFangAnFormData = ref({
     orderDirection: "descending",
 });
 const xlFangAnlist = ref<any[]>([]);
+const xlFangAnlistTotal = ref(0);
 const xlFangAnListFun = async () => {
     // @ts-expect-error
     const { data } = await xlFangAnList(xlFangAnFormData.value);
     xlFangAnlist.value = data.data.rows
+    xlFangAnlistTotal.value = data.data.total;
 };
 const xlFangAnlistTimer = useIntervalFn(() => {
     xlFangAnlistTimer.pause();

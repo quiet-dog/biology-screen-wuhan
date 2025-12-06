@@ -89,13 +89,21 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
-        path: "/center",
-        name: "center",
-        component: () => import("../view/center/index.vue"),
+        path: "/ketiwu",
+        name: "ketiwu",
+        component: () => import("../view/ketiwu/index.vue"),
         meta: {
-          title: "中心侧平",
+          title: "课题五",
         },
-      },
+      }
+      // {
+      //   path: "/center",
+      //   name: "center",
+      //   component: () => import("../view/center/index.vue"),
+      //   meta: {
+      //     title: "中心侧平",
+      //   },
+      // },
     ],
   },
   {

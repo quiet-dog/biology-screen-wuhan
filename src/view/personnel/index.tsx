@@ -6,6 +6,7 @@ import { getBaoJingCiShuTongJiByRecentWeek, getDayExceptionCount, getLiShiYiChan
 import * as echarts from "echarts"
 export function useTiZhengJianCe() {
     const tiZhengJianCeList = ref([])
+    const tiZhengJianCeListTotal = ref(0)
     const tiZhengPageInfo = ref({
         pageNum: 1,
         pageSize: 10,
@@ -14,6 +15,9 @@ export function useTiZhengJianCe() {
     async function getTiZhengJianList(value) {
         // @ts-expect-error
         smDataList(tiZhengPageInfo.value).then(res => {
+            if (res.data.data.total != tiZhengJianCeListTotal.value) {
+                tiZhengJianCeListTotal.value = res.data.data.total;
+            }
             tiZhengJianCeList.value = res.data.data.rows;
         })
     }
@@ -180,7 +184,8 @@ export function useTiZhengJianCe() {
         xinDianOption,
         xinDianEchartRef,
         huXiLvRef,
-        huXiLvOption
+        huXiLvOption,
+        tiZhengJianCeListTotal
     }
 }
 
@@ -192,8 +197,13 @@ export function useZaiXianShengMingDevice() {
         pageSize: 10,
     })
 
+    const smDeviceListTableTotal = ref(0)
+
     async function getZaiXianShengMingDevice() {
         smDeviceList(pageInfo.value).then(res => {
+            if (res.data.data.total != smDeviceListTableTotal.value) {
+                smDeviceListTableTotal.value = res.data.data.total;
+            }
             smDeviceListTable.value = res.data.data.rows;
         })
     }
@@ -209,7 +219,8 @@ export function useZaiXianShengMingDevice() {
         getZaiXianShengMingDevice()
     })
     return {
-        smDeviceListTable
+        smDeviceListTable,
+        smDeviceListTableTotal
     }
 }
 

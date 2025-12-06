@@ -6,20 +6,13 @@ import * as echart from "echarts"
 import { getJcDeviceOnlineCount, jianCeDeviceList } from "../../api/jianCeDevice"
 
 export function useCaiYangDeviceStatus() {
-    const caiYangList = ref([])
-    const caiYangListTotal = ref(0)
+    const caiYangList = ref()
     async function getJianCeDeviceList() {
         nongDuDeviceList({
             pageNum: 1,
             pageSize: 10
         }).then(res => {
-            if (Array.isArray(res.data.data.rows) && res.data.data.rows.length > 0) {
-                caiYangList.value = res.data.data.rows
-            } else {
-                caiYangList.value = []
-            }
-            caiYangListTotal.value = res.data.data.total;
-
+            caiYangList.value = res.data.data.rows
         })
     }
     const jianCeTimer = useIntervalFn(() => {
@@ -101,27 +94,18 @@ export function useCaiYangDeviceStatus() {
 
     return {
         caiYangList,
-        caiYangRef,
-        caiYangListTotal
+        caiYangRef
     }
 }
 
 export function useJianCeDeviceStatus() {
-    const jianCeList = ref([])
-    const jianCeListTotal = ref(0)
+    const jianCeList = ref()
     async function getJianCeDeviceList() {
         jianCeDeviceList({
             pageNum: 1,
             pageSize: 10
         }).then(res => {
-            console.log("res.data.data.rows", res.data.data.rows)
-            if (Array.isArray(res.data.data.rows) && res.data.data.rows.length > 0) {
-                jianCeList.value = res.data.data.rows
-            } else {
-                jianCeList.value = []
-            }
-            jianCeListTotal.value = res.data.data.total;
-
+            jianCeList.value = res.data.data.rows
         })
     }
     const jianCeTimer = useIntervalFn(() => {
@@ -203,8 +187,7 @@ export function useJianCeDeviceStatus() {
 
     return {
         jianCeList,
-        jianCeRef,
-        jianCeListTotal
+        jianCeRef
     }
 }
 
@@ -214,20 +197,13 @@ export function useCaiJiDeviceStatus() {
 }
 
 export function useXsDeviceStatus() {
-    const xsList = ref([])
-    const xsListTotal = ref(0)
+    const xsList = ref()
     async function getXsDeviceList() {
         xsDeviceList({
             pageNum: 1,
             pageSize: 10
         }).then(res => {
-
-            if (Array.isArray(res.data.data.rows) && res.data.data.rows.length > 0) {
-                xsList.value = res.data.data.rows
-            } else {
-                xsList.value = []
-            }
-            xsListTotal.value = res.data.data.total;
+            xsList.value = res.data.data.rows
         })
     }
 
@@ -313,7 +289,6 @@ export function useXsDeviceStatus() {
 
     return {
         xsList,
-        xsDeviceRef,
-        xsListTotal
+        xsDeviceRef
     }
 }
