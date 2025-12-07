@@ -694,19 +694,19 @@ export function useJiWeiBaoJingZhanBi() {
                 }
             }
         ],
-        graphic: [
-            {
-                type: 'text',
-                left: 'center',
-                top: 'middle',
-                style: {
-                    text: '暂无数据',
-                    fill: '#ffffff',
-                    fontSize: 30,
-                    fontWeight: 'bold'
-                }
-            }
-        ]
+        // graphic: [
+        //     {
+        //         type: 'text',
+        //         left: 'center',
+        //         top: 'middle',
+        //         style: {
+        //             text: '暂无数据',
+        //             fill: '#ffffff',
+        //             fontSize: 30,
+        //             fontWeight: 'bold'
+        //         }
+        //     }
+        // ]
     }
 
     const rbRadio = ref("week")
@@ -722,19 +722,9 @@ export function useJiWeiBaoJingZhanBi() {
                 jiWeiBaoJingZhanBiChart = echarts.init(jiWeiBaoJingZhanBiRef.value)
             }
             if (Array.isArray(option.series[0].data) && option.series[0].data.length == 0) {
-                option.graphic =[{
-                    type: 'text',
-                    left: 'center',
-                    top: 'middle',
-                    style: {
-                        text: '暂无数据',
-                        fill: '#ffffff',
-                        fontSize: 30,
-                        fontWeight: 'bold'
-                    }
-                }]
+                jiWeiBaoJingZhanBiChart?.setOption(kongData, true)
             }else{
-                option.graphic =[]
+                // option.graphic =[]
                
                 jiWeiBaoJingZhanBiChart?.setOption(option, true)
             }
