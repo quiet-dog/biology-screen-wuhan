@@ -86,7 +86,7 @@ $design-height: 1080;
     top: adaptiveHeight(91);
     left: adaptiveWidth(26);
     width: adaptiveWidth(450);
-    height: adaptiveHeight(940);
+    height: adaptiveHeight(900);
     // background-color: red;
 }
 
@@ -112,7 +112,7 @@ $design-height: 1080;
     top: adaptiveHeight(91);
     right: adaptiveWidth(26);
     width: adaptiveWidth(450);
-    height: adaptiveHeight(940);
+    height: adaptiveHeight(900);
 }
 
 .right_main_swiper {

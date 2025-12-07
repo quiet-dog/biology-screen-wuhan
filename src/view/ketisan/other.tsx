@@ -722,8 +722,6 @@ export function useJiWeiBaoJingZhanBi() {
                 jiWeiBaoJingZhanBiChart = echarts.init(jiWeiBaoJingZhanBiRef.value)
             }
             if (Array.isArray(option.series[0].data) && option.series[0].data.length == 0) {
-                option.graphic =[]
-            }else{
                 option.graphic =[{
                     type: 'text',
                     left: 'center',
@@ -735,6 +733,9 @@ export function useJiWeiBaoJingZhanBi() {
                         fontWeight: 'bold'
                     }
                 }]
+            }else{
+                option.graphic =[]
+               
                 jiWeiBaoJingZhanBiChart?.setOption(option, true)
             }
            
