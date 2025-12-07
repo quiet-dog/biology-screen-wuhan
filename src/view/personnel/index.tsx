@@ -15,9 +15,10 @@ export function useTiZhengJianCe() {
     async function getTiZhengJianList(value) {
         // @ts-expect-error
         smDataList(tiZhengPageInfo.value).then(res => {
-            if (res.data.data.total != tiZhengJianCeListTotal.value) {
-                tiZhengJianCeListTotal.value = res.data.data.total;
-            }
+            tiZhengJianCeListTotal.value = Math.random()
+            // if (res.data.data.total != tiZhengJianCeListTotal.value) {
+            //     tiZhengJianCeListTotal.value = res.data.data.total;
+            // }
             tiZhengJianCeList.value = res.data.data.rows;
         })
     }

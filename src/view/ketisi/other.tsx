@@ -52,7 +52,7 @@ export function useCaiYangDeviceStatus() {
         },
         series: [
             {
-                name: 'Access From',
+                name: '采样设备状态',
                 type: 'pie',
                 radius: '50%',
                 data: [
@@ -154,7 +154,7 @@ export function useJianCeDeviceStatus() {
         },
         series: [
             {
-                name: 'Access From',
+                name: '监测设备状态',
                 type: 'pie',
                 radius: '50%',
                 data: [
@@ -259,7 +259,7 @@ export function useXsDeviceStatus() {
         },
         series: [
             {
-                name: 'Access From',
+                name: '巡检设备状态',
                 type: 'pie',
                 radius: '50%',
                 data: [

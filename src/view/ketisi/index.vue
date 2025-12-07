@@ -13,8 +13,7 @@
                 <span>状态</span>
             </div>
             <div class="bigscreen_lt_bottomnei">
-                <Vue3SeamlessScroll :key="jianCeListTotal" :list="jianCeList" :singleHeight="70" 
-                    class="scrool">
+                <Vue3SeamlessScroll :key="jianCeListTotal" :list="jianCeList" :singleHeight="70" class="scrool">
 
                     <template v-slot="{ data }">
                         <div class="bigscreen_lt_bottom_nei">
@@ -80,7 +79,7 @@
         </div>
         <div class="bigscreen_lb_bottom">
             <div class="bigscreen_lb_bottom_nei_t">
-                <span>设备编号</span>
+                <span>设备名称</span>
                 <span>所属区域</span>
                 <span>状态</span>
             </div>
@@ -153,7 +152,7 @@ import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
 import { useCaiYangDeviceStatus, useJianCeDeviceStatus, useXsDeviceStatus } from "./other.tsx";
 
 const { caiYangList, caiYangRef, caiYangListTotal } = useCaiYangDeviceStatus()
-const { xsList, xsDeviceRef,xsListTotal } = useXsDeviceStatus()
+const { xsList, xsDeviceRef, xsListTotal } = useXsDeviceStatus()
 const { jianCeList, jianCeRef, jianCeListTotal } = useJianCeDeviceStatus()
 
 

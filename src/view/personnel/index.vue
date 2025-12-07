@@ -147,7 +147,9 @@
       <div class="bigscreen_rb_top_l">
         <img src="/public/img/光标.png" alt="" />
         <span>历史异常指标排名</span>
-        <ElButton class="inputcssright" @click="handleSmAlarmOpen">报警次数统计</ElButton>
+        <ElButton class="inputcssright" @click="handleSmAlarmOpen">
+          <span style="color: white;">报警次数统计</span>
+        </ElButton>
       </div>
     </div>
     <div class="bigscreen_rb_bottom" ref="liShiYiChangRef">
@@ -1618,6 +1620,7 @@ $design-height: 1080;
         // justify-content: center;
         align-items: center;
         // padding: 0 adaptiveWidth(10);
+        cursor: pointer;
 
         div {
           width: 100%;

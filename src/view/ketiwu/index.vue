@@ -1,10 +1,12 @@
 <template>
 
     <div class="left_main_box">
-        <swiper ref="leftMainSwiperRef" @mouseenter="mouseEnterLeft" @mouseleave="mouseLeaveLeft" :modules="[Autoplay]" class="left_main_swiper" direction="vertical" :slides-per-view="3" :slides-per-group="1"
-            :space-between="40" :loop="true" :autoplay="{ delay: 2000, disableOnInteraction: false }">
+        <swiper ref="leftMainSwiperRef" @mouseenter="mouseEnterLeft" @mouseleave="mouseLeaveLeft" :modules="[Autoplay]"
+            class="left_main_swiper" direction="vertical" :slides-per-view="3" :slides-per-group="1" :space-between="40"
+            :loop="true" :autoplay="{ delay: 2000, disableOnInteraction: false }">
             <swiper-slide class="left_main_swiper_item" v-for="item in leftConfig">
-                <component :is="item.component" :url="item.Url" :address="item.address" :link="item.link" :type="item.type" :deviceSn="item.deviceSn" />
+                <component :is="item.component" :url="item.Url" :address="item.address" :link="item.link"
+                    :type="item.type" :deviceSn="item.deviceSn" />
             </swiper-slide>
         </swiper>
     </div>
@@ -12,11 +14,13 @@
     <center></center>
     <div class="right_main_box">
         <!--  鼠标移入移出事件 暂停轮播 -->
-        <swiper ref="rightMainSwiperRef" @mouseenter="mouseEnterRight" @mouseleave="mouseLeaveRight" class="right_main_swiper" :modules="[Autoplay]" direction="vertical" :slides-per-view="3"
+        <swiper ref="rightMainSwiperRef" @mouseenter="mouseEnterRight" @mouseleave="mouseLeaveRight"
+            class="right_main_swiper" :modules="[Autoplay]" direction="vertical" :slides-per-view="3"
             :slides-per-group="1" :space-between="40" :loop="true"
             :autoplay="{ delay: 2000, disableOnInteraction: false }">
             <swiper-slide class="right_main_swiper_item" v-for="item in rightConfig">
-                <component :is="item.component" :url="item.Url" :address="item.address" :type="item.type" :link="item.link" :deviceSn="item.deviceSn" />
+                <component :is="item.component" :url="item.Url" :address="item.address" :type="item.type"
+                    :link="item.link" :deviceSn="item.deviceSn" />
             </swiper-slide>
         </swiper>
     </div>
@@ -82,7 +86,7 @@ $design-height: 1080;
     top: adaptiveHeight(91);
     left: adaptiveWidth(26);
     width: adaptiveWidth(450);
-    height: adaptiveHeight(960);
+    height: adaptiveHeight(940);
     // background-color: red;
 }
 
@@ -108,7 +112,7 @@ $design-height: 1080;
     top: adaptiveHeight(91);
     right: adaptiveWidth(26);
     width: adaptiveWidth(450);
-    height: adaptiveHeight(960);
+    height: adaptiveHeight(940);
 }
 
 .right_main_swiper {

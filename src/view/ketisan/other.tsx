@@ -437,7 +437,9 @@ export function useJianCeShuJuTongJi() {
             left: '3%',
             right: '4%',
             bottom: '3%',
-            containLabel: true
+            containLabel: true,
+            // 白色
+
         },
         xAxis: [
             {
@@ -445,12 +447,28 @@ export function useJianCeShuJuTongJi() {
                 data: [],
                 axisTick: {
                     alignWithLabel: true
+                },
+                axisLabel: {
+                    color: '#ffffff'
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#ffffff'
+                    }
                 }
             }
         ],
         yAxis: [
             {
-                type: 'value'
+                type: 'value',
+                axisLabel: {
+                    color: '#ffffff'
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#ffffff'
+                    }
+                }
             }
         ],
         series: [
@@ -495,6 +513,16 @@ export function useJianCeShuJuTongJi() {
             axisLabel: {
                 color: '#ffffff'
             },
+            axisLine: {
+                lineStyle: {
+                    color: '#ffffff'
+                }
+            },
+            splitLine: {
+                lineStyle: {
+                    color: '#ffffff'
+                }
+            }
         },
         yAxis: {
             type: 'value',
@@ -502,6 +530,16 @@ export function useJianCeShuJuTongJi() {
             axisLabel: {
                 color: '#ffffff'
             },
+            axisLine: {
+                lineStyle: {
+                    color: '#ffffff'
+                }
+            },
+            splitLine: {
+                lineStyle: {
+                    color: '#ffffff'
+                }
+            }
         },
         series: [
             {
@@ -514,6 +552,15 @@ export function useJianCeShuJuTongJi() {
             right: 10,
             bottom: 60,
             top: 10
+        },
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            },
+            // formatter: function (params) {
+            //     return params[0].name + ': ' + params[0].value;
+            // }
         }
     }
     const jiWeiQuShiBianHuaRef = ref()
@@ -646,6 +693,19 @@ export function useJiWeiBaoJingZhanBi() {
                     }
                 }
             }
+        ],
+        graphic: [
+            {
+                type: 'text',
+                left: 'center',
+                top: 'middle',
+                style: {
+                    text: '暂无数据',
+                    fill: '#ffffff',
+                    fontSize: 30,
+                    fontWeight: 'bold'
+                }
+            }
         ]
     }
 
@@ -661,7 +721,23 @@ export function useJiWeiBaoJingZhanBi() {
             if (jiWeiBaoJingZhanBiChart == null || jiWeiBaoJingZhanBiChart === undefined) {
                 jiWeiBaoJingZhanBiChart = echarts.init(jiWeiBaoJingZhanBiRef.value)
             }
-            jiWeiBaoJingZhanBiChart.setOption(option, true)
+            if (Array.isArray(option.series[0].data) && option.series[0].data.length == 0) {
+                option.graphic =[]
+            }else{
+                option.graphic =[{
+                    type: 'text',
+                    left: 'center',
+                    top: 'middle',
+                    style: {
+                        text: '暂无数据',
+                        fill: '#ffffff',
+                        fontSize: 30,
+                        fontWeight: 'bold'
+                    }
+                }]
+                jiWeiBaoJingZhanBiChart?.setOption(option, true)
+            }
+           
         })
     }
     function changeRbRadio() {

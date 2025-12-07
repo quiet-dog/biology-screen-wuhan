@@ -326,18 +326,17 @@
           <!-- <div @click="rtClick(item)" v-for="item in videoList">
             <span>{{ item.name }}</span>
           </div> -->
-          <Vue3SeamlessScroll :total="videoList.length" :list="videoList" :class-option="{
+          <Vue3SeamlessScroll :key="videoList.length" :total="videoList.length" :list="videoList" :class-option="{
             step: 5,
           }" hover>
-            <template v-slot="{data}">
-              <div style="cursor: pointer;" @click="rtClick(data)" 
-              class="video_item">
-              <span>
-                <el-tooltip :content="data?.name">
-                  {{ data?.name }}
-                </el-tooltip>
-              </span>
-            </div>
+            <template v-slot="{ data }">
+              <div style="cursor: pointer;" @click="rtClick(data)" class="video_item">
+                <span>
+                  <el-tooltip :content="data?.name">
+                    {{ data?.name }}
+                  </el-tooltip>
+                </span>
+              </div>
             </template>
           </Vue3SeamlessScroll>
         </div>

@@ -14,20 +14,21 @@
             </div>
             <div @mouseenter="xlFangAnlistTimer.pause()" @mouseleave="xlFangAnlistTimer.resume()"
                 class="bigscreen_lt_bottomnei">
-                <Vue3SeamlessScroll :key="xlFangAnlistTotal" :list="xlFangAnlist" :step="1" :singleHeight="70" hover class="scrool">
+                <Vue3SeamlessScroll :key="xlFangAnlistTotal" :list="xlFangAnlist" :step="1" :singleHeight="70" hover
+                    class="scrool">
                     <template v-slot="{ data }">
-                    <div class="bigscreen_lt_bottom_nei" >
-                        <div @click="handleResultDetailVis(data)">
-                            <ElTooltip :content="data?.name">
-                                <span>{{ data?.name }}</span>
-                            </ElTooltip>
+                        <div class="bigscreen_lt_bottom_nei">
+                            <div @click="handleResultDetailVis(data)">
+                                <ElTooltip :content="data?.name">
+                                    <span>{{ data?.name }}</span>
+                                </ElTooltip>
 
-                            <ElTooltip :content="data?.shiJuanTypesStr">
-                                <span>{{ data?.shiJuanTypesStr }}</span>
-                            </ElTooltip>
-                            <ElTooltip :content="data?.pingGuTimeStr">
-                                <span>{{ data?.pingGuTimeStr }}</span>
-                            </ElTooltip>
+                                <ElTooltip :content="data?.shiJuanTypesStr">
+                                    <span>{{ data?.shiJuanTypesStr }}</span>
+                                </ElTooltip>
+                                <ElTooltip :content="data?.pingGuTimeStr">
+                                    <span>{{ data?.pingGuTimeStr }}</span>
+                                </ElTooltip>
                             </div>
                         </div>
                     </template>
@@ -99,35 +100,35 @@
                 <span>报警时间</span>
             </div>
             <div class="bigscreen_rt_bottomnei">
-                <Vue3SeamlessScroll :key="xwAlarmlistTotal" :list="xwAlarmlist" :step="1" :singleHeight="70" hover class="scrool">
+                <Vue3SeamlessScroll :key="xwAlarmlistTotal" :list="xwAlarmlist" :step="1" :singleHeight="70" hover
+                    class="scrool">
                     <template v-slot="{ data }">
-                    <div class="bigscreen_rt_bottom_nei" >
-                        <div>
-                            <span>
-                                <ElTooltip class="myTooltip" :content="data?.seatNumber">
-                                    <span>{{ data?.seatNumber }}</span>
-                                </ElTooltip>
-                            </span>
+                        <div class="bigscreen_rt_bottom_nei">
+                            <div>
+                                <span>
+                                    <ElTooltip class="myTooltip" :content="data?.seatNumber">
+                                        <span>{{ data?.seatNumber }}</span>
+                                    </ElTooltip>
+                                </span>
 
-                            <span>
-                                <ElTooltip class="myTooltip" :content="data?.cameraId">
-                                    <span>{{ data?.cameraId }}</span>
-                                </ElTooltip>
-                            </span>
-                            <span>
-                                <ElTooltip class="myTooltip" :content="data?.area">
-                                    <span>{{ data?.area }}</span>
-                                </ElTooltip>
-                            </span>
-                            <span>
-                                <ElTooltip class="myTooltip"
-                                    :content="data?.createTime">
-                                    <span>{{ data?.createTime }}</span>
-                                </ElTooltip>
-                            </span>
+                                <span>
+                                    <ElTooltip class="myTooltip" :content="data?.cameraId">
+                                        <span>{{ data?.cameraId }}</span>
+                                    </ElTooltip>
+                                </span>
+                                <span>
+                                    <ElTooltip class="myTooltip" :content="data?.area">
+                                        <span>{{ data?.area }}</span>
+                                    </ElTooltip>
+                                </span>
+                                <span>
+                                    <ElTooltip class="myTooltip" :content="data?.createTime">
+                                        <span>{{ data?.createTime }}</span>
+                                    </ElTooltip>
+                                </span>
 
+                            </div>
                         </div>
-                    </div>
                     </template>
                 </Vue3SeamlessScroll>
             </div>
@@ -191,13 +192,13 @@
             <img @click="jiWeiQuShiBianHuaClose" :src="img9" alt="" srcset="" />
         </div>
         <div class="rctDialog_content">
-            <ElInput size="small" :prefix-icon="Search" class="inputcss rctDialog_content_inputcss" @change="jiWeiQuShiBianHuaGet"
-                v-model="jiWeiQuShiBianHuaInput" />
+            <ElInput placeholder="请输入机位号" size="small" :prefix-icon="Search" class="inputcss rctDialog_content_inputcss"
+                @change="jiWeiQuShiBianHuaGet" v-model="jiWeiQuShiBianHuaInput" />
             <el-radio-group v-model="jiWeiQuShiBianHuaRadio" size="small" @change="jiWeiQuShiBianHuaChangeRadio"
                 class="group cssRadio">
                 <el-radio-button label="日" value="day" />
                 <el-radio-button label="周" value="week" />
-                <el-radio-button label="月" value="month" />
+                <el-radio-button label="月" value="year" />
                 <!-- <el-radio-button label="年" value="year" /> -->
             </el-radio-group>
         </div>
@@ -223,7 +224,7 @@ import { useCePingJieGuoFenXi, useCePingJieGuoTongJi, useJianCeShuJuTongJi, useJ
 const { resultDetail, resultDetailVis, handleResultDetailVis, resultFangAn } = userOther()
 const { selectValue, changeSelectValue, cePingJieGuoFenXiRef, cePingJieGuoFenXiChart } = useCePingJieGuoFenXi()
 const { handleSelectCePingJieGuoTongJi, cePingJieGuoTongJiRef, cePingJieGuoTongJiSelect, loadMoreCePingJieGuoTongJiSelect, selectXlFangAnList, cePingJieGuoTongJiSelectName } = useCePingJieGuoTongJi()
-const { xwAlarmlist,xwAlarmlistTotal } = useRenYuanXingWeiShiBieShuJu()
+const { xwAlarmlist, xwAlarmlistTotal } = useRenYuanXingWeiShiBieShuJu()
 const { jiWeiBaoJingZhanBiRef, rbRadio, changeRbRadio, jiWeiBaoJingZhanBiChart } = useJiWeiBaoJingZhanBi()
 const { jianCeShuJuTongJiRef, jiWeiQuShiBianHuaOpen,
     jiWeiQuShiBianHuaVis, jiWeiQuShiBianHuaInput, jiWeiQuShiBianHuaRef, jiWeiQuShiBianHuaClose,
@@ -440,6 +441,7 @@ $design-height: 1080;
                 // justify-content: center;
                 align-items: center;
                 padding: 0 adaptiveWidth(10);
+                cursor: pointer;
 
                 div {
                     width: 100%;
@@ -765,6 +767,7 @@ $design-height: 1080;
                 // justify-content: center;
                 align-items: center;
                 padding: 0 adaptiveWidth(10);
+                cursor: pointer;
 
                 div {
                     width: 100%;
@@ -1415,8 +1418,8 @@ $design-height: 1080;
     height: adaptiveHeight(24);
     margin-right: adaptiveWidth(11);
     // margin-left: adaptiveWidth(200);
-    --el-text-color-placeholder:white;
-    --el-input-text-color:white;
+    --el-text-color-placeholder: white;
+    --el-input-text-color: white;
 }
 
 // .inputcss :deep(.el-input__wrapper) {
