@@ -147,8 +147,11 @@
       <div class="bigscreen_rb_top_l">
         <img src="/public/img/光标.png" alt="" />
         <span>历史异常指标排名</span>
-        <ElButton class="inputcssright" @click="handleSmAlarmOpen">
+        <!-- <ElButton class="inputcssright inputcss" @click="handleSmAlarmOpen">
           <span style="color: white;">报警次数统计</span>
+        </ElButton> -->
+
+        <ElButton link style="color: white;" @click="handleSmAlarmOpen" class="bigscreen_rb_top_l_rg">报警次数统计
         </ElButton>
       </div>
     </div>
@@ -721,25 +724,25 @@ const getVideoList = () => {
         res.data.data.List.forEach((item, index) => {
           getStreamUrlApi(videoInfo.value.channelid).then((ress) => {
             console.log("res.data.data.wsflv", ress.data.data.wsflv);
-            if (index % 2 == 0) {
-              const url = new URL(ress.data.data.wsflv);
-              url.protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            // if (index % 2 == 0) {
+            const url = new URL(ress.data.data.wsflv);
+            url.protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
 
-              url.host = location.host;
-              videoRef.value.play(url.toString());
-              videoRef.value.setChannelId(ress.data.data.channelId);
-              // videoRef.value.play(ress.data.data.wsflv);
-              // videoRef.value.setChannelId(ress.data.data.channelId);
-            } else {
-              const url = new URL(ress.data.data.wsflv);
-              url.protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            url.host = location.host;
+            console.log("url.toString()", url.toString());
+            videoRef.value?.play(url.toString());
+            videoRef.value?.setChannelId(ress.data.data.channelId);
+            // videoRef.value.play(ress.data.data.wsflv);
+            // videoRef.value.setChannelId(ress.data.data.channelId);
+            // } 
+            // else {
+            //   const url = new URL(ress.data.data.wsflv);
+            //   url.protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
 
-              url.host = location.host;
-              video2Ref.value.play(url.toString());
-              video2Ref.value.setChannelId(ress.data.data.channelId);
-              // video2Ref.value.play(ress.data.data.wsflv);
-              // video2Ref.value.setChannelId(ress.data.data.channelId);
-            }
+            //   url.host = location.host;
+            //   video2Ref.value.play(url.toString());
+            //   video2Ref.value.setChannelId(ress.data.data.channelId);
+            // }
             channelQuery.value.pageNum += 1;
             if (channelQuery.value.pageNum > ress.data.data.Total) {
               channelQuery.value.pageNum = 1;
@@ -1238,6 +1241,15 @@ $design-height: 1080;
   }
 }
 
+.rtDialog_bottom {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
 .bigscreen_rb {
   position: absolute;
   bottom: adaptiveHeight(85);
@@ -1257,6 +1269,7 @@ $design-height: 1080;
     .bigscreen_rb_top_l {
       display: flex;
       align-items: center;
+      width: 100%;
 
       img {
         margin-left: adaptiveWidth(11);
@@ -1298,21 +1311,26 @@ $design-height: 1080;
     justify-content: center;
     align-items: center;
 
-    .rtDialog_bottom_video {
-      :deep(#container) {
-        width: adaptiveWidth(420);
-        height: adaptiveHeight(215);
-        object-fit: cover;
-      }
 
-      object-fit: cover;
-    }
 
     .bigscreen_rb_bottom_nei {
       width: adaptiveWidth(403);
       height: adaptiveHeight(366);
     }
   }
+}
+
+
+.rtDialog_bottom_video {
+  :deep(#container) {
+    width: adaptiveWidth(420);
+    height: adaptiveHeight(215);
+    object-fit: cover;
+  }
+
+  object-fit: cover;
+  width: adaptiveWidth(420);
+  height: adaptiveHeight(215);
 }
 
 .ltDialog {
@@ -1818,6 +1836,7 @@ $design-height: 1080;
   height: adaptiveHeight(24);
   margin-right: adaptiveWidth(11);
   margin-left: adaptiveWidth(140);
+  width: adaptiveWidth(148);
 }
 
 .my_descriptions {
@@ -1829,5 +1848,10 @@ $design-height: 1080;
 
 .lt1Dialog_bottom_nei_tabs_tab {
   height: adaptiveHeight(170);
+}
+
+.bigscreen_rb_top_l_rg {
+  margin-left: auto;
+  margin-right: adaptiveWidth(12);
 }
 </style>

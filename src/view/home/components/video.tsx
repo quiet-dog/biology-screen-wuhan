@@ -107,13 +107,13 @@ export function useVideoHook() {
             // await jessibuca.destroy()
             // console.log("播放新的", res.data.wsflv)
             // await jessibuca.play(res.data.wsflv)
-            try{
-                            const path = new URL(res.data.data.wsflv).pathname;
-                        const scheme = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
-                        const u = scheme + location.host + path
+            try {
+              const path = new URL(res.data.data.wsflv).pathname;
+              const scheme = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+              const u = scheme + location.host + path
 
-                        await jessibuca.play(u)
-                        }catch(e){}
+              await jessibuca.play(u)
+            } catch (e) { }
           }).catch(err => {
 
           }).finally(() => {

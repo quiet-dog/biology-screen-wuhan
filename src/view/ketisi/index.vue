@@ -3,7 +3,7 @@
         <div class="bigscreen_lt_top">
             <div class="bigscreen_lt_top_l">
                 <img src="/public/img/光标.png" alt="" />
-                <span>监测设备状态</span>
+                <span>检测设备状态</span>
             </div>
         </div>
         <div class="bigscreen_lt_bottom">

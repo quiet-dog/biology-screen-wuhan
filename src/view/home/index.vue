@@ -467,7 +467,7 @@
   <div v-if="rtStatus" class="rtDialog">
     <div class="rtDialog_top">
       <span>查看监控视频</span>
-      <img :src="img9" alt="" srcset="" @click="rtcanleClick" />
+      <img  alt="" srcset="" @click="rtcanleClick" />
     </div>
     <div class="rtDialog_bottom">
       <!-- <img src="/public/img/监控视频尺寸.png" alt="" /> -->
@@ -559,8 +559,8 @@ const rtClick = (item: { channelid: string }) => {
           const url = new URL(res.data.data.wsflv);
           url.protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
           url.host = location.host;
-          videoRef.value.play(url.toString());
-          videoRef.value.setChannelId(res.data.data.channelId);
+          videoRef.value?.play(url.toString());
+          videoRef.value?.setChannelId(res.data.data.channelId);
         } catch (e) {
 
         }

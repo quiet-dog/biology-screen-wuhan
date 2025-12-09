@@ -75,7 +75,6 @@
         </div>
         <div class="bigscreen_lb_bottom">
             <div class="bigscreen_lb_bottom_nei" ref="cePingJieGuoTongJiRef"></div>
-
         </div>
     </div>
     <center></center>
@@ -767,7 +766,7 @@ $design-height: 1080;
                 // justify-content: center;
                 align-items: center;
                 padding: 0 adaptiveWidth(10);
-                cursor: pointer;
+                // cursor: pointer;
 
                 div {
                     width: 100%;
