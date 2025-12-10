@@ -137,7 +137,7 @@
         <div class="bigscreen_rc_top">
             <div class="bigscreen_rc_top_l">
                 <img src="/public/img/光标.png" alt="" />
-                <span>监测数据统计</span>
+                <span>检测数据统计</span>
             </div>
             <div class="bigscreen_rc_top_r">
             </div>

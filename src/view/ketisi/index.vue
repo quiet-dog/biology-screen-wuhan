@@ -109,7 +109,7 @@
         <div class="bigscreen_rt_top">
             <div class="bigscreen_rt_top_l">
                 <img src="/public/img/光标.png" alt="" />
-                <span>监测设备统计</span>
+                <span>检测设备统计</span>
             </div>
         </div>
         <div class="bigscreen_rt_bottom" ref="jianCeRef">
