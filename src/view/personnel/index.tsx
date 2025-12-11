@@ -231,9 +231,10 @@ export function useLiShiYiChangPaiMing() {
     let options = {
         title: {
             text: '当天异常人数',
-            left: 'center',
+            // left: 'center',
             textStyle: {
-                color: '#fff'
+                color: '#fff',
+                fontSize: 14,  
             },
             // 靠左边
             left: '10px',
