@@ -43,7 +43,7 @@
       <div class="bigscreen_lb_1_top_l">
         <img src="/public/img/光标.png" alt="" />
         <span>体征监测</span>
-        <ElInput :prefix-icon="Search" v-model="tiZhengPageInfo.smDeviceSn" @change="getTiZhengJianList"
+        <ElInput :prefix-icon="Search" v-model="tiZhengPageInfo.personnelName" @change="getTiZhengJianList"
           placeholder="请输入操作员" class="inputcss tizhengInput" />
       </div>
     </div>
@@ -714,7 +714,7 @@ const videoInfo = ref({});
 const channelQuery = ref({
   name: "",
   pageNum: 1,
-  pageSize: 2,
+  pageSize: 1,
 });
 const getVideoList = () => {
   nextTick(() => {

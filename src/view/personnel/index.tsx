@@ -10,10 +10,10 @@ export function useTiZhengJianCe() {
     const tiZhengPageInfo = ref({
         pageNum: 1,
         pageSize: 10,
-        smDeviceSn: ""
+        smDeviceSn: "",
+        personnelName: ""
     })
     async function getTiZhengJianList(value) {
-        // @ts-expect-error
         smDataList(tiZhengPageInfo.value).then(res => {
             tiZhengJianCeListTotal.value = Math.random()
             // if (res.data.data.total != tiZhengJianCeListTotal.value) {
@@ -196,6 +196,7 @@ export function useZaiXianShengMingDevice() {
     const pageInfo = ref({
         pageNum: 1,
         pageSize: 10,
+        online: "在线"
     })
 
     const smDeviceListTableTotal = ref(0)
@@ -234,7 +235,7 @@ export function useLiShiYiChangPaiMing() {
             // left: 'center',
             textStyle: {
                 color: '#fff',
-                fontSize: 14,  
+                fontSize: 14,
             },
             // 靠左边
             left: '10px',

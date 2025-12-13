@@ -109,7 +109,7 @@ onBeforeUnmount(() => {
 
                     <Motion>
                         <h2 class="outline-none">
-                            <TypeIt :cursor="false" :speed="150" :values="['高生物安全风险车间<br/>智能化和实时动态监管平台']" />
+                            <TypeIt :cursor="false" :speed="150" :values="['高生物安全风险车间<br/>生物安全关键技术研究数字孪生平台']" />
                         </h2>
                     </Motion>
 

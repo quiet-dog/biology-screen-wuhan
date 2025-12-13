@@ -14,7 +14,7 @@
             </div>
             <div @mouseenter="xlFangAnlistTimer.pause()" @mouseleave="xlFangAnlistTimer.resume()"
                 class="bigscreen_lt_bottomnei">
-                <Vue3SeamlessScroll :key="xlFangAnlistTotal" :list="xlFangAnlist" :step="1" :singleHeight="70" hover
+                <Vue3SeamlessScroll :key="xlFangAnlistTotal" :list="xlFangAnlist" :step="0.5" :singleHeight="70" hover
                     class="scrool">
                     <template v-slot="{ data }">
                         <div class="bigscreen_lt_bottom_nei">
@@ -99,10 +99,10 @@
                 <span>报警时间</span>
             </div>
             <div class="bigscreen_rt_bottomnei">
-                <Vue3SeamlessScroll :key="xwAlarmlistTotal" :list="xwAlarmlist" :step="1" :singleHeight="70" hover
-                    class="scrool">
+                <Vue3SeamlessScroll v-model="rtScrool" :key="xwAlarmlistTotal" :list="xwAlarmlist" :singleHeight="70"
+                    hover class="scrool">
                     <template v-slot="{ data }">
-                        <div class="bigscreen_rt_bottom_nei">
+                        <div @click="clickRtDialog(data)" class="bigscreen_rt_bottom_nei">
                             <div>
                                 <span>
                                     <ElTooltip class="myTooltip" :content="data?.seatNumber">
@@ -206,6 +206,35 @@
     </div>
 
 
+    <div v-if="rtDialogVis" class="rtDialog">
+        <div class="rtDialog_top">
+            <span>报警信息</span>
+            <img @click="rtDialogClose" :src="img9" alt="" srcset="" />
+        </div>
+        <div class="rtDialog_bottom">
+            <ElScrollbar height="100%">
+                <ElDescriptions class="my_descriptions" :column="1">
+                    <ElDescriptionsItem :width="'100px'" :min-width="'100px'" :label-align="'right'" label="机位号">
+                        {{ rtDialogItem?.seatNumber }}
+                    </ElDescriptionsItem>
+                    <ElDescriptionsItem :width="'100px'" :min-width="'100px'" :label-align="'right'" label="摄像头ID">
+                        {{ rtDialogItem?.cameraId }}
+                    </ElDescriptionsItem>
+                    <ElDescriptionsItem :width="'100px'" :min-width="'100px'" :label-align="'right'" label="区域">
+                        {{ rtDialogItem?.area }}
+                    </ElDescriptionsItem>
+                    <ElDescriptionsItem :width="'100px'" :min-width="'100px'" :label-align="'right'" label="报警时间">
+                        {{ rtDialogItem?.createTime }}
+                    </ElDescriptionsItem>
+                    <ElDescriptionsItem :width="'100px'" :min-width="'100px'" :label-align="'right'" label="报警图片">
+                        <el-image :src="getPicUrl(rtDialogItem?.picPath)"
+                            :preview-src-list="[getPicUrl(rtDialogItem?.picPathOrg)]" />
+                    </ElDescriptionsItem>
+                </ElDescriptions>
+            </ElScrollbar>
+        </div>
+    </div>
+
 </template>
 
 <script lang="ts" setup>
@@ -216,7 +245,7 @@ import dayjs from "dayjs";
 import { Vue3SeamlessScroll } from "vue3-seamless-scroll";
 import img9 from "../../../public/img/叉号.png";
 import { useIntervalFn } from '@vueuse/core'
-import { ElButton, ElDescriptions, ElDescriptionsItem, ElForm, ElFormItem, ElInput, ElScrollbar, ElSelect } from "element-plus";
+import { ElButton, ElDescriptions, ElDescriptionsItem, ElForm, ElFormItem, ElImage, ElInput, ElScrollbar, ElSelect } from "element-plus";
 import { xlFangAnList } from "../../api/xlFangAn";
 import { useCePingJieGuoFenXi, useCePingJieGuoTongJi, useJianCeShuJuTongJi, useJiWeiBaoJingZhanBi, useRenYuanXingWeiShiBieShuJu, userOther } from "./other";
 
@@ -252,7 +281,27 @@ const xlFangAnlistTimer = useIntervalFn(() => {
     })
 }, 10000)
 
-
+const rtDialogVis = ref(false);
+const rtDialogItem = ref();
+function clickRtDialog(item) {
+    rtDialogVis.value = true;
+    rtDialogItem.value = item;
+    setTimeout(() => {
+        rtScrool.value = false;
+    }, 100);
+}
+const rtScrool = ref(true);
+function rtDialogClose() {
+    rtDialogVis.value = false;
+    rtDialogItem.value = null;
+    rtScrool.value = true;
+}
+const getPicUrl = item => {
+    if (item != null && item != "") {
+        return `/renTiServer/images` + item.replace("/home/hust/storage", "");
+    }
+    return "";
+};
 
 
 onMounted(() => {
@@ -766,7 +815,7 @@ $design-height: 1080;
                 // justify-content: center;
                 align-items: center;
                 padding: 0 adaptiveWidth(10);
-                // cursor: pointer;
+                cursor: pointer;
 
                 div {
                     width: 100%;
@@ -1508,5 +1557,13 @@ $design-height: 1080;
 .rctDialog_content_inputcss {
     margin-left: adaptiveWidth(20);
     margin-top: adaptiveHeight(5);
+}
+
+
+.my_descriptions {
+    --el-text-color-primary: white !important;
+    --el-text-color-regular: white !important;
+    --el-fill-color-blank: transparent !important;
+
 }
 </style>
