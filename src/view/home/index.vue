@@ -326,7 +326,7 @@
           <!-- <div @click="rtClick(item)" v-for="item in videoList">
             <span>{{ item.name }}</span>
           </div> -->
-          <Vue3SeamlessScroll :key="videoList.length" :total="videoList.length" :list="videoList" :class-option="{
+          <Vue3SeamlessScroll :key="videoListKey" :total="videoList.length" :list="videoList" :class-option="{
             step: 5,
           }" hover>
             <template v-slot="{ data }">
@@ -467,7 +467,7 @@
   <div v-if="rtStatus" class="rtDialog">
     <div class="rtDialog_top">
       <span>查看监控视频</span>
-      <img  alt="" srcset="" @click="rtcanleClick" />
+      <img alt="" srcset="" @click="rtcanleClick" />
     </div>
     <div class="rtDialog_bottom">
       <!-- <img src="/public/img/监控视频尺寸.png" alt="" /> -->
@@ -1411,14 +1411,17 @@ const lbRadioChange = (val: string) => {
 };
 
 const videoList = ref([]);
+const videoListKey = ref(0);
 const channelQuery = ref({
   name: "",
   pageNum: 1,
-  pageSize: 3,
+  pageSize: 100,
 });
 const getVideoList = () => {
   getChannelListApi(channelQuery.value).then((res) => {
     videoList.value = res.data.data.List;
+  }).finally(() => {
+    videoListKey.value++;
   });
 };
 
