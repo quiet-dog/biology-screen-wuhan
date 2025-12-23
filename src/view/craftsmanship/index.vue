@@ -68,23 +68,24 @@
       </div>
       <div class="bigscreen_lt_bottom_b">
         <div class="bigscreen_lt_bottom_b_neis">
-          <Vue3SeamlessScroll :key="alarmEventslistTotal" :list="alarmEventslist" :step="1" :singleHeight="72" hover class="scrool">
-            <template v-slot="{data}">
-              <div class="bigscreen_lt_bottom_b_nei" >
-              <img :src="data?.img" alt="" />
-              <div>
-                <span style="margin-left: 25px">{{ data?.level }}</span>
-                <el-tooltip placement="top-start">
-                  <template #content>
+          <Vue3SeamlessScroll :key="alarmEventslistTotal" :list="alarmEventslist" :step="1" :singleHeight="72" hover
+            class="scrool">
+            <template v-slot="{ data }">
+              <div class="bigscreen_lt_bottom_b_nei">
+                <img :src="data?.img" alt="" />
+                <div>
+                  <span style="margin-left: 25px">{{ data?.level }}</span>
+                  <el-tooltip placement="top-start">
+                    <template #content>
+                      <span>{{ data?.craftNode?.nodeName }}</span>
+                      <br />
+                      <span>{{ data?.createTime }}</span>
+                    </template>
                     <span>{{ data?.craftNode?.nodeName }}</span>
-                    <br />
-                    <span>{{ data?.createTime }}</span>
-                  </template>
-                  <span>{{ data?.craftNode?.nodeName }}</span>
-                </el-tooltip>
-                <span>节点故障</span>
+                  </el-tooltip>
+                  <span>节点故障</span>
+                </div>
               </div>
-            </div>
             </template>
           </Vue3SeamlessScroll>
         </div>
@@ -114,22 +115,22 @@
           <Vue3SeamlessScroll :key="nodelistTotal" :list="nodelist" :class-option="{
             step: 5,
           }" hover class="scrool">
-            <template v-slot="{data}">
-               <div class="bigscreen_lb_bottom_neis"  @click="lbClick(data)">
-              <div class="bigscreen_lb_bottom_nei_t_l" :style="{
-                background: `url(${data?.img}) no-repeat`,
-                'background-size': '100% 100%',
-              }">
-                {{ data?.nodeOrder }}
+            <template v-slot="{ data }">
+              <div class="bigscreen_lb_bottom_neis" @click="lbClick(data)">
+                <div class="bigscreen_lb_bottom_nei_t_l" :style="{
+                  background: `url(${data?.img}) no-repeat`,
+                  'background-size': '100% 100%',
+                }">
+                  {{ data?.nodeOrder }}
+                </div>
+                <div class="bigscreen_lb_bottom_neis_r">
+                  <span :style="{
+                    color: data?.isHighRisk ? 'red' : '#ffffff',
+                  }">{{ data?.nodeName }}</span>
+                  <span>{{ data?.craftArchive.craftArchiveName }}</span>
+                  <span>{{ data?.isHighRisk ? "是" : "否" }}</span>
+                </div>
               </div>
-              <div class="bigscreen_lb_bottom_neis_r">
-                <span :style="{
-                  color: data?.isHighRisk ? 'red' : '#ffffff',
-                }">{{ data?.nodeName }}</span>
-                <span>{{ data?.craftArchive.craftArchiveName }}</span>
-                <span>{{ data?.isHighRisk ? "是" : "否" }}</span>
-              </div>
-            </div>
             </template>
           </Vue3SeamlessScroll>
         </div>
@@ -158,7 +159,7 @@
             <span style="font-size: 18px">工艺要素</span>
             <span style="font-size: 28px; padding-left: 25px">{{
               processTotal
-              }}</span>
+            }}</span>
           </div>
           <div>
             <span>
@@ -180,13 +181,13 @@
         <Vue3SeamlessScroll :key="processTotal" :list="processlist" :class-option="{
           step: 5,
         }" hover class="scrool">
-          <template v-slot="{data}">
+          <template v-slot="{ data }">
             <div class="bigscreen_rt_bottom_nei" @click="rtClcik(data)">
-            <span>{{ data?.craftArchiveName }}</span>
-            <span>{{ data?.personnelFactors }}</span>
-            <span>{{ data?.materialFactors }}</span>
-            <span>{{ data?.environmentFactors }}</span>
-          </div>
+              <span>{{ data?.craftArchiveName }}</span>
+              <span>{{ data?.personnelFactors }}</span>
+              <span>{{ data?.materialFactors }}</span>
+              <span>{{ data?.environmentFactors }}</span>
+            </div>
           </template>
         </Vue3SeamlessScroll>
       </div>
@@ -811,7 +812,7 @@ const processlistTimer = useIntervalFn(() => {
   processlistFun().finally(() => {
     processlistTimer.resume();
   })
-}, 5000)
+}, 10000)
 const rtShow = ref(false);
 const rtInfo = ref()
 const rtClcik = (item) => {

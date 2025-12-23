@@ -164,16 +164,17 @@
           <span>维修人员</span>
         </div>
         <div class="bigscreen_rc_bottom_b" @mouseleave="repairListTimer.resume()" @mouseenter="repairListTimer.pause()">
-          <Vue3SeamlessScroll :key="repairListTotal" :list="repairList" :step="1" :direction="'up'"  hover class="scrool">
-            <template v-slot="{data}">
+          <Vue3SeamlessScroll :key="repairListTotal" :list="repairList" :step="1" :direction="'up'" hover
+            class="scrool">
+            <template v-slot="{ data }">
               <div :class="data?.status
-              ? 'bigscreen_rc_bottom_nei_active'
-              : 'bigscreen_rc_bottom_nei_b'
-              "  @click="rcClick(data)">
-              <span>{{ data?.equipment.equipmentCode }}</span>
-              <span>{{ dayjs(data?.createTime).format("YYYY-MM-DD") }}</span>
-              <span>{{ data?.repairPersonnel }}</span>
-            </div>
+                ? 'bigscreen_rc_bottom_nei_active'
+                : 'bigscreen_rc_bottom_nei_b'
+                " @click="rcClick(data)">
+                <span>{{ data?.equipment.equipmentCode }}</span>
+                <span>{{ dayjs(data?.createTime).format("YYYY-MM-DD") }}</span>
+                <span>{{ data?.repairPersonnel }}</span>
+              </div>
             </template>
           </Vue3SeamlessScroll>
         </div>
@@ -199,7 +200,8 @@
         </div>
         <div @mouseenter="inspectionListTimer.pause()" @mouseleave="inspectionListTimer.pause()"
           class="bigscreen_rb_bottom_r_b">
-          <Vue3SeamlessScroll :key="inspectionlistTotal" :list="inspectionlist" :step="1" :direction="'up'"  hover class="scrool">
+          <Vue3SeamlessScroll :key="inspectionlistTotal" :list="inspectionlist" :step="1" :direction="'up'" hover
+            class="scrool">
             <template v-slot="{ data }">
               <div class="bigscreen_rb_bottom_r_nei" @click="rbClick(data)">
                 <div class="bigscreen_rb_bottom_r_neis">
@@ -248,11 +250,11 @@
           <img src="/public/img/zuo.svg" alt="" @click="ciShuLeftClick" style="margin-left: 5px" />
           <span>{{
             dayjs(ciShuTimer.startTime).format("MM月DD日")
-          }}</span>
+            }}</span>
           <span>-</span>
           <span>{{
             dayjs(ciShuTimer.endTime).format("MM月DD日")
-          }}</span>
+            }}</span>
           <img src="/public/img/you.svg" alt="" @click="ciShuRightClick" style="margin-right: 5px" />
         </div>
       </div>
@@ -395,11 +397,11 @@ const videoRef = ref();
 const rtClick = (item) => {
   rtStatus.value = !rtStatus.value;
   getStreamUrlApi(item.channelid).then((res) => {
-    console.log("res.data.data.wsflv", res.data.data.wsflv);
     const url = new URL(res.data.data.wsflv);
+    url.protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
     url.host = location.host;
-    videoRef.value.play(url.toString());
-    videoRef.value.setChannelId(res.data.data.channelId);
+    videoRef.value?.play(url.toString());
+    videoRef.value?.setChannelId(res.data.data.channelId);
   });
 };
 const rtcanleClick = () => {
